@@ -1,11 +1,17 @@
 import React from 'react'
 import './App.css'
 import routes from '../../routes/routes'
+import Layout from '../../components/Layout'
+import { useHistory } from 'react-router-dom'
 
-function App() {
+const App: React.FC = () => {
+  const history = useHistory()
+
   return (
     <div className="App">
-      {routes()}
+      <Layout history={history}>
+        {routes()}
+      </Layout>
     </div>
   )
 }
