@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextInputField, Button } from 'evergreen-ui'
 import produce from 'immer'
 import { loginUser } from '../../reducers/auth'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { Store } from '../../types'
+import { useHistory } from 'react-router-dom'
 
 const Login: React.FC = () => {
   // Local State
@@ -20,6 +22,20 @@ const Login: React.FC = () => {
   })
 
   const dispatch = useDispatch()
+  const history = useHistory()
+
+  // Selectors
+  const auth = useSelector(({ auth }: Store) => auth)
+
+  // Effects
+  useEffect(() => {
+    const isLoggedUserWithBlog = auth.success && auth.blogKey
+    const isLoggedUserFirstTime = auth.success && !auth.blogKey
+
+    if (isLoggedUserWithBlog) history.push('/')
+    if (isLoggedUserFirstTime) history.push('/welcome')
+
+  }, [auth.blogKey, auth.success, history])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

@@ -9,9 +9,10 @@ export const AUTH_ACTION_TYPES = {
 
 const initialState: AuthStore = {
   authToken: null,
-  loggedInUserID: '',
+  blogKey: null,
   working: false,
   error: null,
+  success: false,
 }
 
 const authReducer = (state = initialState, { payload, type, error }: ReduxAction) => {
@@ -24,12 +25,14 @@ const authReducer = (state = initialState, { payload, type, error }: ReduxAction
         break
       case AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS: 
         draft.working = false
-        draft.loggedInUserID = payload.id
+        draft.blogKey = payload.blogID
         draft.authToken = payload['access_token']
+        draft.success = true
         break
       case AUTH_ACTION_TYPES.LOGIN_USER_ERROR: 
         draft.working = false
         draft.error = error
+        draft.success = false
         break
       
       default: return state

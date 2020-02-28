@@ -1,9 +1,17 @@
 import { IconName, ButtonAppearance } from 'evergreen-ui'
 import { History } from 'history'
+import { RouteComponentProps } from 'react-router-dom'
 
 export type ValueOf<T> = T[keyof T]
 
 export type $TS_FIXME = any
+export type ComponentType = React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>
+
+export type Store = {
+  auth: AuthStore,
+  app: AppStore,
+  blog: BlogStore,
+}
 
 export interface PostEditProps {
   
@@ -51,9 +59,10 @@ export interface AppStore {
 
 export interface AuthStore {
   authToken: string | null,
-  loggedInUserID: string,
+  blogKey: string | null,
   working: boolean,
   error: string | null,
+  success: boolean,
 }
 
 export type BlogPost = {
