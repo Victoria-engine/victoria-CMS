@@ -12,16 +12,18 @@ const sagaMiddleware = createSagaMiddleware()
 /** Middlewares */
 const middlewares = [sagaMiddleware]
 
+/** Add a logger if it's not in production */
+if (!__PROD__) {
+  middlewares.push(createLogger() as SagaMiddleware<Middleware>)
+}
+
 // redux devtools
 // @ts-ignore
 const composeEnhancer = !__PROD__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose
 
 const enhancer = composeEnhancer(applyMiddleware(...middlewares))
 
-/** Add a logger if it's not in production */
-if (!__PROD__) {
-  middlewares.push(createLogger({ diff: true }) as SagaMiddleware<Middleware>)
-}
+
 
 /** Redux Store */
 const store = createStore(combinedReducers, enhancer)

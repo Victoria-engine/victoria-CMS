@@ -6,6 +6,7 @@ import Posts from '../pages/Posts'
 import PostEdit from '../pages/PostEdit'
 import CreatePost from '../pages/CreatePost'
 import Settings from '../pages/Settings'
+import Login from '../pages/Auth'
 
 /**
  * Add routes to your web app here
@@ -15,6 +16,7 @@ const routes: RouteProps[] = [
   { path: '/post/:postID', component: PostEdit, exact: true },
   { path: '/new', component: CreatePost, exact: true },
   { path: '/settings', component: Settings, exact: true },
+  { path: '/login', component: Login, exact: true },
 ]
 
 export default () => (

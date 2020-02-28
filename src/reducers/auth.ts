@@ -1,32 +1,33 @@
 import produce from 'immer'
-import { ReduxAction, $TS_FIXME } from '../types'
+import { ReduxAction, $TS_FIXME, AuthStore, ValueOf } from '../types'
 
-export const ACTION_TYPES = {
+export const AUTH_ACTION_TYPES = {
   LOGIN_USER: 'Auth/LOGIN_USER',
   LOGIN_USER_SUCCESS: 'Auth/LOGIN_USER_SUCCESS',
   LOGIN_USER_ERROR: 'Auth/LOGIN_USER_ERROR',
 }
 
-const initialState = {
+const initialState: AuthStore = {
   authToken: null,
-  blogData: {},
+  loggedInUserID: '',
   working: false,
-  error: '',
+  error: null,
 }
 
 const authReducer = (state = initialState, { payload, type, error }: ReduxAction) => {
   return produce(state, (draft) => {
-    const actionType = type as keyof typeof ACTION_TYPES
+    const actionType = type as ValueOf<typeof AUTH_ACTION_TYPES>
 
     switch (actionType) {
-      case 'LOGIN_USER': 
+      case AUTH_ACTION_TYPES.LOGIN_USER: 
         draft.working = true
         break
-      case 'LOGIN_USER_SUCCESS': 
+      case AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS: 
         draft.working = false
-        draft.blogData = payload.blogData
+        draft.loggedInUserID = payload.id
+        draft.authToken = payload['access_token']
         break
-      case 'LOGIN_USER_ERROR': 
+      case AUTH_ACTION_TYPES.LOGIN_USER_ERROR: 
         draft.working = false
         draft.error = error
         break
@@ -40,15 +41,15 @@ const authReducer = (state = initialState, { payload, type, error }: ReduxAction
  * Login user action
  */
 export const loginUser = (payload: $TS_FIXME) => ({
-  type: ACTION_TYPES.LOGIN_USER,
+  type: AUTH_ACTION_TYPES.LOGIN_USER,
   payload,
 })
 export const loginUserSuccess = (payload: $TS_FIXME) => ({
-  type: ACTION_TYPES.LOGIN_USER_SUCCESS,
+  type: AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS,
   payload,
 })
 export const loginUserError = (error: Error) => ({
-  type: ACTION_TYPES.LOGIN_USER_ERROR,
+  type: AUTH_ACTION_TYPES.LOGIN_USER_ERROR,
   error,
 })
 

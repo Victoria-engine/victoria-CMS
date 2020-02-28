@@ -2,28 +2,26 @@ import { takeLatest, put, call } from 'redux-saga/effects'
 import { AnyAction } from 'redux'
 import request from '../utils/request'
 import { API_URL } from '../constants'
-import { loginUserError, loginUserSuccess, ACTION_TYPES } from '../reducers/auth'
+import { loginUserError, loginUserSuccess, AUTH_ACTION_TYPES } from '../reducers/auth'
 
 
 /** Worker to login a user with the API */
 function * loginUserWorker ({ payload }: AnyAction) {
-  console.log(payload)
-    const requestUrl = `${API_URL}/api/auth/login`
+
+    try {
+      const requestUrl = `${API_URL}/api/auth/login`
     console.log(requestUrl)
     const headers = { 'Content-Type': 'application/json' }
     const body = JSON.stringify({ credentials: payload.credentials })
 
-    const { data, error } = yield call(request, requestUrl, {
+    const { data } = yield call(request, requestUrl, {
       headers,
       method: 'POST',
       body,
     })
 
-    console.log(data)
-
-    if (!error) {
       yield put(loginUserSuccess(data))
-    } else {
+    } catch (error) {
       yield put(loginUserError(error))
     }
 }
@@ -48,7 +46,7 @@ function * loginUserWorker ({ payload }: AnyAction) {
 // }
 
 export default function* rootSaga() {
-  yield takeLatest(ACTION_TYPES.LOGIN_USER, loginUserWorker)
+  yield takeLatest(AUTH_ACTION_TYPES.LOGIN_USER, loginUserWorker)
   //yield takeLatest(AUTO_LOGIN, autoLogin)
 }
 
