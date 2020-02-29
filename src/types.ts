@@ -58,7 +58,7 @@ export interface AppStore {
 }
 
 export interface AuthStore {
-  authToken: string | null,
+  authToken?: string,
   blogKey: string | null,
   working: boolean,
   error: string | null,
@@ -79,6 +79,15 @@ export type BlogPost = {
   updatedAt: string
 }
 
+export type BlogData = {
+  _id: string,
+  description: string,
+  name: string,
+  author: string,
+  key: string,
+  posts: BlogPost[],
+}
+
 export interface BlogStore {
   working: boolean,
   blog: {
@@ -90,3 +99,16 @@ export interface BlogStore {
   },
   error: string | null,
 }
+
+export interface LoginserPayload{
+  credentials: {
+    email: string,
+    password: string,
+  }
+}
+export interface LoginUserSuccessPayload {
+  access_token: string,
+  blogID: string,
+}
+
+export type GetUserDataSuccess = BlogData

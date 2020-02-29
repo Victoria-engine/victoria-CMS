@@ -1,5 +1,5 @@
 import produce from 'immer'
-import { ReduxAction, $TS_FIXME, BlogStore } from '../types'
+import { ReduxAction, BlogStore, GetUserDataSuccess } from '../types'
 
 export const BLOG_ACTION_TYPES = {
   GET_USER_DATA: 'Auth/GET_USER_DATA',
@@ -24,14 +24,14 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
     const actionType = type as keyof typeof BLOG_ACTION_TYPES
 
     switch (actionType) {
-      case 'GET_USER_DATA': 
+      case BLOG_ACTION_TYPES.GET_USER_DATA: 
         draft.working = true
         break
-      case 'GET_USER_DATA_SUCCESS': 
+      case BLOG_ACTION_TYPES.GET_USER_DATA_SUCCESS: 
         draft.working = false
         draft.blog = payload
         break
-      case 'GET_USER_DATA_ERROR': 
+      case BLOG_ACTION_TYPES.GET_USER_DATA_ERROR: 
         draft.working = false
         draft.error = error
         break
@@ -44,11 +44,10 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 /**
  * Get User data user action
  */
-export const getUserData = (payload: $TS_FIXME) => ({
+export const getUserData = () => ({
   type: BLOG_ACTION_TYPES.GET_USER_DATA,
-  payload,
 })
-export const getUserDataSuccess = (payload: $TS_FIXME) => ({
+export const getUserDataSuccess = (payload: GetUserDataSuccess) => ({
   type: BLOG_ACTION_TYPES.GET_USER_DATA_SUCCESS,
   payload,
 })

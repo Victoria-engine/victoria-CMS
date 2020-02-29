@@ -26,16 +26,18 @@ const Login: React.FC = () => {
 
   // Selectors
   const auth = useSelector(({ auth }: Store) => auth)
+  const userData = useSelector(({ blog }: Store) => blog)
 
   // Effects
   useEffect(() => {
+    const hasUserKey = userData.blog.key
     const isLoggedUserWithBlog = auth.success && auth.blogKey
     const isLoggedUserFirstTime = auth.success && !auth.blogKey
 
-    if (isLoggedUserWithBlog) history.push('/')
-    if (isLoggedUserFirstTime) history.push('/welcome')
+    if (isLoggedUserFirstTime && !hasUserKey) history.push('/welcome')
+    if (isLoggedUserWithBlog && hasUserKey) history.push('/')
 
-  }, [auth.blogKey, auth.success, history])
+  }, [auth.blogKey, auth.success, dispatch, history, userData.blog.key])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

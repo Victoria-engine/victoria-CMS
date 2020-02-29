@@ -1,5 +1,7 @@
 import produce from 'immer'
-import { ReduxAction, $TS_FIXME, AuthStore, ValueOf } from '../types'
+import { ReduxAction, AuthStore, ValueOf, LoginUserSuccessPayload, LoginserPayload } from '../types'
+import { setCookie, getCookie } from '../utils/cookies'
+import { ACCESS_TOKEN } from '../constants'
 
 export const AUTH_ACTION_TYPES = {
   LOGIN_USER: 'Auth/LOGIN_USER',
@@ -8,7 +10,7 @@ export const AUTH_ACTION_TYPES = {
 }
 
 const initialState: AuthStore = {
-  authToken: null,
+  authToken: getCookie('key'),
   blogKey: null,
   working: false,
   error: null,
@@ -43,17 +45,22 @@ const authReducer = (state = initialState, { payload, type, error }: ReduxAction
 /**
  * Login user action
  */
-export const loginUser = (payload: $TS_FIXME) => ({
+export const loginUser = (payload: LoginserPayload) => ({
   type: AUTH_ACTION_TYPES.LOGIN_USER,
   payload,
 })
-export const loginUserSuccess = (payload: $TS_FIXME) => ({
-  type: AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS,
-  payload,
-})
+export const loginUserSuccess = (payload: LoginUserSuccessPayload) => {
+  setCookie(ACCESS_TOKEN, payload.access_token)
+
+  return {
+    type: AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS,
+    payload,
+  }
+}
 export const loginUserError = (error: Error) => ({
   type: AUTH_ACTION_TYPES.LOGIN_USER_ERROR,
   error,
 })
+
 
 export default authReducer
