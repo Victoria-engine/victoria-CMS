@@ -24,7 +24,7 @@ export interface PostsProps {
 export type ReduxAction = {
   payload: object | any,
   type: string,
-  error: string,
+  error: Error,
 }
 
 export type TabbarActionItem = {
@@ -45,7 +45,7 @@ export interface SidebarProps {
 
 export interface TopbarProps {
   title: string,
-  actions: TabbarActionItem[],
+  actions?: TabbarActionItem[],
 }
 
 export interface LayoutProps {
@@ -88,6 +88,13 @@ export type BlogData = {
   posts: BlogPost[],
 }
 
+export type UserData = {
+  firstName: string,
+  lastName: string,
+  email: string,
+  createdAt: string,
+}
+
 export interface BlogStore {
   working: boolean,
   blog: {
@@ -97,6 +104,7 @@ export interface BlogStore {
     key: string,
     posts: BlogPost[],
   },
+  user: UserData,
   error: string | null,
 }
 
@@ -111,7 +119,10 @@ export interface LoginUserSuccessPayload {
   blogID: string,
 }
 
-export type GetUserDataSuccess = BlogData
+export interface GetUserDataSuccess {
+  blog: BlogData,
+  user: UserData,
+}
 
 export interface PostLinkProps {
   postData: BlogPost,

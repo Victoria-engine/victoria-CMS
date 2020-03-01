@@ -12,7 +12,7 @@ const Layout: React.FC<LayoutProps> = ({ children, history, hasSidebar }) => {
       {hasSidebar && <Sidebar
         tabs={[
           { iconName: 'edit', label: 'Create new post', to: '/new' },
-          { iconName: 'applications', label: 'Posts', to: '/posts' },
+          { iconName: 'applications', label: 'Posts', to: '/' },
           { iconName: 'settings', label: 'Settings', to: '/settings' },
         ]}
         activeItem={history.location.pathname}

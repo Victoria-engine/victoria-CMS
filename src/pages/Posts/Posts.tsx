@@ -19,7 +19,6 @@ const Posts: React.FC<Props> = () => {
   return (
     <div className={classes.postsContainer}>
       <Topbar
-        actions={[]}
         title='Posts list'
       />
       

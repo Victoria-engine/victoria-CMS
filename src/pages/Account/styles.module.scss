@@ -1,0 +1,47 @@
+.accountContainer {
+  display: flex;
+  flex-flow: column;
+  text-align: left;
+}
+
+.accountSettings {
+  display: flex;
+  flex-flow: row;
+  margin-top: 40px;
+}
+
+
+.labelsCol {
+  span {
+    display: flex;
+    align-items: center;
+    color: #666666;
+    font-size: 12px;
+    height: 30px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+  }
+  display: flex;
+  flex-flow: column;
+}
+
+.fieldsCols {
+  display: flex;
+  flex-flow: column;
+
+  input {
+    height: 30px;
+    margin-bottom: 10px;
+  }
+}
+
+ 
+.created {
+  color: #666666;
+  font-size: 12px;
+}
+
+.actions {
+  margin-top: 40px;
+  width: 100px;
+}

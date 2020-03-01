@@ -1,12 +1,14 @@
 import produce from 'immer'
 import { ReduxAction, AuthStore, ValueOf, LoginUserSuccessPayload, LoginserPayload } from '../types'
-import { setCookie, getCookie } from '../utils/cookies'
+import { setCookie, getCookie, removeCookie } from '../utils/cookies'
 import { ACCESS_TOKEN } from '../constants'
 
 export const AUTH_ACTION_TYPES = {
   LOGIN_USER: 'Auth/LOGIN_USER',
   LOGIN_USER_SUCCESS: 'Auth/LOGIN_USER_SUCCESS',
   LOGIN_USER_ERROR: 'Auth/LOGIN_USER_ERROR',
+
+  LOGOUT_USER: 'Auth/LOGOUT_USER',
 }
 
 const initialState: AuthStore = {
@@ -22,21 +24,26 @@ const authReducer = (state = initialState, { payload, type, error }: ReduxAction
     const actionType = type as ValueOf<typeof AUTH_ACTION_TYPES>
 
     switch (actionType) {
-      case AUTH_ACTION_TYPES.LOGIN_USER: 
+      case AUTH_ACTION_TYPES.LOGIN_USER:
         draft.working = true
         break
-      case AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS: 
+      case AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS:
         draft.working = false
         draft.blogKey = payload.blogID
         draft.authToken = payload['access_token']
         draft.success = true
         break
-      case AUTH_ACTION_TYPES.LOGIN_USER_ERROR: 
+      case AUTH_ACTION_TYPES.LOGIN_USER_ERROR:
         draft.working = false
-        draft.error = error
+        draft.error = error.message
         draft.success = false
         break
-      
+
+      case AUTH_ACTION_TYPES.LOGOUT_USER:
+        draft.blogKey = null
+        draft.authToken = ''
+        break
+
       default: return state
     }
   })
@@ -62,5 +69,19 @@ export const loginUserError = (error: Error) => ({
   error,
 })
 
+/**
+ * Logout user
+ */
+export const logoutUser = () => {
+  const token = getCookie(ACCESS_TOKEN)
+
+  //@FIXME: Only remove on success when connected to /revoke
+  removeCookie(ACCESS_TOKEN)
+
+  return {
+    type: AUTH_ACTION_TYPES.LOGOUT_USER,
+    token,
+  }
+}
 
 export default authReducer

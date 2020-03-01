@@ -8,16 +8,18 @@ import CreatePost from '../pages/CreatePost'
 import Settings from '../pages/Settings'
 import Login from '../pages/Auth'
 import Tutorial from '../pages/Tutorial'
+import Account from '../pages/Account'
 import GateKeeper from '../pages/Auth/GateKeeper'
 
 /**
  * Add routes to your web app here
  */
 const routes: RouteProps[] = [
-  { path: '/posts', component: GateKeeper(Posts), exact: true },
+  { path: '/', component: GateKeeper(Posts), exact: true },
   { path: '/post/:postID', component: GateKeeper(PostEdit), exact: true },
   { path: '/new', component: GateKeeper(CreatePost), exact: true },
   { path: '/settings', component: GateKeeper(Settings), exact: true },
+  { path: '/account', component: GateKeeper(Account), exact: true },
   { path: '/login', component: Login, exact: true },
   { path: '/welcome', component: GateKeeper(Tutorial), exact: true },
 ]

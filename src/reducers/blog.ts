@@ -16,6 +16,12 @@ const initialState: BlogStore = {
     key: '',
     posts: [],
   },
+  user: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    createdAt: '',
+  },
   error: null,
 }
 
@@ -29,11 +35,12 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         break
       case BLOG_ACTION_TYPES.GET_USER_DATA_SUCCESS: 
         draft.working = false
-        draft.blog = payload
+        draft.blog = payload.blog[0]
+        draft.user = payload.user
         break
       case BLOG_ACTION_TYPES.GET_USER_DATA_ERROR: 
         draft.working = false
-        draft.error = error
+        draft.error = error.message
         break
       
       default: return state

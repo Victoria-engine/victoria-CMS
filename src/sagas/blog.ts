@@ -3,23 +3,24 @@ import request from '../utils/request'
 import { API_URL } from '../constants'
 import { BLOG_ACTION_TYPES, getUserDataSuccess, getUserDataError } from '../reducers/blog'
 import setAuthHeaders from '../utils/setAuthHeaders'
+import { logoutUser } from '../reducers/auth'
 
 
 /** Worker to user speciic data */
 function* getUserDataWorker() {
-  try {
-    const requestUrl = `${API_URL}/api/user/info`
-    const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
+  const requestUrl = `${API_URL}/api/user/info`
+  const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
-    const { data } = yield call(request, requestUrl, {
-      headers,
-      method: 'GET',
-    })
+  const { data, error } = yield call(request, requestUrl, {
+    headers,
+    method: 'GET',
+  })
 
-    yield put(getUserDataSuccess(data[0]))
-  } catch (error) {
-    yield put(getUserDataError(error))
+  if (error) {
+     yield put(getUserDataError(error))
+     yield put(logoutUser())
   }
+  if (data && !error) yield put(getUserDataSuccess(data))
 }
 
 export default function* rootSaga() {

@@ -13,15 +13,19 @@ const App: React.FC = () => {
 
   // Selector
   const auth = useSelector(({ auth }: Store) => auth)
+  const error = useSelector(({ blog }: Store) => blog.error)
 
   const loggedInUser = auth.authToken
 
   useEffect(() => {
-
-    if (auth.authToken) {
+    if (auth.authToken && !error) {
       dispatch(getUserData())
     }
-  }, [dispatch, auth.authToken])
+    if (error) {
+      history.push('/login')
+    }
+
+  }, [dispatch, auth.authToken, error, history])
 
   return (
     <div className='App'>
