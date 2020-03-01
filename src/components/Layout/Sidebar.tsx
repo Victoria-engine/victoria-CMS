@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem }) => {
 
         {tabs.map(tab => {
           return (
-            <NavLink to={tab.to as string} className={classes.item} activeClassName={classes.activeSidebarItem}>
+            <NavLink to={tab.to as string} className={classes.item} activeClassName={classes.activeSidebarItem} key={tab.to}>
             <li>
               <Icon icon={tab.iconName} color='muted' marginRight={16} />
               <p>{tab.label}</p>

@@ -1,14 +1,20 @@
 import React from 'react'
-import { PostsProps as Props } from '../../types'
-import { useDispatch } from 'react-redux'
+import { PostsProps as Props, Store } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
+import { useSelector } from 'react-redux'
+import PostLink from '../../components/PostLink'
+import { Spinner } from 'evergreen-ui'
 
 /**
- * Posts list
+ * Posts list screen
  */
 const Posts: React.FC<Props> = () => {
 
-  const dispatch = useDispatch()
+  const blogReducer = useSelector(({ blog }: Store) => blog)
+  const blogData = blogReducer.blog
+  
+  if (!blogData || blogReducer.working) return <Spinner />
+
   return (
     <div>
       <Topbar
@@ -17,7 +23,10 @@ const Posts: React.FC<Props> = () => {
         ]}
         title='Posts list'
       />
-      Posts list
+      
+      <ul>
+        {blogData.posts.map(post => <PostLink postData={post} key={`${post._id}-blogPost`} />)}
+      </ul>
     </div>
   )
 }

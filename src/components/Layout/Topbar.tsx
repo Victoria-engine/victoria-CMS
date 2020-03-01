@@ -9,8 +9,8 @@ const Topbar: React.FC<Props> = ({ actions, title }) => (
     <h2>{title}</h2>
     
     <ul>
-      {actions.map(tab => (
-        <li>
+      {actions.map((tab, index) => (
+        <li key={`${index}-topbarItem`}>
           <Button
             iconAfter={tab.iconName}
             disabled={tab.isDisabled}

@@ -14,7 +14,7 @@ import GateKeeper from '../pages/Auth/GateKeeper'
  * Add routes to your web app here
  */
 const routes: RouteProps[] = [
-  { path: '/', component: GateKeeper(Posts), exact: true },
+  { path: '/posts', component: GateKeeper(Posts), exact: true },
   { path: '/post/:postID', component: GateKeeper(PostEdit), exact: true },
   { path: '/new', component: GateKeeper(CreatePost), exact: true },
   { path: '/settings', component: GateKeeper(Settings), exact: true },
@@ -25,6 +25,11 @@ const routes: RouteProps[] = [
 export default () => (
   <Switch>
     {routes.map(route =>
-      <Route path={route.path} exact={route.exact} component={route.component} key={`${route.path}route`} />)}
+      <Route
+        key={`${route.path}route`}
+        path={route.path}
+        exact={route.exact}
+        component={route.component}
+      />)}
   </Switch>
 )

@@ -16,7 +16,7 @@ function* getUserDataWorker() {
       method: 'GET',
     })
 
-    yield put(getUserDataSuccess(data))
+    yield put(getUserDataSuccess(data[0]))
   } catch (error) {
     yield put(getUserDataError(error))
   }

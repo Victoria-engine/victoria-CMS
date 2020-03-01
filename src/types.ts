@@ -112,3 +112,13 @@ export interface LoginUserSuccessPayload {
 }
 
 export type GetUserDataSuccess = BlogData
+
+export interface PostLinkProps {
+  postData: BlogPost,
+}
+
+export interface GatekeeperProps {
+  Component: any,
+  authToken: string,
+  isAutorizing: boolean,
+}
