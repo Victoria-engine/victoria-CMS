@@ -4,6 +4,7 @@ import Topbar from '../../components/Layout/Topbar'
 import { useSelector } from 'react-redux'
 import PostLink from '../../components/PostLink'
 import { Spinner } from 'evergreen-ui'
+import classes from './styles.module.scss'
 
 /**
  * Posts list screen
@@ -16,15 +17,13 @@ const Posts: React.FC<Props> = () => {
   if (!blogData || blogReducer.working) return <Spinner />
 
   return (
-    <div>
+    <div className={classes.postsContainer}>
       <Topbar
-        actions={[
-         { iconName: 'add', label: 'New post', appearance: 'primary', onClick: () => console.log('creating post') },
-        ]}
+        actions={[]}
         title='Posts list'
       />
       
-      <ul>
+      <ul className={classes.postsList}>
         {blogData.posts.map(post => <PostLink postData={post} key={`${post._id}-blogPost`} />)}
       </ul>
     </div>

@@ -1,0 +1,11 @@
+.postsContainer {
+  padding: 0;
+}
+
+.postsList {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  list-style: none;
+  padding: 0;
+}
