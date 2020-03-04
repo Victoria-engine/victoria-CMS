@@ -1,4 +1,4 @@
-import { IconName, ButtonAppearance } from 'evergreen-ui'
+import { IconName, ButtonAppearance, IntentTypes } from 'evergreen-ui'
 import { History } from 'history'
 import { RouteComponentProps } from 'react-router-dom'
 
@@ -34,6 +34,7 @@ export type TabbarActionItem = {
   isDisabled?: boolean,
   isLoading?: boolean,
   appearance?: ButtonAppearance,
+  intent?: IntentTypes,
 
   onClick?: (...args: any) => void,
 }
@@ -72,7 +73,7 @@ export type BlogPost = {
   title: string,
   slug: string,
   excerpt: string,
-  visibility: 'private' | 'public',
+  visibility: 'public' | 'private' | 'not-listed',
   reading_time: number,
   author: string,
   createdAt: string,
@@ -132,4 +133,18 @@ export interface GatekeeperProps {
   Component: any,
   authToken: string,
   isAutorizing: boolean,
+}
+
+export interface GetPostByIDPayload {
+  postID: string,
+}
+
+export type GetPostByIDSuccessPayload = BlogPost
+
+export interface SavePostPayload {
+  title: string,
+  html: string,
+  description: string,
+  visibility: BlogPost['visibility'],
+  slug: string,
 }

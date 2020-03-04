@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import './App.css'
 import routes from '../../routes/routes'
 import Layout from '../../components/Layout'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Store } from '../../types'
 import { getUserData } from '../../reducers/blog'
@@ -10,12 +10,16 @@ import { getUserData } from '../../reducers/blog'
 const App: React.FC = () => {
   const history = useHistory()
   const dispatch = useDispatch()
+  const { pathname } = useLocation()
 
   // Selector
   const auth = useSelector(({ auth }: Store) => auth)
   const error = useSelector(({ blog }: Store) => blog.error)
 
+  //FIXME: Refactor this using routeMatch function
+  const pathsWithoutSidebar = pathname.includes('/post/')
   const loggedInUser = auth.authToken
+  const showSideBar = !!loggedInUser && !pathsWithoutSidebar
 
   useEffect(() => {
     if (auth.authToken && !error) {
@@ -29,7 +33,7 @@ const App: React.FC = () => {
 
   return (
     <div className='App'>
-      <Layout history={history} hasSidebar={!!loggedInUser}>
+      <Layout history={history} hasSidebar={showSideBar}>
         {routes()}
       </Layout>
     </div>

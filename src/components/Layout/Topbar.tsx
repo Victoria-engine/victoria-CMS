@@ -16,6 +16,8 @@ const Topbar: React.FC<Props> = ({ actions, title }) => (
             disabled={tab.isDisabled}
             isLoading={tab.isLoading}
             appearance={tab.appearance}
+            intent={tab.intent}
+            onClick={tab.onClick}
           >
             {tab.label}
           </Button>
