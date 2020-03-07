@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { PostsProps as Props, Store } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
 import { useSelector } from 'react-redux'
@@ -10,6 +10,10 @@ import classes from './styles.module.scss'
  * Posts list screen
  */
 const Posts: React.FC<Props> = () => {
+
+  useEffect(() => {
+    // getPosts...
+  })
 
   const blogReducer = useSelector(({ blog }: Store) => blog)
   const blogData = blogReducer.blog

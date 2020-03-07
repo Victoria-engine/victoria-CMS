@@ -13,6 +13,10 @@ export const BLOG_ACTION_TYPES = {
   SAVE_POST: 'Blog/SAVE_POST',
   SAVE_POST_SUCCESS: 'Blog/SAVE_POST_SUCCESS',
   SAVE_POST_ERROR: 'Blog/SAVE_POST_ERROR',
+
+  CREATE_POST: 'Blog/CREATE_POST',
+  CREATE_POST_SUCCESS: 'Blog/CREATE_POST_SUCCESS',
+  CREATE_POST_ERROR: 'Blog/CREATE_POST_ERROR',
 }
 
 const initialState: BlogStore = {
@@ -44,8 +48,9 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         break
       case BLOG_ACTION_TYPES.GET_USER_DATA_SUCCESS: 
         draft.working = false
-        draft.blog = payload.blog[0]
+        draft.blog = payload.blog
         draft.user = payload.user
+        draft.blog.posts = payload.posts
         break
 
       case BLOG_ACTION_TYPES.GET_POST_BY_ID_ERROR:
@@ -116,6 +121,22 @@ export const savePostSuccess = (payload: $TS_FIXME) => ({
 })
 export const savePostError = (error: Error) => ({
   type: BLOG_ACTION_TYPES.SAVE_POST_ERROR,
+  error,
+})
+
+/**
+ * Create post
+ */
+export const createPost = (payload: SavePostPayload) => ({
+  type: BLOG_ACTION_TYPES.CREATE_POST,
+  ...payload,
+})
+export const createPostSuccess = (payload: $TS_FIXME) => ({
+  type: BLOG_ACTION_TYPES.CREATE_POST_SUCCESS,
+  payload,
+})
+export const createPostError = (error: Error) => ({
+  type: BLOG_ACTION_TYPES.CREATE_POST_ERROR,
   error,
 })
 

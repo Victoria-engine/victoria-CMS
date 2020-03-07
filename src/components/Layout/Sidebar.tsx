@@ -15,6 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem }) => {
           <img src={logoImage} alt='victoria logo' className={classes.logo}>
           </img>
         </Link>
+        <p>BLOG NAME</p>
 
         {tabs.map(tab => {
           return (

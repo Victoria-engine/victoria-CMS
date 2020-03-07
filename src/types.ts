@@ -71,13 +71,13 @@ export type BlogPost = {
   _id: string,
   html: string,
   title: string,
-  slug: string,
   excerpt: string,
   visibility: 'public' | 'private' | 'not-listed',
   reading_time: number,
   author: string,
   createdAt: string,
-  updatedAt: string
+  updatedAt: string,
+  description?: string,
 }
 
 export type BlogData = {
@@ -123,6 +123,7 @@ export interface LoginUserSuccessPayload {
 export interface GetUserDataSuccess {
   blog: BlogData,
   user: UserData,
+  posts: BlogPost[],
 }
 
 export interface PostLinkProps {
@@ -144,7 +145,7 @@ export type GetPostByIDSuccessPayload = BlogPost
 export interface SavePostPayload {
   title: string,
   html: string,
-  description: string,
+  description?: string,
   visibility: BlogPost['visibility'],
-  slug: string,
+  id?: string,
 }
