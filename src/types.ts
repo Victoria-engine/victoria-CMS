@@ -149,3 +149,8 @@ export interface SavePostPayload {
   visibility: BlogPost['visibility'],
   id?: string,
 }
+
+export interface LoginSignInSwitcherProps {
+  isLoginActive: boolean,
+  onChange: any,
+}

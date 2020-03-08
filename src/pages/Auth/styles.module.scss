@@ -1,0 +1,106 @@
+@import "../../styles/colors.scss";
+
+.loginContainer {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+
+  .forms {
+    order: 1;
+    background-color: #ffffff;
+    width: 35%;
+
+    .form {
+      padding-top: 100px;
+      width: 70%;
+      margin: auto;
+      text-align: left;
+
+      img {
+        width: 50%;
+        margin-bottom: 50px;
+      }
+    }
+  }
+
+  .info {
+    position: relative;
+    order: 2;
+    flex: 1;
+    color: #ffffff;
+    background-color: $primary-color;
+    text-align: left;
+
+    .infoContent {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 60%;      
+
+      img {
+        width: 100%;
+      }
+
+      .textContainer {
+        display: flex;
+        flex-flow: column;
+        margin-left: 20px;
+
+        .mainText {
+          width: 100%;
+          font-size: 30px;
+          font-weight: bold;
+        }
+        .secondaryText {
+          width: 100%;
+          font-size: 16px;
+          margin: 0px;
+        }
+      }
+    }
+  }
+
+  .bottomActions {
+    display: flex;
+    flex-flow: column;
+
+    button {
+      width: 70px;
+    }
+  }
+}
+
+.loginSignInSwitcher {
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 140px;
+
+  .activeElem {
+    color: #333333;
+    font-weight: bolder;
+    transition: 0.3s all ease-in;
+  }
+  .noneActive {
+    color: $grey-light;
+    font-weight: 300;
+    font-size: 14px;
+    transition: 0.2s all ease-in;
+  }
+}
+
+.forgotPwText {
+  color: $grey-light;
+  font-weight: 300;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding-bottom: 30px;
+}

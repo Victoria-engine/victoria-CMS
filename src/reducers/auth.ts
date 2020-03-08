@@ -8,6 +8,10 @@ export const AUTH_ACTION_TYPES = {
   LOGIN_USER_SUCCESS: 'Auth/LOGIN_USER_SUCCESS',
   LOGIN_USER_ERROR: 'Auth/LOGIN_USER_ERROR',
 
+  REGISTER_USER: 'Auth/REGISTER_USER',
+  REGISTER_USER_SUCCESS: 'Auth/REGISTER_USER_SUCCESS',
+  REGISTER_USER_ERROR: 'Auth/REGISTER_USER_ERROR',
+
   LOGOUT_USER: 'Auth/LOGOUT_USER',
 }
 
@@ -66,6 +70,26 @@ export const loginUserSuccess = (payload: LoginUserSuccessPayload) => {
 }
 export const loginUserError = (error: Error) => ({
   type: AUTH_ACTION_TYPES.LOGIN_USER_ERROR,
+  error,
+})
+
+/**
+ * Register user action
+ */
+export const registerUser = (payload: LoginserPayload) => ({
+  type: AUTH_ACTION_TYPES.REGISTER_USER,
+  payload,
+})
+export const registerUserSuccess = (payload: LoginUserSuccessPayload) => {
+  setCookie(ACCESS_TOKEN, payload.access_token)
+
+  return {
+    type: AUTH_ACTION_TYPES.REGISTER_USER_SUCCESS,
+    payload,
+  }
+}
+export const registerUserError = (error: Error) => ({
+  type: AUTH_ACTION_TYPES.REGISTER_USER_ERROR,
   error,
 })
 
