@@ -13,6 +13,7 @@ import CheckList from '@editorjs/checklist'
 import Delimiter from '@editorjs/delimiter'
 import InlineCode from '@editorjs/inline-code'
 import SimpleImage from '@editorjs/editorjs'
+import { BlogPost } from '../../types'
 
 export const EDITOR_JS_TOOLS = {
   embed: Embed,
@@ -76,4 +77,38 @@ export const convertCleanDataToHTML = (data: any) => {
   })
 
   return html
+}
+
+export const INITIAL_EDITOR_DATA = {
+  time: 1556098174501,
+  blocks: [
+    {
+      type: "header",
+      data: {
+        text: getRandomQuote(),
+        level: 2
+      }
+    },
+    {
+      type: "paragraph",
+      data: {
+        text:
+          "Pro tip: Press TAB for more commands when writing."
+      }
+    }
+  ]
+}
+
+export const EMPTY_POST: BlogPost = {
+  _id: '',
+  html: JSON.stringify(INITIAL_EDITOR_DATA),
+  visibility: 'private',
+  title: '',
+  tags: [],
+  author: '',
+  createdAt: '',
+  excerpt: '',
+  reading_time: 0,
+  updatedAt: '',
+  description: '',
 }
