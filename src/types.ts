@@ -43,6 +43,7 @@ export type TabbarActionItem = {
 export interface SidebarProps {
   tabs: TabbarActionItem[],
   activeItem: History['location']['pathname'],
+  title: string,
 }
 
 export interface TopbarProps {
@@ -53,6 +54,7 @@ export interface TopbarProps {
 export interface LayoutProps {
   history: History,
   hasSidebar: boolean,
+  blog: BlogStore['blog'],
 }
 
 export interface AppStore {

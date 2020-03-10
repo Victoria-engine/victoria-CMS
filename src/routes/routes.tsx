@@ -4,7 +4,7 @@ import { RouteProps, Route, Switch } from 'react-router'
 // Pages
 import Posts from '../pages/Posts'
 import PostEdit, { PostCreate } from '../pages/PostEdit'
-import CreatePost from '../pages/CreatePost'
+import CreatePost from '../pages/Drafts'
 import Settings from '../pages/Settings'
 import Login from '../pages/Auth'
 import Tutorial from '../pages/Tutorial'

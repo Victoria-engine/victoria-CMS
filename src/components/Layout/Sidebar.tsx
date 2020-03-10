@@ -6,7 +6,7 @@ import { Icon } from 'evergreen-ui'
 import { NavLink, Link } from 'react-router-dom'
 import logoImage from '../../assets/logo.png'
 
-const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem }) => {
+const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem , title }) => {
   return (
     <div className={classes.sidebar}>
       <ul>
@@ -15,7 +15,8 @@ const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem }) => {
           <img src={logoImage} alt='victoria logo' className={classes.logo}>
           </img>
         </Link>
-        <p>BLOG NAME</p>
+
+        <p>{title}</p>
 
         {tabs.map(tab => {
           return (

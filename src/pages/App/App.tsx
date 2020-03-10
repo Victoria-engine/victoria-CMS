@@ -14,6 +14,7 @@ const App: React.FC = () => {
 
   // Selector
   const auth = useSelector(({ auth }: Store) => auth)
+  const blog = useSelector(({ blog }: Store) => blog.blog)
   const error = useSelector(({ blog }: Store) => blog.error)
 
   //FIXME: Refactor this using routeMatch function
@@ -33,7 +34,7 @@ const App: React.FC = () => {
 
   return (
     <div className='App'>
-      <Layout history={history} hasSidebar={showSideBar}>
+      <Layout history={history} hasSidebar={showSideBar} blog={blog}>
         {routes()}
       </Layout>
     </div>

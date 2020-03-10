@@ -1,3 +1,28 @@
 #editorjs {
   text-align: start;
 }
+
+.mainWrapper {
+  width: 70%;
+  margin: auto;
+}
+
+.borderlessInput {
+  box-shadow: none;
+  text-align: left;
+  width: 100%;
+  font-size: 16px;
+  margin-bottom: 20px;
+
+  &:focus, &:active {
+    box-shadow: none;
+  }
+  &:hover {
+    background-color: #f8f8f8;
+  }
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}

@@ -3,11 +3,13 @@ import { PostEditProps as Props, Store } from '../../types'
 import { useLocation, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Topbar from '../../components/Layout/Topbar'
-import { Spinner, TextInputField } from 'evergreen-ui'
+import { Spinner, TextInput } from 'evergreen-ui'
 import { getPostByID, savePost } from '../../reducers/blog'
 import Editor from './Editor'
 import { EDITOR_JS_TOOLS } from './editorTools'
 import { OutputData } from '@editorjs/editorjs'
+import classes from './styles.module.scss'
+import cx from 'classnames'
 
 export const getPostIDFromPathname = (pathname: string) => {
   const arr = pathname.split('/')
@@ -85,25 +87,34 @@ const PostEdit: React.FC<Props> = () => {
         { label: 'Delete', onClick: () => { }, appearance: 'minimal', iconName: 'delete', intent: 'danger', isDisabled: true },
       ]} />
 
-      <TextInputField
-        name='title'
-        onChange={onPostDataChange}
-        value={postData.title}
-        label='Title'
-      />
+      <div className={classes.mainWrapper}>
 
-      <TextInputField
-        name='excerpt'
-        onChange={onPostDataChange}
-        value={postData.excerpt}
-        label='Description'
-      />
+        <TextInput
+          name='title'
+          onChange={onPostDataChange}
+          value={postData.title}
+          className={cx(classes.borderlessInput, classes.title)}
+          isInvalid={postData.title.length <= 0}
+          placeholder='Title'
+        />
 
-      {fetchSuccess && <Editor
-        tools={EDITOR_JS_TOOLS as any}
-        data={postData.html}
-        onData={setEditorData}
-      />}
+        <TextInput
+          name='excerpt'
+          onChange={onPostDataChange}
+          value={postData.excerpt}
+          className={classes.borderlessInput}
+          isInvalid={postData.excerpt.length <= 0}
+          placeholder='Description'
+        />
+
+        {fetchSuccess && <Editor
+          tools={EDITOR_JS_TOOLS as any}
+          data={postData.html}
+          onData={setEditorData}
+          autofocus
+        />}
+
+      </div>
 
     </article>
   )

@@ -6,16 +6,17 @@ import { LayoutProps } from '../../types'
 /**
  * Layout component
  */
-const Layout: React.FC<LayoutProps> = ({ children, history, hasSidebar }) => {
+const Layout: React.FC<LayoutProps> = ({ children, history, hasSidebar, blog }) => {
   return (
     <div className={classes.layoutContainer}>
       {hasSidebar && <Sidebar
         tabs={[
-          { iconName: 'edit', label: 'Create new post', to: '/new' },
+          { iconName: 'edit', label: 'Drafts', to: '/new' },
           { iconName: 'applications', label: 'Posts', to: '/' },
           { iconName: 'settings', label: 'Settings', to: '/settings' },
         ]}
         activeItem={history.location.pathname}
+        title={blog.name}
       />}
 
       <div className={classes.content}>
