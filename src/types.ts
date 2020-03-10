@@ -110,6 +110,7 @@ export interface BlogStore {
   },
   user: UserData,
   error: string | null,
+  hasSavedSuccess: boolean,
 }
 
 export interface LoginserPayload{

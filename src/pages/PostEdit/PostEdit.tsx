@@ -6,7 +6,7 @@ import Topbar from '../../components/Layout/Topbar'
 import { Spinner, TextInput } from 'evergreen-ui'
 import { getPostByID, savePost } from '../../reducers/blog'
 import Editor from './Editor'
-import { EDITOR_JS_TOOLS } from './editorTools'
+import { EDITOR_JS_TOOLS, isNameValidField } from './editorTools'
 import { OutputData } from '@editorjs/editorjs'
 import classes from './styles.module.scss'
 import cx from 'classnames'
@@ -22,7 +22,10 @@ export const getPostIDFromPathname = (pathname: string) => {
  */
 const PostEdit: React.FC<Props> = () => {
   // Selectors
-  const blog = useSelector(({ blog }: Store) => blog.blog)
+  const blogReducer = useSelector(({ blog }: Store) => blog)
+
+  const blog = blogReducer.blog
+  const hasSavedSuccess = blogReducer.hasSavedSuccess
 
   const { pathname } = useLocation()
   const postID = getPostIDFromPathname(pathname)
@@ -32,6 +35,13 @@ const PostEdit: React.FC<Props> = () => {
   const [editorData, setEditorData] = useState<OutputData>()
   const [postData, setPostData] = useState(selectedPost)
   const [fetchSuccess, setFetchSuccess] = useState(false)
+  const [hasChangesToSave, setHasChangesToSave] = useState(false)
+  const [hasFieldChanged, setHasFieldChanged] = useState({
+    title: false,
+    excerpt: false,
+    editor: false,
+  })
+
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -41,6 +51,7 @@ const PostEdit: React.FC<Props> = () => {
     if (!postData) return
 
     const { visibility, title, excerpt } = postData
+
     dispatch(savePost({
       id: selectedPost?._id,
       //@ts-ignore
@@ -60,6 +71,16 @@ const PostEdit: React.FC<Props> = () => {
       ...postData,
       [name]: value,
     })
+
+    if (!isNameValidField(name)) return
+    if (!hasFieldChanged[name]) setHasFieldChanged({...hasFieldChanged, [name]: true})
+    if (!hasChangesToSave) setHasChangesToSave(true)
+  }
+
+  const onEditorDataChange = (value: OutputData) => {
+    setEditorData(value)
+    
+    if (!hasChangesToSave) setHasChangesToSave(true)
   }
 
   useEffect(() => {
@@ -76,13 +97,18 @@ const PostEdit: React.FC<Props> = () => {
 
   }, [selectedPost])
 
+  useEffect(() => {
+    hasSavedSuccess && setHasChangesToSave(false)
+  }, [hasSavedSuccess])
+
+
   if (!selectedPost || !postData) return <Spinner />
 
   return (
     <article>
       <Topbar title={postData.title} actions={[
         { label: 'Exit', onClick: () => history.push('/'), appearance: 'primary', iconName: 'step-backward', intent: 'none' },
-        { label: 'Save', onClick: onSaveHandler, appearance: 'primary', iconName: 'saved', intent: 'success' },
+        { label: 'Save', onClick: onSaveHandler, appearance: 'primary', iconName: 'saved', intent: 'success', isDisabled: !hasChangesToSave },
         { label: 'Publish', onClick: () => { }, appearance: 'primary', iconName: 'publish-function', intent: 'warning', isDisabled: true },
         { label: 'Delete', onClick: () => { }, appearance: 'minimal', iconName: 'delete', intent: 'danger', isDisabled: true },
       ]} />
@@ -110,7 +136,7 @@ const PostEdit: React.FC<Props> = () => {
         {fetchSuccess && <Editor
           tools={EDITOR_JS_TOOLS as any}
           data={postData.html}
-          onData={setEditorData}
+          onData={onEditorDataChange}
           autofocus
         />}
 

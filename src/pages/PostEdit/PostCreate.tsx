@@ -1,24 +1,22 @@
-import React, { useState } from 'react'
-import { PostEditProps as Props } from '../../types'
+import React, { useState, useEffect } from 'react'
+import { PostEditProps as Props, Store } from '../../types'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Topbar from '../../components/Layout/Topbar'
 import { TextInputField } from 'evergreen-ui'
 import { createPost } from '../../reducers/blog'
 import Editor from './Editor'
-import { EDITOR_JS_TOOLS, EMPTY_POST, INITIAL_EDITOR_DATA } from './editorTools'
+import { EDITOR_JS_TOOLS, EMPTY_POST, INITIAL_EDITOR_DATA, isNameValidField } from './editorTools'
 import { OutputData } from '@editorjs/editorjs'
 import classes from './styles.module.scss'
 import cx from 'classnames'
 
-function isNameValidField (name: string): name is 'title' | 'excerpt' | 'editor' {
-  return ['title', 'excerpt', 'editor'].includes(name)
-}
 
 /**
  * Post manipulation screen
  */
 const PostEdit: React.FC<Props> = () => {
+  // Local state
   const [editorData, setEditorData] = useState<OutputData>(INITIAL_EDITOR_DATA)
   const [postData, setPostData] = useState({ ...EMPTY_POST })
   const [hasChangesToSave, setHasChangesToSave] = useState(false)
@@ -30,6 +28,9 @@ const PostEdit: React.FC<Props> = () => {
 
   const dispatch = useDispatch()
   const history = useHistory()
+
+  // Selectors
+  const hasSavedSuccess = useSelector(({ blog }: Store) => blog.hasSavedSuccess)
 
   const onCreatePost = () => {
     const { visibility, title, excerpt } = postData
@@ -46,6 +47,7 @@ const PostEdit: React.FC<Props> = () => {
 
     if (!isNameValidField(name)) return
     if (!hasFieldChanged[name]) setHasFieldChanged({...hasFieldChanged, [name]: true})
+    if (!hasChangesToSave) setHasChangesToSave(true)
   }
 
   const onEditorDataChange = (value: OutputData) => {
@@ -53,6 +55,10 @@ const PostEdit: React.FC<Props> = () => {
     
     if (!hasChangesToSave) setHasChangesToSave(true)
   }
+
+  useEffect(() => {
+    hasSavedSuccess && setHasChangesToSave(false)
+  }, [hasSavedSuccess])
 
   return (
     <article>

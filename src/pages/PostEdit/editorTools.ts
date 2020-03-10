@@ -113,3 +113,6 @@ export const EMPTY_POST: BlogPost = {
   description: '',
 }
 
+export function isNameValidField (name: string): name is 'title' | 'excerpt' | 'editor' {
+  return ['title', 'excerpt', 'editor'].includes(name)
+}

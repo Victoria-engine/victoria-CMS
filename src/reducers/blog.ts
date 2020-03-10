@@ -1,5 +1,6 @@
 import produce from 'immer'
 import { ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME } from '../types'
+import { toaster } from 'evergreen-ui'
 
 export const BLOG_ACTION_TYPES = {
   GET_USER_DATA: 'Blog/GET_USER_DATA',
@@ -35,6 +36,7 @@ const initialState: BlogStore = {
     createdAt: '',
   },
   error: null,
+  hasSavedSuccess: false,
 }
 
 const blogReducer = (state = initialState, { payload, type, error }: ReduxAction) => {
@@ -43,10 +45,10 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 
     switch (actionType) {
       case BLOG_ACTION_TYPES.GET_POST_BY_ID:
-      case BLOG_ACTION_TYPES.GET_USER_DATA: 
+      case BLOG_ACTION_TYPES.GET_USER_DATA:
         draft.working = true
         break
-      case BLOG_ACTION_TYPES.GET_USER_DATA_SUCCESS: 
+      case BLOG_ACTION_TYPES.GET_USER_DATA_SUCCESS:
         draft.working = false
         draft.blog = payload.blog
         draft.user = payload.user
@@ -54,7 +56,7 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         break
 
       case BLOG_ACTION_TYPES.GET_POST_BY_ID_ERROR:
-      case BLOG_ACTION_TYPES.GET_USER_DATA_ERROR: 
+      case BLOG_ACTION_TYPES.GET_USER_DATA_ERROR:
         draft.working = false
         draft.error = error.message
         break
@@ -71,6 +73,22 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         }
 
         break
+
+      case BLOG_ACTION_TYPES.CREATE_POST:
+      case BLOG_ACTION_TYPES.SAVE_POST: {
+        draft.hasSavedSuccess = false
+        break
+      }
+      case BLOG_ACTION_TYPES.CREATE_POST_SUCCESS:
+      case BLOG_ACTION_TYPES.SAVE_POST_SUCCESS: {
+        draft.hasSavedSuccess = true
+        break
+      }
+      case BLOG_ACTION_TYPES.CREATE_POST_ERROR:
+      case BLOG_ACTION_TYPES.SAVE_POST_ERROR: {
+        draft.hasSavedSuccess = false
+        break
+      }
 
       default: return state
     }
@@ -115,14 +133,22 @@ export const savePost = (payload: SavePostPayload) => ({
   type: BLOG_ACTION_TYPES.SAVE_POST,
   ...payload,
 })
-export const savePostSuccess = (payload: $TS_FIXME) => ({
-  type: BLOG_ACTION_TYPES.SAVE_POST_SUCCESS,
-  payload,
-})
-export const savePostError = (error: Error) => ({
-  type: BLOG_ACTION_TYPES.SAVE_POST_ERROR,
-  error,
-})
+export const savePostSuccess = (payload: $TS_FIXME) => {
+  toaster.success('Post saved with success!')
+
+  return {
+    type: BLOG_ACTION_TYPES.SAVE_POST_SUCCESS,
+    payload,
+  }
+}
+export const savePostError = (error: Error) => {
+  toaster.danger(error.message || 'Couldn\'t save the post, please check if eveything is filled correctly.')
+
+  return {
+    type: BLOG_ACTION_TYPES.SAVE_POST_ERROR,
+    error,
+  }
+}
 
 /**
  * Create post
@@ -131,13 +157,21 @@ export const createPost = (payload: SavePostPayload) => ({
   type: BLOG_ACTION_TYPES.CREATE_POST,
   ...payload,
 })
-export const createPostSuccess = (payload: $TS_FIXME) => ({
-  type: BLOG_ACTION_TYPES.CREATE_POST_SUCCESS,
-  payload,
-})
-export const createPostError = (error: Error) => ({
-  type: BLOG_ACTION_TYPES.CREATE_POST_ERROR,
-  error,
-})
+export const createPostSuccess = (payload: $TS_FIXME) => {
+  toaster.success('Post created with success!')
+
+  return {
+    type: BLOG_ACTION_TYPES.CREATE_POST_SUCCESS,
+    payload,
+  }
+}
+export const createPostError = (error: Error) => {
+  toaster.danger(error.message || 'Couldn\'t save the post, please check if eveything is filled correctly.')
+
+  return {
+    type: BLOG_ACTION_TYPES.CREATE_POST_ERROR,
+    error,
+  }
+}
 
 export default blogReducer
