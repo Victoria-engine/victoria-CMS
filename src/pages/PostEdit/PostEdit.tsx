@@ -19,28 +19,30 @@ export const getPostIDFromPathname = (pathname: string) => {
  * Post manipulation screen
  */
 const PostEdit: React.FC<Props> = () => {
-  const [editorData, setEditorData] = useState<OutputData>()
-  const [postData, setPostData] = useState()
-  const [fetchSuccess, setFetchSuccess] = useState(false)
-
-  const { pathname } = useLocation()
-  const dispatch = useDispatch()
-  const history = useHistory()
-
-  const postID = getPostIDFromPathname(pathname)
-
   // Selectors
   const blog = useSelector(({ blog }: Store) => blog.blog)
 
+  const { pathname } = useLocation()
+  const postID = getPostIDFromPathname(pathname)
   const selectedPost = (blog.posts && blog.posts.find(post => post._id === postID))
+
+  // Locale State
+  const [editorData, setEditorData] = useState<OutputData>()
+  const [postData, setPostData] = useState(selectedPost)
+  const [fetchSuccess, setFetchSuccess] = useState(false)
+  const dispatch = useDispatch()
+  const history = useHistory()
+
   const isCreating = postID === 'new'
 
   const onSaveHandler = () => {
-    const { visibility,title, excerpt } = postData
+    if (!postData) return
+
+    const { visibility, title, excerpt } = postData
     dispatch(savePost({
       id: selectedPost?._id,
       //@ts-ignore
-      html:editorData || selectedPost?.html,
+      html: editorData || selectedPost?.html,
       visibility,
       title,
       description: excerpt,
@@ -48,6 +50,8 @@ const PostEdit: React.FC<Props> = () => {
   }
 
   const onPostDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!postData) return
+
     const { target: { value, name } } = event
 
     setPostData({
@@ -65,10 +69,7 @@ const PostEdit: React.FC<Props> = () => {
 
   useEffect(() => {
     // Sync Props with state
-    selectedPost && setPostData({
-      ...selectedPost,
-      html: JSON.parse(selectedPost.html),
-    })
+    selectedPost && setPostData(selectedPost)
     setFetchSuccess(true)
 
   }, [selectedPost])
@@ -79,7 +80,7 @@ const PostEdit: React.FC<Props> = () => {
     <article>
       <Topbar title={postData.title} actions={[
         { label: 'Exit', onClick: () => history.push('/'), appearance: 'primary', iconName: 'step-backward', intent: 'none' },
-        { label: 'Save', onClick: onSaveHandler, appearance: 'primary', iconName: 'saved', intent: 'success'},
+        { label: 'Save', onClick: onSaveHandler, appearance: 'primary', iconName: 'saved', intent: 'success' },
         { label: 'Publish', onClick: () => { }, appearance: 'primary', iconName: 'publish-function', intent: 'warning', isDisabled: true },
         { label: 'Delete', onClick: () => { }, appearance: 'minimal', iconName: 'delete', intent: 'danger', isDisabled: true },
       ]} />
@@ -98,7 +99,7 @@ const PostEdit: React.FC<Props> = () => {
         label='Description'
       />
 
-        {fetchSuccess && <Editor
+      {fetchSuccess && <Editor
         tools={EDITOR_JS_TOOLS as any}
         data={postData.html}
         onData={setEditorData}

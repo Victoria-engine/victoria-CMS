@@ -190,7 +190,7 @@ const Login: React.FC = () => {
           <img src={LogoWhite} alt='Victoria logo white' />
 
           <div className={classes.textContainer}>
-            <p className={classes.mainText}>Victoria is a public and open source blog engine, headless CMS and static blog generator.</p>
+            <p className={classes.mainText}>Victoria is a free and open source blog engine, headless CMS and static blog generator.</p>
             <p className={classes.secondaryText}>Create and Publish all of you content in one place.</p>
           </div>
         </div>

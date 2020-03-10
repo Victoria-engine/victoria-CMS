@@ -1,5 +1,6 @@
 .postsContainer {
   padding: 0;
+  height: 100vh;
 }
 
 .postsList {
@@ -8,4 +9,6 @@
   align-items: flex-start;
   list-style: none;
   padding: 0;
+  height: 80%;
+  overflow-y: auto;
 }

@@ -47,7 +47,13 @@ function* createPostWorker({ visibility, title, slug, html, description }: SaveP
   const { data, error } = yield call(request, requestUrl, {
     headers,
     method: 'POST',
-    body: JSON.stringify({ visibility, title, slug, html, description }),
+    body: JSON.stringify({ 
+      visibility,
+      title,
+      slug,
+      html,
+      description
+    }),
   })
 
   if (error) {
@@ -63,7 +69,7 @@ function* savePostWorker({ visibility, title, slug, html, description, id }: Sav
   const { data, error } = yield call(request, requestUrl, {
     headers,
     method: 'PUT',
-    body: JSON.stringify({ id, visibility, title, slug, html: JSON.stringify(html), description }),
+    body: JSON.stringify({ id, visibility, title, slug, html, description }),
   })
 
   if (error) {

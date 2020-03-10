@@ -21,7 +21,7 @@ const PostEdit: React.FC<Props> = () => {
 
   const onCreatePost = () => {
     const { visibility, title, excerpt } = postData
-    dispatch(createPost({ html: postData as any, visibility, title, description: excerpt }))
+    dispatch(createPost({ html: editorData as any, visibility, title, description: excerpt }))
   }
 
   const onPostDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {

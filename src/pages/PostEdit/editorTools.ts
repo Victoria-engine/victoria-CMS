@@ -101,7 +101,7 @@ export const INITIAL_EDITOR_DATA = {
 
 export const EMPTY_POST: BlogPost = {
   _id: '',
-  html: JSON.stringify(INITIAL_EDITOR_DATA),
+  html: INITIAL_EDITOR_DATA,
   visibility: 'private',
   title: '',
   tags: [],
@@ -112,3 +112,4 @@ export const EMPTY_POST: BlogPost = {
   updatedAt: '',
   description: '',
 }
+

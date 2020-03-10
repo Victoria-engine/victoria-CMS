@@ -1,6 +1,7 @@
 import { IconName, ButtonAppearance, IntentTypes } from 'evergreen-ui'
 import { History } from 'history'
 import { RouteComponentProps } from 'react-router-dom'
+import { OutputData } from '@editorjs/editorjs'
 
 export type ValueOf<T> = T[keyof T]
 
@@ -69,7 +70,7 @@ export interface AuthStore {
 export type BlogPost = {
   tags: string[],
   _id: string,
-  html: string,
+  html: OutputData,
   title: string,
   excerpt: string,
   visibility: 'public' | 'private' | 'not-listed',
@@ -144,7 +145,7 @@ export type GetPostByIDSuccessPayload = BlogPost
 
 export interface SavePostPayload {
   title: string,
-  html: string,
+  html: OutputData,
   description?: string,
   visibility: BlogPost['visibility'],
   id?: string,
