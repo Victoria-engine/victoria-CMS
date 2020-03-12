@@ -113,6 +113,19 @@ export interface BlogStore {
   hasSavedSuccess: boolean,
 }
 
+export interface RegisterUserPayload{
+  credentials: {
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+  }
+}
+export interface RegisterUserSuccessPayload {
+  access_token: string,
+  blogID: string,
+}
+
 export interface LoginserPayload{
   credentials: {
     email: string,
@@ -123,6 +136,7 @@ export interface LoginUserSuccessPayload {
   access_token: string,
   blogID: string,
 }
+
 
 export interface GetUserDataSuccess {
   blog: BlogData,

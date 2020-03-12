@@ -1,7 +1,8 @@
 import produce from 'immer'
-import { ReduxAction, AuthStore, ValueOf, LoginUserSuccessPayload, LoginserPayload } from '../types'
+import { ReduxAction, AuthStore, ValueOf, LoginUserSuccessPayload, LoginserPayload, RegisterUserPayload } from '../types'
 import { setCookie, getCookie, removeCookie } from '../utils/cookies'
 import { ACCESS_TOKEN } from '../constants'
+import { toaster } from 'evergreen-ui'
 
 export const AUTH_ACTION_TYPES = {
   LOGIN_USER: 'Auth/LOGIN_USER',
@@ -37,6 +38,7 @@ const authReducer = (state = initialState, { payload, type, error }: ReduxAction
         draft.authToken = payload['access_token']
         draft.success = true
         break
+      case AUTH_ACTION_TYPES.REGISTER_USER_ERROR:
       case AUTH_ACTION_TYPES.LOGIN_USER_ERROR:
         draft.working = false
         draft.error = error.message
@@ -76,22 +78,24 @@ export const loginUserError = (error: Error) => ({
 /**
  * Register user action
  */
-export const registerUser = (payload: LoginserPayload) => ({
+export const registerUser = (payload: RegisterUserPayload) => ({
   type: AUTH_ACTION_TYPES.REGISTER_USER,
   payload,
 })
 export const registerUserSuccess = (payload: LoginUserSuccessPayload) => {
-  setCookie(ACCESS_TOKEN, payload.access_token)
-
   return {
     type: AUTH_ACTION_TYPES.REGISTER_USER_SUCCESS,
     payload,
   }
 }
-export const registerUserError = (error: Error) => ({
-  type: AUTH_ACTION_TYPES.REGISTER_USER_ERROR,
-  error,
-})
+export const registerUserError = (error: Error) => {
+  toaster.danger(error.message || 'Register failed, please double check if all fields are type corretly')
+
+  return {
+    type: AUTH_ACTION_TYPES.REGISTER_USER_ERROR,
+    error,
+  }
+}
 
 /**
  * Logout user

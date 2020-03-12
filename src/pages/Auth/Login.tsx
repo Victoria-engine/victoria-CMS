@@ -22,6 +22,16 @@ const Login: React.FC = () => {
       isValid: true,
       error: null,
     },
+    firstName: {
+      value: '',
+      isValid: true,
+      error: null,
+    },
+    lastName: {
+      value: '',
+      isValid: true,
+      error: null,
+    },
   })
   const [isLoginActive, setLoginActive] = useState(true)
 
@@ -45,7 +55,7 @@ const Login: React.FC = () => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    const _name = name as 'email' | 'password'
+    const _name = name as 'email' | 'password' | 'firstName' | 'lastName'
 
     let isValid = true
     let errorMsg: string | null = null
@@ -62,6 +72,20 @@ const Login: React.FC = () => {
         if (!value) {
           isValid = false
           errorMsg = 'Password is required!'
+        }
+        break
+      }
+      case 'lastName': {
+        if (!value) {
+          isValid = false
+          errorMsg = 'Last name is required!'
+        }
+        break
+      }
+      case 'firstName': {
+        if (!value) {
+          isValid = false
+          errorMsg = 'First name is required!'
         }
         break
       }
@@ -88,12 +112,14 @@ const Login: React.FC = () => {
       credentials: {
         email: formData.email.value,
         password: formData.password.value,
+        firstName: formData.firstName.value,
+        lastName: formData.lastName.value,
       }
     }))
   }
 
   const renderLoginForm = () => (
-    <div>
+    <form>
       <TextInputField
         type='email'
         name='email'
@@ -118,53 +144,53 @@ const Login: React.FC = () => {
         <span className={classes.forgotPwText}>Don't remember your password ?</span>
         <Button onClick={onLoginClick} intent='success' appearance='primary'>Login</Button>
       </div>
-    </div>
+    </form>
   )
 
   const renderRegisterForm = () => (
     <div>
-      <div>
+      <form>
         <TextInputField
           type='text'
-          name='lastName'
-          value={''}
-          isInvalid={false}
+          name='firstName'
+          value={formData.firstName.value}
+          isInvalid={!formData.firstName.isValid}
           required
           label="First Name"
-          //validationMessage={formData.email.error}
-          //onChange={onChange}
+          validationMessage={formData.firstName.error}
+          onChange={onChange}
         />
         <TextInputField
           type='text'
           name='lastName'
-          value={''}
-          isInvalid={false}
+          value={formData.lastName.value}
+          isInvalid={!formData.lastName.isValid}
           required
           label="Last Name"
-          //validationMessage={formData.email.error}
-          //onChange={onChange}
+          validationMessage={formData.lastName.error}
+          onChange={onChange}
         />
-      </div>
-      <TextInputField
-        type='email'
-        name='email'
-        value={formData.email.value}
-        isInvalid={!formData.email.isValid}
-        required
-        label="Email address"
-        validationMessage={formData.email.error}
-        onChange={onChange}
-      />
-      <TextInputField
-        type='password'
-        name='password'
-        value={formData.password.value}
-        isInvalid={!formData.password.isValid}
-        required
-        label="Password"
-        validationMessage={formData.password.error}
-        onChange={onChange}
-      />
+        <TextInputField
+          type='email'
+          name='email'
+          value={formData.email.value}
+          isInvalid={!formData.email.isValid}
+          required
+          label="Email address"
+          validationMessage={formData.email.error}
+          onChange={onChange}
+        />
+        <TextInputField
+          type='password'
+          name='password'
+          value={formData.password.value}
+          isInvalid={!formData.password.isValid}
+          required
+          label="Password"
+          validationMessage={formData.password.error}
+          onChange={onChange}
+        />
+      </form>
 
       <Button onClick={onRegisterClick} intent='success' appearance='primary'>Register</Button>
     </div>
