@@ -179,3 +179,15 @@ export interface PostsTableProps {
   onSelect: (postID: string) => () => void,
   onSearchChange?: (value: string) => void,
 }
+
+export type StepperStep = {
+  title: string,
+}
+
+export interface StepperProps {
+  steps: StepperStep[],
+  activeStep: number,
+  showNumber?: boolean,
+  
+  onSelect: (step: number) => void,
+}
