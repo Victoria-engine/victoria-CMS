@@ -4,10 +4,13 @@ import classes from './styles.module.scss'
 import { TopbarProps as Props } from '../../types'
 import { Button } from 'evergreen-ui'
 
-const Topbar: React.FC<Props> = ({ actions, title }) => (
+const Topbar: React.FC<Props> = ({ actions, title, description }) => (
   <div className={classes.topbar}>
-    <h2>{title}</h2>
-    
+    <div className={classes.titleDivider}>
+      <h2>{title}</h2>
+      <p className={classes.description}>{description}</p>
+    </div>
+
     <ul>
       {Array.isArray(actions) && actions.map((tab, index) => (
         <li key={`${index}-topbarItem`}>

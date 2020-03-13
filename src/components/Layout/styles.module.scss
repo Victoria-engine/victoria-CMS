@@ -78,8 +78,21 @@
   padding-left: 20px;
   min-height: 75px;
 
-  h2 {
-    font-weight: 600;
+  .titleDivider {
+    display: flex;
+    flex-flow: column;
+    text-align: start;
+
+    h2 {
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+  
+    .description {
+      color: $text-color;
+      font-size: 13px;
+      margin-top: 5px;
+    }
   }
 
   ul {

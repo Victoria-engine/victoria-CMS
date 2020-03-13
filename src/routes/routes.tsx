@@ -4,7 +4,7 @@ import { RouteProps, Route, Switch } from 'react-router'
 // Pages
 import Posts from '../pages/Posts'
 import PostEdit, { PostCreate } from '../pages/PostEdit'
-import CreatePost from '../pages/Drafts'
+import Drafts from '../pages/Drafts'
 import Settings from '../pages/Settings'
 import Login from '../pages/Auth'
 import Tutorial from '../pages/Tutorial'
@@ -18,7 +18,7 @@ const routes: RouteProps[] = [
   { path: '/', component: GateKeeper(Posts), exact: true },
   { path: '/post/new', component: GateKeeper(PostCreate), exact: true },
   { path: '/post/:postID', component: GateKeeper(PostEdit), exact: true },
-  { path: '/new', component: GateKeeper(CreatePost), exact: true },
+  { path: '/drafts', component: GateKeeper(Drafts), exact: true },
   { path: '/settings', component: GateKeeper(Settings), exact: true },
   { path: '/account', component: GateKeeper(Account), exact: true },
   { path: '/login', component: Login, exact: true },

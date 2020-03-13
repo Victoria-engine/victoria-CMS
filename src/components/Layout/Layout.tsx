@@ -11,7 +11,7 @@ const Layout: React.FC<LayoutProps> = ({ children, history, hasSidebar, blog }) 
     <div className={classes.layoutContainer}>
       {hasSidebar && <Sidebar
         tabs={[
-          { iconName: 'edit', label: 'Drafts', to: '/new' },
+          { iconName: 'edit', label: 'Drafts', to: '/drafts' },
           { iconName: 'applications', label: 'Posts', to: '/' },
           { iconName: 'settings', label: 'Settings', to: '/settings' },
         ]}

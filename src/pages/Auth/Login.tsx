@@ -119,7 +119,7 @@ const Login: React.FC = () => {
   }
 
   const renderLoginForm = () => (
-    <form>
+    <div>
       <TextInputField
         type='email'
         name='email'
@@ -144,12 +144,12 @@ const Login: React.FC = () => {
         <span className={classes.forgotPwText}>Don't remember your password ?</span>
         <Button onClick={onLoginClick} intent='success' appearance='primary'>Login</Button>
       </div>
-    </form>
+    </div>
   )
 
   const renderRegisterForm = () => (
     <div>
-      <form>
+      <div>
         <TextInputField
           type='text'
           name='firstName'
@@ -190,7 +190,7 @@ const Login: React.FC = () => {
           validationMessage={formData.password.error}
           onChange={onChange}
         />
-      </form>
+      </div>
 
       <Button onClick={onRegisterClick} intent='success' appearance='primary'>Register</Button>
     </div>

@@ -48,6 +48,7 @@ export interface SidebarProps {
 
 export interface TopbarProps {
   title: string,
+  description?: string,
   actions?: TabbarActionItem[],
 }
 
@@ -171,4 +172,10 @@ export interface SavePostPayload {
 export interface LoginSignInSwitcherProps {
   isLoginActive: boolean,
   onChange: any,
+}
+
+export interface PostsTableProps {
+  posts: BlogPost[],
+  onSelect: (postID: string) => () => void,
+  onSearchChange?: (value: string) => void,
 }
