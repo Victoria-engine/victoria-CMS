@@ -83,6 +83,7 @@ export const registerUser = (payload: RegisterUserPayload) => ({
   payload,
 })
 export const registerUserSuccess = (payload: LoginUserSuccessPayload) => {
+  toaster.success('Your account was successfully created! You can login with it now!')
   return {
     type: AUTH_ACTION_TYPES.REGISTER_USER_SUCCESS,
     payload,

@@ -36,11 +36,12 @@ const Posts: React.FC<Props> = () => {
   }
 
   const onSearchChange = (value: string) => {
-    if (!value) return setPosts(blogData.posts)
+    if (!value) return setPosts(blogData.posts.filter(p => ['public'].includes(p.visibility)))
 
     const searchValue = value.toLocaleLowerCase()
 
-    setPosts(posts.filter(post => post.title.toLocaleLowerCase().includes(searchValue)))
+    setPosts(posts.filter(post =>
+      post.title.toLocaleLowerCase().includes(searchValue) && ['public'].includes(post.visibility)))
   }
 
   if (!blogData || blogReducer.working || !posts) return <Spinner />

@@ -23,7 +23,7 @@ const Account: React.FC = () => {
       <Topbar
         title='Account'
         actions={[
-          { onClick: undefined, appearance: 'primary', label: 'Save', iconName: 'saved' }
+          { onClick: undefined, appearance: 'primary', label: 'Save', iconName: 'saved', isDisabled: true }
         ]}
       />
 
