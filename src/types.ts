@@ -2,6 +2,7 @@ import { IconName, ButtonAppearance, IntentTypes } from 'evergreen-ui'
 import { History } from 'history'
 import { RouteComponentProps } from 'react-router-dom'
 import { OutputData } from '@editorjs/editorjs'
+import { Props as JoyrideProps } from 'react-joyride'
 
 export type ValueOf<T> = T[keyof T]
 
@@ -178,4 +179,13 @@ export interface PostsTableProps {
   posts: BlogPost[],
   onSelect: (postID: string) => () => void,
   onSearchChange?: (value: string) => void,
+  onBoardingID?: string,
+}
+
+export type OnBorderderProps = {
+  steps: JoyrideProps['steps'],
+} & JoyrideProps
+
+export interface GetStepsProps {
+  show: boolean,
 }

@@ -6,6 +6,8 @@ import { Spinner } from 'evergreen-ui'
 import classes from './styles.module.scss'
 import { useHistory } from 'react-router-dom'
 import PostsTable from '../../components/PostsTable/PostsTable'
+import OnBoarder from '../../components/OnBoarder'
+import { getPostsSteps } from '../../components/OnBoarder/steps'
 
 /**
  * Posts list screen
@@ -48,6 +50,11 @@ const Posts: React.FC<Props> = () => {
 
   return (
     <div className={classes.postsContainer}>
+      <OnBoarder 
+        steps={getPostsSteps({ show: true })}
+        run
+        
+      />
       <Topbar
         title='Posts list'
         actions={[
@@ -60,6 +67,7 @@ const Posts: React.FC<Props> = () => {
         posts={posts}
         onSelect={nagivateToPostHandler}
         onSearchChange={onSearchChange}
+        onBoardingID='posts-table'
       />
     </div>
   )

@@ -3,7 +3,11 @@ import React from 'react'
 const Tutorial: React.FC = () => {
   return (
     <div>
-      Welcome !
+      Setup your blog...
+
+      How to install it locally...
+
+      After this page the OnBoarding should run
     </div>
   )
 }

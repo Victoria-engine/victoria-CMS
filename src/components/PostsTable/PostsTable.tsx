@@ -3,7 +3,7 @@ import { Table } from 'evergreen-ui'
 import { PostsTableProps, BlogPost } from '../../types'
 import { getRelativeDate, transformToLocalDate } from '../../utils/dateUtils'
 
-const PostsTable: React.FC<PostsTableProps> = ({ posts, onSelect, onSearchChange }) => {
+const PostsTable: React.FC<PostsTableProps> = ({ posts, onBoardingID, onSelect, onSearchChange, ...props }) => {
 
   const getStatusWording = (status: BlogPost['visibility']) => {
     switch (status) {
@@ -15,7 +15,7 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, onSelect, onSearchChange
   }
 
   return (
-    <Table>
+    <Table {...props} id={onBoardingID}>
       <Table.Head>
         <Table.SearchHeaderCell icon='search' onChange={onSearchChange} />
         <Table.TextHeaderCell>
