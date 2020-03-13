@@ -2,14 +2,19 @@ import React, { useEffect } from 'react'
 import './App.css'
 import routes from '../../routes/routes'
 import Layout from '../../components/Layout'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation, matchPath } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Store } from '../../types'
 import { getUserData } from '../../reducers/blog'
 
+const shouldPathHaveSidebar = (path: string) => {
+  return matchPath(path, ['/welcome', '/post', '/login'])
+}
+
 const App: React.FC = () => {
   const history = useHistory()
   const dispatch = useDispatch()
+
   const { pathname } = useLocation()
 
   // Selector
@@ -17,8 +22,7 @@ const App: React.FC = () => {
   const blog = useSelector(({ blog }: Store) => blog.blog)
   const error = useSelector(({ blog }: Store) => blog.error)
 
-  //FIXME: Refactor this using routeMatch function
-  const pathsWithoutSidebar = pathname.includes('/post/')
+  const pathsWithoutSidebar = shouldPathHaveSidebar(pathname)
   const loggedInUser = auth.authToken
   const showSideBar = !!loggedInUser && !pathsWithoutSidebar
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { StepperProps } from '../../types'
 import './stepperStyles.scss'
 
-const Stepper: React.FC<StepperProps> = ({ steps, showNumber, onSelect, activeStep }) => {
+const Stepper: React.FC<StepperProps> = ({ steps, showNumber, onSelect, activeStep, isNextBlocked }) => {
   const lastIndexOfSteps = steps.length - 1
 
   return (
@@ -12,7 +12,7 @@ const Stepper: React.FC<StepperProps> = ({ steps, showNumber, onSelect, activeSt
           return (
             <React.Fragment key={index}>
               <div className="stepper-item">
-                <div className="stepper-item-outer" onClick={onSelect.bind(null, index + 1)}>
+                <div className="stepper-item-outer" onClick={isNextBlocked ? onSelect.bind(null, index + 1) : undefined}>
                   <div className={`stepper-item-inner ${activeStep === (index + 1) ? 'stepper-item-inner-active'
                     : (index + 1) < activeStep ? 'stepper-item-inner-completed' : 'stepper-item-inner-future'}`}>
                     {showNumber && index + 1} </div>

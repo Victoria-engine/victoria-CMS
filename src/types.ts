@@ -108,10 +108,12 @@ export interface BlogStore {
     author: string,
     key: string,
     posts: BlogPost[],
+    apiKey?: string | null,
   },
   user: UserData,
   error: string | null,
   hasSavedSuccess: boolean,
+  wasBlogCreated: boolean,
 }
 
 export interface RegisterUserPayload{
@@ -188,6 +190,20 @@ export interface StepperProps {
   steps: StepperStep[],
   activeStep: number,
   showNumber?: boolean,
+  isNextBlocked: boolean,
   
-  onSelect: (step: number) => void,
+  onSelect: (step: any) => void,
+}
+
+export type CreateBlogPayload = {
+  name: string,
+	description: string,
+}
+
+export interface BlogCreationSectionProps {
+  blogData: CreateBlogPayload,
+  userData: UserData,
+
+  onBlogDataChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  onEnd: () => void,
 }

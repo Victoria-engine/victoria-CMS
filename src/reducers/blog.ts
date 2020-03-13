@@ -1,5 +1,5 @@
 import produce from 'immer'
-import { ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME } from '../types'
+import { ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME, CreateBlogPayload } from '../types'
 import { toaster } from 'evergreen-ui'
 
 export const BLOG_ACTION_TYPES = {
@@ -18,6 +18,10 @@ export const BLOG_ACTION_TYPES = {
   CREATE_POST: 'Blog/CREATE_POST',
   CREATE_POST_SUCCESS: 'Blog/CREATE_POST_SUCCESS',
   CREATE_POST_ERROR: 'Blog/CREATE_POST_ERROR',
+
+  CREATE_BLOG: 'Blog/CREATE_BLOG',
+  CREATE_BLOG_SUCCESS: 'Blog/CREATE_BLOG_SUCCESS',
+  CREATE_BLOG_ERROR: 'Blog/CREATE_BLOG_ERROR',
 }
 
 const initialState: BlogStore = {
@@ -28,6 +32,7 @@ const initialState: BlogStore = {
     author: '',
     key: '',
     posts: [],
+    apiKey: null,
   },
   user: {
     firstName: '',
@@ -37,6 +42,7 @@ const initialState: BlogStore = {
   },
   error: null,
   hasSavedSuccess: false,
+  wasBlogCreated: false,
 }
 
 const blogReducer = (state = initialState, { payload, type, error }: ReduxAction) => {
@@ -87,6 +93,22 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       case BLOG_ACTION_TYPES.CREATE_POST_ERROR:
       case BLOG_ACTION_TYPES.SAVE_POST_ERROR: {
         draft.hasSavedSuccess = false
+        break
+      }
+
+      case BLOG_ACTION_TYPES.CREATE_BLOG: {
+        draft.working = false
+        draft.wasBlogCreated = false
+        break
+      }
+      case BLOG_ACTION_TYPES.CREATE_BLOG_SUCCESS: {
+        draft.wasBlogCreated = true
+        draft.blog = payload.blog
+        break
+      }
+      case BLOG_ACTION_TYPES.CREATE_BLOG_ERROR: {
+        draft.wasBlogCreated = false
+        draft.error = error.message
         break
       }
 
@@ -170,6 +192,28 @@ export const createPostError = (error: Error) => {
 
   return {
     type: BLOG_ACTION_TYPES.CREATE_POST_ERROR,
+    error,
+  }
+}
+
+/**
+ * Create post
+ */
+export const createBlog = (payload: CreateBlogPayload) => ({
+  type: BLOG_ACTION_TYPES.CREATE_BLOG,
+  ...payload,
+})
+export const createBlogSuccess = (payload: $TS_FIXME) => {
+  return {
+    type: BLOG_ACTION_TYPES.CREATE_BLOG_SUCCESS,
+    payload,
+  }
+}
+export const ccreateBlogError = (error: Error) => {
+  toaster.danger(error.message || 'Couldn\'t create the blog, please check if eveything is filled correctly.')
+
+  return {
+    type: BLOG_ACTION_TYPES.CREATE_BLOG_ERROR,
     error,
   }
 }

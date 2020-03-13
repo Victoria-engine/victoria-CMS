@@ -11,10 +11,12 @@
   .stepper-item {
     position: relative;
     cursor: pointer;
+    transition: 0.3s all ease;
     .stepper-item-outer {
       display: flex;
       justify-content: center;
       align-items: center;
+      transition: 0.3s all ease;
     }
     .stepper-title {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -27,10 +29,12 @@
       text-align: center;
       color: #bfc2c3;
       font-size: 12px;
+      transition: 0.3s all ease;
     }
     .stepper-title-active {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       color: #000000;
+      transition: 0.3s all ease;
     }
   }
 }
@@ -39,6 +43,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
+  transition: 0.3s all ease;
 
   .stepper-item-inner {
     width: 12px;
