@@ -32,7 +32,6 @@ const initialState: BlogStore = {
     author: '',
     key: '',
     posts: [],
-    apiKey: null,
   },
   user: {
     firstName: '',

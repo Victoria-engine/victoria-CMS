@@ -108,7 +108,6 @@ export interface BlogStore {
     author: string,
     key: string,
     posts: BlogPost[],
-    apiKey?: string | null,
   },
   user: UserData,
   error: string | null,
