@@ -1,14 +1,15 @@
 @import "../../styles/colors.scss";
 
-@-webkit-keyframes slide {
-  0% { margin-left: -100%; }
-  100% { margin-left: 0; }
-}
+// @FIXME: UNSUED
+// @-webkit-keyframes slide {
+//   0% { margin-left: -100%; }
+//   100% { margin-left: 0; }
+// }
 
-@keyframes slide {
-  0% { margin-left: -100%; }
-  100% { margin-left: 0; }
-}
+// @keyframes slide {
+//   0% { margin-left: -100%; }
+//   100% { margin-left: 0; }
+// }
 
 .layoutContainer {
   display: flex;
@@ -23,8 +24,8 @@
   margin-right: 20px;
   width: 240px;
   flex: initial;
-  -webkit-animation: slide 0.5s;
-  animation: slide 0.5s;
+  // -webkit-animation: slide 0.5s;
+  // animation: slide 0.5s;
 
   ul {
     list-style: none;

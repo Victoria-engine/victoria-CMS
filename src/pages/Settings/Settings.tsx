@@ -3,6 +3,7 @@ import { PostEditProps as Props, Store } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
 import { Code, Icon } from 'evergreen-ui'
 import { useDispatch, useSelector } from 'react-redux'
+import classes from '../Account/styles.module.scss'
 
 const Settings: React.FC<Props> = () => {
 
@@ -17,15 +18,21 @@ const Settings: React.FC<Props> = () => {
     <div>
       <Topbar title='Settings' actions={[]} />
 
-      <p>Blog private API KEY</p>
+      <div className={classes.accountSettings}>
 
-      <p>
-          <Icon icon="info-sign" color="warning" marginRight={5} paddingTop={3} />
+        <div className={classes.labelsCol}>
+          <span>Blog private API KEY: </span>
+        </div>
+        <div className={classes.fieldsCols}>
+          <Code style={{ color: '#e9404c' }}>{apiKey}</Code>
+        </div>
+      </div>
+      <p className={classes.warning}>
+        <Icon icon="info-sign" color="warning" marginRight={5} paddingTop={3} />
           This key <b>should not be public to anyone</b> but you or your development team !
           Sharing to others might harm you blog!
         </p>
-      <Code style={{ color: '#e9404c' }}>{apiKey}</Code>
-    </div> 
+    </div>
   )
 }
 
