@@ -35,6 +35,9 @@ const PostEdit: React.FC<Props> = () => {
   const onCreatePost = () => {
     const { visibility, title, excerpt } = postData
     dispatch(createPost({ html: editorData as any, visibility, title, description: excerpt }))
+    window.setTimeout(() => {
+      history.push('/drafts')
+    }, 700)
   }
 
   const onPostDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
