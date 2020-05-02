@@ -86,6 +86,9 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       }
       case BLOG_ACTION_TYPES.CREATE_POST_SUCCESS:
       case BLOG_ACTION_TYPES.SAVE_POST_SUCCESS: {
+        const changedPostIndex = draft.blog.posts.findIndex((p) => p._id === payload.post._id)
+        console.log(changedPostIndex, payload)
+        draft.blog.posts[changedPostIndex] = payload.post
         draft.hasSavedSuccess = true
         break
       }

@@ -1,7 +1,8 @@
 import { takeLatest, put, call } from 'redux-saga/effects'
 import request from '../utils/request'
 import { API_URL } from '../constants'
-import { BLOG_ACTION_TYPES, getUserDataSuccess, getUserDataError, getPostByIDSuccess, getPostByIDError, savePostError, savePostSuccess, createPostError, createPostSuccess, ccreateBlogError, createBlogSuccess } from '../reducers/blog'
+import { BLOG_ACTION_TYPES, getUserDataSuccess, getUserDataError, getPostByIDSuccess, getPostByIDError, savePostError, savePostSuccess,
+  createPostError, createPostSuccess, ccreateBlogError, createBlogSuccess } from '../reducers/blog'
 import setAuthHeaders from '../utils/setAuthHeaders'
 import { logoutUser } from '../reducers/auth'
 import { GetPostByIDPayload, SavePostPayload, CreateBlogPayload } from '../types'

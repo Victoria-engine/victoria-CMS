@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PostEditProps as Props, Store } from '../../types'
+import { PostEditProps as Props, Store, BlogPost } from '../../types'
 import { useLocation, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Topbar from '../../components/Layout/Topbar'
@@ -50,13 +50,31 @@ const PostEdit: React.FC<Props> = () => {
   const onSaveHandler = () => {
     if (!postData) return
 
-    const { visibility, title, excerpt } = postData
+    const { title, excerpt, visibility } = postData
 
     dispatch(savePost({
       id: selectedPost?._id,
       //@ts-ignore
       html: editorData || selectedPost?.html,
+      title,
       visibility,
+      description: excerpt,
+    }))
+  }
+
+  const onPublishHandler = () => {
+    if (!postData) return
+
+    const { title, excerpt, visibility } = postData
+
+    const newVisibility: BlogPost['visibility'] = visibility === 'not-listed' ? 'public' : 'not-listed'
+    console.log(newVisibility)
+
+    dispatch(savePost({
+      id: selectedPost?._id, 
+      visibility: newVisibility,
+      //@ts-ignore
+      html: editorData || selectedPost?.html,
       title,
       description: excerpt,
     }))
@@ -104,12 +122,14 @@ const PostEdit: React.FC<Props> = () => {
 
   if (!selectedPost || !postData) return <Spinner />
 
+  const publishButtonSlug = postData.visibility === 'public' ? 'Unpublish' : 'Publish'
+
   return (
     <article>
       <Topbar title={postData.title} actions={[
         { label: 'Exit', onClick: () => history.goBack(), appearance: 'primary', iconName: 'step-backward', intent: 'none' },
         { label: 'Save', onClick: onSaveHandler, appearance: 'primary', iconName: 'saved', intent: 'success', isDisabled: !hasChangesToSave },
-        { label: 'Publish', onClick: () => { }, appearance: 'primary', iconName: 'publish-function', intent: 'warning', isDisabled: true },
+        { label: publishButtonSlug, onClick: onPublishHandler, appearance: 'primary', iconName: 'publish-function', intent: 'warning' },
         { label: 'Delete', onClick: () => { }, appearance: 'minimal', iconName: 'delete', intent: 'danger', isDisabled: true },
       ]} />
 

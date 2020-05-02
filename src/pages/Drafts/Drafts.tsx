@@ -44,19 +44,19 @@ const Drafts: React.FC = () => {
 
   return (
     <div className={classes.postsContainer}>
-    <Topbar
-      title='Drafts'
-      actions={[
-        { iconName: 'add', label: 'New post', appearance: 'primary', onClick: () => history.push('/post/new') },
-      ]}
-      description='The list of posts that are not published or are work in progress.'
-    />
+      <Topbar
+        title='Drafts'
+        actions={[
+          { iconName: 'add', label: 'New post', appearance: 'primary', onClick: () => history.push('/post/new') },
+        ]}
+        description='The list of posts that are not published or are work in progress.'
+      />
 
-    <PostsTable
-      posts={posts}
-      onSelect={nagivateToPostHandler}
-      onSearchChange={onSearchChange}
-    />
+      <PostsTable
+        posts={posts}
+        onSelect={nagivateToPostHandler}
+        onSearchChange={onSearchChange}
+      />
     </div>
   )
 }
