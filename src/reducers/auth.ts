@@ -70,10 +70,15 @@ export const loginUserSuccess = (payload: LoginUserSuccessPayload) => {
     payload,
   }
 }
-export const loginUserError = (error: Error) => ({
-  type: AUTH_ACTION_TYPES.LOGIN_USER_ERROR,
-  error,
-})
+export const loginUserError = (error: Error) => {
+
+  toaster.danger(error.message, { description: 'Please check if all the credentials are correctly typed' })
+
+  return {
+    type: AUTH_ACTION_TYPES.LOGIN_USER_ERROR,
+    error,
+  }
+}
 
 /**
  * Register user action
@@ -104,7 +109,7 @@ export const registerUserError = (error: Error) => {
 export const logoutUser = () => {
   const token = getCookie(ACCESS_TOKEN)
 
-  //@FIXME: Only remove on success when connected to /revoke
+  // FIXME: Only remove on success when connected to /revoke
   removeCookie(ACCESS_TOKEN)
 
   return {

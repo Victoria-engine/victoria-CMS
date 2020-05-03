@@ -4,7 +4,7 @@ import { useLocation, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Topbar from '../../components/Layout/Topbar'
 import { Spinner, TextInput } from 'evergreen-ui'
-import { getPostByID, savePost } from '../../reducers/blog'
+import { getPostByID, savePost, togglePublishPost } from '../../reducers/blog'
 import Editor from './Editor'
 import { EDITOR_JS_TOOLS, isNameValidField } from './editorTools'
 import { OutputData } from '@editorjs/editorjs'
@@ -67,10 +67,9 @@ const PostEdit: React.FC<Props> = () => {
 
     const { title, excerpt, visibility } = postData
 
-    const newVisibility: BlogPost['visibility'] = visibility === 'not-listed' ? 'public' : 'not-listed'
-    console.log(newVisibility)
+    const newVisibility: BlogPost['visibility'] = ['not-listed', 'private'].includes(visibility) ? 'public' : 'not-listed'
 
-    dispatch(savePost({
+    dispatch(togglePublishPost({
       id: selectedPost?._id, 
       visibility: newVisibility,
       //@ts-ignore
@@ -123,12 +122,13 @@ const PostEdit: React.FC<Props> = () => {
   if (!selectedPost || !postData) return <Spinner />
 
   const publishButtonSlug = postData.visibility === 'public' ? 'Unpublish' : 'Publish'
+  const isDisabled = postData.visibility !== 'not-listed'
 
   return (
     <article>
       <Topbar title={postData.title} actions={[
         { label: 'Exit', onClick: () => history.goBack(), appearance: 'primary', iconName: 'step-backward', intent: 'none' },
-        { label: 'Save', onClick: onSaveHandler, appearance: 'primary', iconName: 'saved', intent: 'success', isDisabled: !hasChangesToSave },
+        { label: 'Save', onClick: onSaveHandler, appearance: 'primary', iconName: 'saved', intent: 'success', isDisabled: !hasChangesToSave || isDisabled },
         { label: publishButtonSlug, onClick: onPublishHandler, appearance: 'primary', iconName: 'publish-function', intent: 'warning' },
         { label: 'Delete', onClick: () => { }, appearance: 'minimal', iconName: 'delete', intent: 'danger', isDisabled: true },
       ]} />
@@ -142,6 +142,7 @@ const PostEdit: React.FC<Props> = () => {
           className={cx(classes.borderlessInput, classes.title)}
           isInvalid={postData.title.length <= 0}
           placeholder='Title'
+          disabled={isDisabled}
         />
 
         <TextInput
@@ -151,6 +152,7 @@ const PostEdit: React.FC<Props> = () => {
           className={classes.borderlessInput}
           isInvalid={postData.excerpt.length <= 0}
           placeholder='Description'
+          disabled={isDisabled}
         />
 
         {fetchSuccess && <Editor

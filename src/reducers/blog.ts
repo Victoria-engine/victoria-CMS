@@ -1,5 +1,6 @@
 import produce from 'immer'
-import { ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME, CreateBlogPayload } from '../types'
+import { ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME,
+  CreateBlogPayload } from '../types'
 import { toaster } from 'evergreen-ui'
 
 export const BLOG_ACTION_TYPES = {
@@ -14,6 +15,10 @@ export const BLOG_ACTION_TYPES = {
   SAVE_POST: 'Blog/SAVE_POST',
   SAVE_POST_SUCCESS: 'Blog/SAVE_POST_SUCCESS',
   SAVE_POST_ERROR: 'Blog/SAVE_POST_ERROR',
+
+  TOGGLE_PUBLISH_POST: 'Blog/TOGGLE_PUBLISH_POST',
+  TOGGLE_PUBLISH_POST_SUCCESS: 'Blog/TOGGLE_PUBLISH_POST_SUCCESS',
+  TOGGLE_PUBLISH_POST_ERROR: 'Blog/TOGGLE_PUBLISH_POST_ERROR',
 
   CREATE_POST: 'Blog/CREATE_POST',
   CREATE_POST_SUCCESS: 'Blog/CREATE_POST_SUCCESS',
@@ -84,14 +89,18 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         draft.hasSavedSuccess = false
         break
       }
+
+      case BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST_SUCCESS:
       case BLOG_ACTION_TYPES.CREATE_POST_SUCCESS:
       case BLOG_ACTION_TYPES.SAVE_POST_SUCCESS: {
         const changedPostIndex = draft.blog.posts.findIndex((p) => p._id === payload.post._id)
-        console.log(changedPostIndex, payload)
+
         draft.blog.posts[changedPostIndex] = payload.post
         draft.hasSavedSuccess = true
         break
       }
+
+      case BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST_ERROR:
       case BLOG_ACTION_TYPES.CREATE_POST_ERROR:
       case BLOG_ACTION_TYPES.SAVE_POST_ERROR: {
         draft.hasSavedSuccess = false
@@ -170,6 +179,31 @@ export const savePostError = (error: Error) => {
 
   return {
     type: BLOG_ACTION_TYPES.SAVE_POST_ERROR,
+    error,
+  }
+}
+
+/**
+ * Publish/Unpublish Post
+ */
+export const togglePublishPost = (payload: SavePostPayload) => ({
+  type: BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST,
+  ...payload,
+})
+export const togglePublishPostSuccess = (payload: $TS_FIXME) => {
+  const newStateNotification = ['private', 'not-listed'].includes(payload.post.visibility) ? 'Unpublished' : 'Published'
+  toaster.success(`Post has been ${newStateNotification} !`)
+
+  return {
+    type: BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST_SUCCESS,
+    payload,
+  }
+}
+export const togglePublishPostError = (error: Error) => {
+  toaster.danger(error.message || 'Couldn\'t publish the post, please check if eveything is filled correctly.')
+
+  return {
+    type: BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST_ERROR,
     error,
   }
 }

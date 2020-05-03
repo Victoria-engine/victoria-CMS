@@ -6,25 +6,23 @@ const Stepper: React.FC<StepperProps> = ({ steps, showNumber, onSelect, activeSt
   const lastIndexOfSteps = steps.length - 1
 
   return (
-    <>
-      <div className="stepper-container">
-        {steps.map((step, index) => {
-          return (
-            <React.Fragment key={index}>
-              <div className="stepper-item">
-                <div className="stepper-item-outer" onClick={isNextBlocked ? onSelect.bind(null, index + 1) : undefined}>
-                  <div className={`stepper-item-inner ${activeStep === (index + 1) ? 'stepper-item-inner-active'
-                    : (index + 1) < activeStep ? 'stepper-item-inner-completed' : 'stepper-item-inner-future'}`}>
-                    {showNumber && index + 1} </div>
-                </div>
-                <span className={`stepper-title ${activeStep === (index + 1) ? 'stepper-title-active' : ''}`}> {step.title} </span>
+    <div className="stepper-container">
+      {steps.map((step, index) => {
+        return (
+          <React.Fragment key={index}>
+            <div className="stepper-item">
+              <div className="stepper-item-outer" onClick={isNextBlocked ? onSelect.bind(null, index + 1) : undefined}>
+                <div className={`stepper-item-inner ${activeStep === (index + 1) ? 'stepper-item-inner-active'
+                  : (index + 1) < activeStep ? 'stepper-item-inner-completed' : 'stepper-item-inner-future'}`}>
+                  {showNumber && index + 1} </div>
               </div>
-              {lastIndexOfSteps === index ? '' : <div className="stepper-item-outer"> </div>}
-            </React.Fragment>
-          )
-        })}
-      </div>
-    </>
+              <span className={`stepper-title ${activeStep === (index + 1) ? 'stepper-title-active' : ''}`}> {step.title} </span>
+            </div>
+            {lastIndexOfSteps === index ? '' : <div className="stepper-item-outer"> </div>}
+          </React.Fragment>
+        )
+      })}
+    </div>
   )
 }
 

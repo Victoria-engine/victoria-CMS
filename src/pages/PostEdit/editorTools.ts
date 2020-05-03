@@ -69,7 +69,7 @@ export const INITIAL_EDITOR_DATA = {
 export const EMPTY_POST: BlogPost = {
   _id: '',
   html: INITIAL_EDITOR_DATA,
-  visibility: 'private',
+  visibility: 'not-listed',
   title: '',
   tags: [],
   author: '',

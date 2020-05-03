@@ -2,7 +2,7 @@ import { takeLatest, put, call } from 'redux-saga/effects'
 import request from '../utils/request'
 import { API_URL } from '../constants'
 import { BLOG_ACTION_TYPES, getUserDataSuccess, getUserDataError, getPostByIDSuccess, getPostByIDError, savePostError, savePostSuccess,
-  createPostError, createPostSuccess, ccreateBlogError, createBlogSuccess } from '../reducers/blog'
+  createPostError, createPostSuccess, ccreateBlogError, createBlogSuccess, togglePublishPostError, togglePublishPostSuccess } from '../reducers/blog'
 import setAuthHeaders from '../utils/setAuthHeaders'
 import { logoutUser } from '../reducers/auth'
 import { GetPostByIDPayload, SavePostPayload, CreateBlogPayload } from '../types'
@@ -79,6 +79,22 @@ function* savePostWorker({ visibility, title, slug, html, description, id }: Sav
   if (data && !error) yield put(savePostSuccess(data))
 }
 
+function* togglePublishPostWorker({ visibility, id }: SavePostPayload & AnyAction) {
+  const requestUrl = `${API_URL}/api/content/post`
+  const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
+
+  const { data, error } = yield call(request, requestUrl, {
+    headers,
+    method: 'PUT',
+    body: JSON.stringify({ id, visibility }),
+  })
+
+  if (error) {
+    yield put(togglePublishPostError(error))
+  }
+  if (data && !error) yield put(togglePublishPostSuccess(data))
+}
+
 function* createBlogWorker({ name, description }: CreateBlogPayload & AnyAction) {
   const requestUrl = `${API_URL}/api/content/blog`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
@@ -101,5 +117,6 @@ export default function* rootSaga() {
   yield takeLatest(BLOG_ACTION_TYPES.CREATE_POST, createPostWorker)
   yield takeLatest(BLOG_ACTION_TYPES.SAVE_POST, savePostWorker)
   yield takeLatest(BLOG_ACTION_TYPES.CREATE_BLOG, createBlogWorker)
+  yield takeLatest(BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST, togglePublishPostWorker)
 }
 
