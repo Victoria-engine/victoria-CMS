@@ -67,17 +67,19 @@ export const INITIAL_EDITOR_DATA = {
 }
 
 export const EMPTY_POST: BlogPost = {
-  _id: '',
-  html: INITIAL_EDITOR_DATA,
+  id: '',
+  text: INITIAL_EDITOR_DATA,
   visibility: 'not-listed',
   title: '',
   tags: [],
-  author: '',
-  createdAt: '',
-  excerpt: '',
-  reading_time: 0,
-  updatedAt: '',
+  created_at: '',
   description: '',
+  reading_time: 0,
+  updated_at: '',
+  user: {
+    id: '',
+    name: '',
+  }
 }
 
 export function isNameValidField (name: string): name is 'title' | 'excerpt' | 'editor' {

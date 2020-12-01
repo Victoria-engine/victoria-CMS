@@ -5,4 +5,4 @@ export const USER_ROLES = Object.freeze({
   ADMIN: 1,
 })
 
-export const ACCESS_TOKEN = 'key'
+export const ACCESS_TOKEN = 'victoria_a_t'

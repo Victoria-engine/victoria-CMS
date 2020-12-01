@@ -21,7 +21,7 @@ const Settings: React.FC<Props> = () => {
       <div className={classes.accountSettings}>
 
         <div className={classes.labelsCol}>
-          <span>Blog private API KEY: </span>
+          <span>Blog public consumer key:</span>
         </div>
         <div className={classes.fieldsCols}>
           <Code style={{ color: '#e9404c' }}>{apiKey}</Code>
@@ -29,8 +29,8 @@ const Settings: React.FC<Props> = () => {
       </div>
       <p className={classes.warning}>
         <Icon icon="info-sign" color="warning" marginRight={5} paddingTop={3} />
-          This key <b>should not be public to anyone</b> but you or your development team !
-          Sharing to others might harm you blog!
+          This key is used to identify your blog content when consuming public endpoints,
+          please refer to the documentation for more information.
         </p>
     </div>
   )

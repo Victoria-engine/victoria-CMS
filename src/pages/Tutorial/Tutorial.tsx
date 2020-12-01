@@ -14,16 +14,15 @@ type Steps = 1 | 2 | 3
 const Tutorial: React.FC = () => {
   const [activeStep, setActiveStep] = useState<Steps>(1)
   const [blogData, setBlogData] = useState({
-    name: randomNameGen(),
+    title: randomNameGen(),
     description: '',
   })
 
   const dispatch = useDispatch()
   const history = useHistory()
 
-  // Selectors
   const blogReducer = useSelector(({ blog }: Store) => blog)
-  const wasBlogCreated = blogReducer.wasBlogCreated
+  const wasBlogCreated = blogReducer.blogCreated
   const userData = blogReducer.user
   const apiKey = blogReducer.blog.key
 
@@ -42,12 +41,11 @@ const Tutorial: React.FC = () => {
   }
 
   const createBlogAndGoNext = () => {
-    if (blogData.description && blogData.name) {
-      dispatch(createBlog({
-        description: blogData.description,
-        name: blogData.name,
-      }))
-    }
+    const { description, title } = blogData
+
+    if (!description || !title) return
+
+    dispatch(createBlog({ description, title }))
   }
 
   useEffect(() => {
@@ -69,9 +67,19 @@ const Tutorial: React.FC = () => {
 
       <div className={classes.sectionWrapper}>
         {{
-          1: <BlogCreationSection onBlogDataChange={onBlogDataChange} blogData={blogData} onEnd={createBlogAndGoNext} userData={userData} />,
-          2: <SetupSection apiKey={apiKey} onEnd={() => onChangeStep(3)} />,
-          3: <DeploySection onEnd={() => history.push('/drafts')} />,
+          1: (<BlogCreationSection
+            onBlogDataChange={onBlogDataChange}
+            blogData={blogData}
+            onEnd={createBlogAndGoNext}
+            userData={userData}
+          />),
+          2: (<SetupSection
+            apiKey={apiKey}
+            onEnd={() => onChangeStep(3)}
+          />),
+          3: (<DeploySection
+            onEnd={() => history.push('/drafts')}
+          />),
         }[activeStep]}
       </div>
     </div>
@@ -79,7 +87,7 @@ const Tutorial: React.FC = () => {
 }
 
 export const BlogCreationSection: React.FC<BlogCreationSectionProps> = ({ onBlogDataChange, blogData, onEnd, userData }) => {
-  const isValidSubmit = blogData.description && blogData.name
+  const isValidSubmit = blogData.description && blogData.title
 
   return (
     <>
@@ -94,9 +102,9 @@ export const BlogCreationSection: React.FC<BlogCreationSectionProps> = ({ onBlog
         <TextInputField
           className={classes.borderlessInput}
           type='text'
-          name='name'
+          name='title'
           label=""
-          value={blogData.name}
+          value={blogData.title}
           onChange={onBlogDataChange}
           placeholder='Some remarkable name...'
         />

@@ -8,19 +8,15 @@ import { BlogPost, Store } from '../../types'
 import { useSelector } from 'react-redux'
 
 const Drafts: React.FC = () => {
-
-  // Local State
   const [posts, setPosts] = useState<BlogPost[]>([])
 
-
-  // Selectors
   const blogReducer = useSelector(({ blog }: Store) => blog)
   const blogData = blogReducer.blog
 
 
   useEffect(() => {
     // getPosts...
-  })
+  }, [])
 
   const history = useHistory()
 
@@ -28,15 +24,14 @@ const Drafts: React.FC = () => {
     setPosts(blogData.posts.filter(p => ['not-listed', 'private'].includes(p.visibility)))
   }, [blogData.posts])
 
-  const nagivateToPostHandler = (postID: string) => () => {
+  const handlePostClick = (postID: string) => () => {
     history.push(`/post/${postID}`)
   }
 
-  const onSearchChange = (value: string) => {
+  const handleOnSearchChange = (value: string) => {
     if (!value) return setPosts(blogData.posts)
 
     const searchValue = value.toLocaleLowerCase()
-
     setPosts(posts.filter(post => post.title.toLocaleLowerCase().includes(searchValue)))
   }
 
@@ -54,8 +49,8 @@ const Drafts: React.FC = () => {
 
       <PostsTable
         posts={posts}
-        onSelect={nagivateToPostHandler}
-        onSearchChange={onSearchChange}
+        onSelect={handlePostClick}
+        onSearchChange={handleOnSearchChange}
       />
     </div>
   )

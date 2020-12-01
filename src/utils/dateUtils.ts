@@ -18,6 +18,8 @@ export const getRelativeDate = (current: string) => {
 }
 
 function timeDifference(current: string) {
+  if (!current) return
+
   const timeAgo = new TimeAgo('en-GB')
   return timeAgo.format(new Date(current))
 }

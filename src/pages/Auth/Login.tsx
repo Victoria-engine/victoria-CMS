@@ -9,8 +9,8 @@ import classes from './styles.module.scss'
 import LogoTextSvg from '../../assets/victoria-text.svg'
 import LogoWhite from '../../assets/logo-white.svg'
 
+
 const Login: React.FC = () => {
-  // Local State
   const [formData, setFormData] = useState({
     email: {
       value: '',
@@ -38,20 +38,25 @@ const Login: React.FC = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  // Selectors
   const auth = useSelector(({ auth }: Store) => auth)
-  const userData = useSelector(({ blog }: Store) => blog)
+  const { blog, gotBlog } = useSelector(({ blog }: Store) => blog)
 
-  // Effects
+
   useEffect(() => {
-    const hasUserKey = userData.blog.key
-    const isLoggedUserWithBlog = auth.success && auth.blogKey
-    const isLoggedUserFirstTime = auth.success && !auth.blogKey
+    if (!auth.success || !gotBlog) return
 
-    if (isLoggedUserFirstTime && !hasUserKey) history.push('/welcome')
-    if (isLoggedUserWithBlog && hasUserKey) history.push('/')
+    const isLoggedUserWithBlog = blog.id
+    const isLoggedUserFirstTime =  !blog.id
 
-  }, [auth.blogKey, auth.success, dispatch, history, userData.blog.key])
+    if (isLoggedUserFirstTime) {
+      return history.push('/welcome')
+    }
+    if (isLoggedUserWithBlog) {
+      return history.push('/')
+    }
+
+  }, [auth.success, blog.id, history, gotBlog])
+
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -100,21 +105,17 @@ const Login: React.FC = () => {
 
   const onLoginClick = () => {
     dispatch(loginUser({
-      credentials: {
-        email: formData.email.value,
-        password: formData.password.value,
-      }
+      email: formData.email.value,
+      password: formData.password.value,
     }))
   }
 
   const onRegisterClick = () => {
     dispatch(registerUser({
-      credentials: {
-        email: formData.email.value,
-        password: formData.password.value,
-        firstName: formData.firstName.value,
-        lastName: formData.lastName.value,
-      }
+      email: formData.email.value,
+      password: formData.password.value,
+      firstName: formData.firstName.value,
+      lastName: formData.lastName.value,
     }))
   }
 

@@ -17,7 +17,7 @@ export const AUTH_ACTION_TYPES = {
 }
 
 const initialState: AuthStore = {
-  authToken: getCookie('key'),
+  authToken: getCookie(ACCESS_TOKEN),
   blogKey: null,
   working: false,
   error: null,
@@ -34,7 +34,6 @@ const authReducer = (state = initialState, { payload, type, error }: ReduxAction
         break
       case AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS:
         draft.working = false
-        draft.blogKey = payload.blogID
         draft.authToken = payload['access_token']
         draft.success = true
         break
@@ -71,8 +70,9 @@ export const loginUserSuccess = (payload: LoginUserSuccessPayload) => {
   }
 }
 export const loginUserError = (error: Error) => {
+  const errorMessage = error.message ?? 'Please check if all the credentials are correctly typed'
 
-  toaster.danger(error.message, { description: 'Please check if all the credentials are correctly typed' })
+  toaster.danger(errorMessage)
 
   return {
     type: AUTH_ACTION_TYPES.LOGIN_USER_ERROR,

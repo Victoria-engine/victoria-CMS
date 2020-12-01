@@ -1,12 +1,18 @@
 import produce from 'immer'
-import { ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME,
-  CreateBlogPayload } from '../types'
+import {
+  ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME,
+  CreateBlogPayload
+} from '../types'
 import { toaster } from 'evergreen-ui'
 
 export const BLOG_ACTION_TYPES = {
   GET_USER_DATA: 'Blog/GET_USER_DATA',
   GET_USER_DATA_SUCCESS: 'Blog/GET_USER_DATA_SUCCESS',
   GET_USER_DATA_ERROR: 'Blog/GET_USER_DATA_ERROR',
+
+  GET_BLOG: 'Blog/GET_BLOG',
+  GET_BLOG_SUCCESS: 'Blog/GET_BLOG_SUCCESS',
+  GET_BLOG_ERROR: 'Blog/GET_BLOG_ERROR',
 
   GET_POST_BY_ID: 'Blog/GET_POST_BY_ID',
   GET_POST_BY_ID_SUCCESS: 'Blog/GET_POST_BY_ID_SUCCESS',
@@ -27,14 +33,17 @@ export const BLOG_ACTION_TYPES = {
   CREATE_BLOG: 'Blog/CREATE_BLOG',
   CREATE_BLOG_SUCCESS: 'Blog/CREATE_BLOG_SUCCESS',
   CREATE_BLOG_ERROR: 'Blog/CREATE_BLOG_ERROR',
+
+  GET_CONSUMER_KEY: 'Blog/GET_CONSUMER_KEY',
+  GET_CONSUMER_KEY_SUCCESS: 'Blog/GET_CONSUMER_KEY_SUCCESS',
+  GET_CONSUMER_KEY_ERROR: 'Blog/GET_CONSUMER_KEY_ERROR',
 }
 
 const initialState: BlogStore = {
-  working: false,
   blog: {
-    name: '',
+    id: '',
+    title: '',
     description: '',
-    author: '',
     key: '',
     posts: [],
   },
@@ -46,7 +55,9 @@ const initialState: BlogStore = {
   },
   error: null,
   hasSavedSuccess: false,
-  wasBlogCreated: false,
+  blogCreated: false,
+  working: false,
+  gotBlog: false,
 }
 
 const blogReducer = (state = initialState, { payload, type, error }: ReduxAction) => {
@@ -59,10 +70,25 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         draft.working = true
         break
       case BLOG_ACTION_TYPES.GET_USER_DATA_SUCCESS:
+        const { blogID, ...userData } = payload
         draft.working = false
-        draft.blog = payload.blog
-        draft.user = payload.user
-        draft.blog.posts = payload.posts
+        draft.blog.id = blogID
+        draft.user = userData
+        break
+
+      case BLOG_ACTION_TYPES.GET_BLOG:
+        draft.working = true
+        draft.gotBlog = true
+        break
+      case BLOG_ACTION_TYPES.GET_BLOG_SUCCESS:
+        draft.working = false
+        draft.blog = payload
+        draft.gotBlog = true
+        break
+      case BLOG_ACTION_TYPES.GET_BLOG_ERROR:
+        draft.working = false
+        draft.gotBlog = true
+        draft.error = error.message
         break
 
       case BLOG_ACTION_TYPES.GET_POST_BY_ID_ERROR:
@@ -73,15 +99,13 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 
       case BLOG_ACTION_TYPES.GET_POST_BY_ID_SUCCESS:
         draft.working = false
-        const postToUpdate = draft.blog.posts.find(post => post._id === payload._id)
-
-        if (postToUpdate) {
-          const idx = draft.blog.posts.findIndex(post => post._id === payload._id)
-          draft.blog.posts[idx] = payload
-        } else {
-          draft.blog.posts.unshift(payload)
+        const idx = draft.blog.posts.findIndex(p => p.id === payload.id)
+      
+        if (idx < 0) {
+          throw new Error(`found no post with ID of ${payload.id} to update.`)
         }
 
+        draft.blog.posts[idx] = payload
         break
 
       case BLOG_ACTION_TYPES.CREATE_POST:
@@ -93,9 +117,9 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       case BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST_SUCCESS:
       case BLOG_ACTION_TYPES.CREATE_POST_SUCCESS:
       case BLOG_ACTION_TYPES.SAVE_POST_SUCCESS: {
-        const changedPostIndex = draft.blog.posts.findIndex((p) => p._id === payload.post._id)
+        const changedPostIndex = draft.blog.posts.findIndex((p) => p.id === payload.id)
 
-        draft.blog.posts[changedPostIndex] = payload.post
+        draft.blog.posts[changedPostIndex] = payload
         draft.hasSavedSuccess = true
         break
       }
@@ -109,16 +133,31 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 
       case BLOG_ACTION_TYPES.CREATE_BLOG: {
         draft.working = false
-        draft.wasBlogCreated = false
+        draft.blogCreated = false
         break
       }
       case BLOG_ACTION_TYPES.CREATE_BLOG_SUCCESS: {
-        draft.wasBlogCreated = true
-        draft.blog = payload.blog
+        draft.blogCreated = true
+        draft.blog = payload
         break
       }
       case BLOG_ACTION_TYPES.CREATE_BLOG_ERROR: {
-        draft.wasBlogCreated = false
+        draft.blogCreated = false
+        draft.error = error.message
+        break
+      }
+
+      case BLOG_ACTION_TYPES.GET_CONSUMER_KEY: {
+        draft.working = false
+        break
+      }
+      case BLOG_ACTION_TYPES.GET_CONSUMER_KEY_SUCCESS: {
+        draft.working = false
+        draft.blog.key = payload
+        break
+      }
+      case BLOG_ACTION_TYPES.GET_CONSUMER_KEY_ERROR: {
+        draft.working = false
         draft.error = error.message
         break
       }
@@ -140,6 +179,22 @@ export const getUserDataSuccess = (payload: GetUserDataSuccess) => ({
 })
 export const getUserDataError = (error: Error) => ({
   type: BLOG_ACTION_TYPES.GET_USER_DATA_ERROR,
+  error,
+})
+
+/**
+ * Get blog action
+ */
+export const getBlog = (payload: { key: string }) => ({
+  type: BLOG_ACTION_TYPES.GET_BLOG,
+  ...payload,
+})
+export const getBlogSuccess = (payload: GetUserDataSuccess['blog']) => ({
+  type: BLOG_ACTION_TYPES.GET_BLOG_SUCCESS,
+  payload,
+})
+export const getBlogError = (error: Error) => ({
+  type: BLOG_ACTION_TYPES.GET_BLOG_ERROR,
   error,
 })
 
@@ -191,7 +246,7 @@ export const togglePublishPost = (payload: SavePostPayload) => ({
   ...payload,
 })
 export const togglePublishPostSuccess = (payload: $TS_FIXME) => {
-  const newStateNotification = ['private', 'not-listed'].includes(payload.post.visibility) ? 'Unpublished' : 'Published'
+  const newStateNotification = ['private', 'not-listed'].includes(payload.visibility) ? 'Unpublished' : 'Published'
   toaster.success(`Post has been ${newStateNotification} !`)
 
   return {
@@ -245,11 +300,30 @@ export const createBlogSuccess = (payload: $TS_FIXME) => {
     payload,
   }
 }
-export const ccreateBlogError = (error: Error) => {
+export const createBlogError = (error: Error) => {
   toaster.danger(error.message || 'Couldn\'t create the blog, please check if eveything is filled correctly.')
 
   return {
     type: BLOG_ACTION_TYPES.CREATE_BLOG_ERROR,
+    error,
+  }
+}
+
+/**
+ * Get consumer key
+ */
+export const getConsumerKey = () => ({
+  type: BLOG_ACTION_TYPES.GET_CONSUMER_KEY,
+})
+export const getConsumerKeySuccess = (payload: string) => {
+  return {
+    type: BLOG_ACTION_TYPES.GET_CONSUMER_KEY_SUCCESS,
+    payload,
+  }
+}
+export const getConsumerKeyError = (error: Error) => {
+  return {
+    type: BLOG_ACTION_TYPES.GET_CONSUMER_KEY_ERROR,
     error,
   }
 }

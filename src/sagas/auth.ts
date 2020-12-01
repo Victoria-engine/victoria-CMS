@@ -8,17 +8,26 @@ import { LoginserPayload, RegisterUserPayload } from '../types'
 
 /** Worker to login a user with the API */
 function* loginUserWorker({ payload }: AnyAction & LoginserPayload) {
+  const { email, password } = payload
+
 
   try {
-    const requestUrl = `${API_URL}/api/auth/login`
+    const requestUrl = `${API_URL}/auth/session`
     const headers = { 'Content-Type': 'application/json' }
-    const body = JSON.stringify({ credentials: payload.credentials })
+    const body = JSON.stringify({ email, password })
 
-    const { data } = yield call(request, requestUrl, {
+    const { data, error } = yield call(request, requestUrl, {
       headers,
       method: 'POST',
       body,
     })
+
+    console.log(data)
+
+    if (error) {
+      yield put(loginUserError(error))
+      return
+    }
 
     yield put(loginUserSuccess(data))
   } catch (error) {
@@ -28,22 +37,23 @@ function* loginUserWorker({ payload }: AnyAction & LoginserPayload) {
 
 /** Worker to register a user with the API */
 function* registerUserWorker({ payload }: AnyAction & RegisterUserPayload) {
+  const { email, password, firstName, lastName } = payload
 
-    const requestUrl = `${API_URL}/api/auth/register`
-    const headers = { 'Content-Type': 'application/json' }
-    const body = JSON.stringify({ credentials: payload.credentials })
+  const requestUrl = `${API_URL}/auth/register`
+  const headers = { 'Content-Type': 'application/json' }
+  const body = JSON.stringify({ email, password, firstName, lastName })
 
-    const { data, error } = yield call(request, requestUrl, {
-      headers,
-      method: 'POST',
-      body,
-    })
+  const { data, error } = yield call(request, requestUrl, {
+    headers,
+    method: 'POST',
+    body,
+  })
 
-    if (error) {
+  if (error) {
     yield put(registerUserError(error))
-    }
+  }
 
-    if (data && !error) yield put(registerUserSuccess(data))
+  if (data && !error) yield put(registerUserSuccess(data))
 }
 
 export default function* rootSaga() {
