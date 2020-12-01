@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import { PostsProps as Props, Store, BlogPost } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Spinner } from 'evergreen-ui'
 import classes from './styles.module.scss'
 import { useHistory } from 'react-router-dom'
 import PostsTable from '../../components/PostsTable/PostsTable'
+import { getPostsList } from '../../reducers/blog'
 
 /**
  * Posts list screen
  */
 const Posts: React.FC<Props> = () => {
-
-  // Local State
   const [posts, setPosts] = useState<BlogPost[]>([])
 
-
-  // Selectors
   const blogReducer = useSelector(({ blog }: Store) => blog)
   const blogData = blogReducer.blog
-
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    // getPosts...
-  })
+    const consumerKey = blogData.key
+    if (!consumerKey) return
+
+    dispatch(getPostsList(consumerKey))
+  }, [blogData.key, dispatch, getPostsList])
+
 
   useEffect(() => {
     setPosts(blogData.posts.filter(p => ['public'].includes(p.visibility)))
@@ -52,10 +53,10 @@ const Posts: React.FC<Props> = () => {
         title='Posts list'
         actions={[
           { iconName: 'add', label: 'New post', appearance: 'primary', onClick: () => history.push('/post/new') },
-         ]}
-         description='The list with all of the public posts, the posts the users will see on your blog.'
+        ]}
+        description='The list with all of the public posts, the posts the users will see on your blog.'
       />
-      
+
       <PostsTable
         posts={posts}
         onSelect={nagivateToPostHandler}

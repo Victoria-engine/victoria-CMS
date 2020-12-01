@@ -5,7 +5,8 @@ import PostsTable from '../../components/PostsTable'
 import classes from '../Posts/styles.module.scss'
 import { Spinner } from 'evergreen-ui'
 import { BlogPost, Store } from '../../types'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPostsList } from '../../reducers/blog'
 
 const Drafts: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([])
@@ -13,10 +14,15 @@ const Drafts: React.FC = () => {
   const blogReducer = useSelector(({ blog }: Store) => blog)
   const blogData = blogReducer.blog
 
+  const dispatch = useDispatch()
+
 
   useEffect(() => {
-    // getPosts...
-  }, [])
+    const consumerKey = blogData.key
+    if (!consumerKey) return
+
+    dispatch(getPostsList(consumerKey))
+  }, [blogData.key, dispatch, getPostsList])
 
   const history = useHistory()
 

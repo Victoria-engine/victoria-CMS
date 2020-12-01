@@ -22,8 +22,6 @@ function* loginUserWorker({ payload }: AnyAction & LoginserPayload) {
       body,
     })
 
-    console.log(data)
-
     if (error) {
       yield put(loginUserError(error))
       return
@@ -37,11 +35,11 @@ function* loginUserWorker({ payload }: AnyAction & LoginserPayload) {
 
 /** Worker to register a user with the API */
 function* registerUserWorker({ payload }: AnyAction & RegisterUserPayload) {
-  const { email, password, firstName, lastName } = payload
+  const { email, password, name } = payload
 
   const requestUrl = `${API_URL}/auth/register`
   const headers = { 'Content-Type': 'application/json' }
-  const body = JSON.stringify({ email, password, firstName, lastName })
+  const body = JSON.stringify({ email, password, name })
 
   const { data, error } = yield call(request, requestUrl, {
     headers,

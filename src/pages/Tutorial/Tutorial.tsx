@@ -95,7 +95,7 @@ export const BlogCreationSection: React.FC<BlogCreationSectionProps> = ({ onBlog
       <hr />
 
       <div className={classes.textWrapper}>
-        <p className={classes.bolder}>Welcome <b>{userData.firstName} {userData.lastName}</b>, your account has been successfully created, now we need to create and link a blog to your account !</p>
+        <p className={classes.bolder}>Welcome <b>{userData.name}</b>, your account has been successfully created, now we need to create and link a blog to your account !</p>
 
         <p>How would like to name your blog ?</p>
 

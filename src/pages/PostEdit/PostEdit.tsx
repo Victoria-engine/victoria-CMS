@@ -33,7 +33,7 @@ const PostEdit: React.FC<Props> = () => {
   const [hasChangesToSave, setHasChangesToSave] = useState(false)
   const [hasFieldChanged, setHasFieldChanged] = useState({
     title: false,
-    excerpt: false,
+    description: false,
     editor: false,
   })
 
@@ -58,23 +58,23 @@ const PostEdit: React.FC<Props> = () => {
   const onSaveHandler = () => {
     if (!postData) return
 
-    const { title, description: excerpt, visibility } = postData
+    const { title, description, visibility } = postData
     const postText = editorData || selectedPost?.text
 
     dispatch(
       savePost({
         id: selectedPost?.id,
-        text: JSON.stringify(postText),
+        text: typeof postText === 'string' ? postText : JSON.stringify(postText),
         title,
         visibility,
-        description: excerpt,
+        description,
       }))
   }
 
   const onPublishHandler = () => {
     if (!postData) return
 
-    const { title, description: excerpt, visibility } = postData
+    const { title, description, visibility } = postData
 
     const newVisibility: BlogPost['visibility'] = ['not-listed', 'private'].includes(visibility) ? 'public' : 'not-listed'
     const postText = editorData || selectedPost?.text
@@ -85,7 +85,7 @@ const PostEdit: React.FC<Props> = () => {
         visibility: newVisibility,
         text: postText,
         title,
-        description: excerpt,
+        description,
       }))
   }
 
@@ -131,7 +131,6 @@ const PostEdit: React.FC<Props> = () => {
 
   console.log(postData)
 
-
   return (
     <article>
       <Topbar title={postData.title} actions={[
@@ -154,7 +153,7 @@ const PostEdit: React.FC<Props> = () => {
         />
 
         <TextInput
-          name='excerpt'
+          name='description'
           onChange={onPostDataChange}
           value={postData.description}
           className={classes.borderlessInput}
@@ -166,7 +165,7 @@ const PostEdit: React.FC<Props> = () => {
         {fetchSuccess &&
           <Editor
             tools={EDITOR_JS_TOOLS as any}
-            data={JSON.parse(postData.text as string)}
+            data={postData.text as OutputData}
             onData={onEditorDataChange}
             autofocus
           />}

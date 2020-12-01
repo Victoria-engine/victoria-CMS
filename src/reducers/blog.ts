@@ -1,7 +1,8 @@
 import produce from 'immer'
 import {
   ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME,
-  CreateBlogPayload
+  CreateBlogPayload,
+  BlogPost
 } from '../types'
 import { toaster } from 'evergreen-ui'
 
@@ -37,6 +38,10 @@ export const BLOG_ACTION_TYPES = {
   GET_CONSUMER_KEY: 'Blog/GET_CONSUMER_KEY',
   GET_CONSUMER_KEY_SUCCESS: 'Blog/GET_CONSUMER_KEY_SUCCESS',
   GET_CONSUMER_KEY_ERROR: 'Blog/GET_CONSUMER_KEY_ERROR',
+
+  GET_POSTS_LIST: 'Blog/GET_POSTS_LIST',
+  GET_POSTS_LIST_SUCCESS: 'Blog/GET_POSTS_LIST_SUCCESS',
+  GET_POSTS_LIST_ERROR: 'Blog/GET_POSTS_LIST_ERROR',
 }
 
 const initialState: BlogStore = {
@@ -48,10 +53,9 @@ const initialState: BlogStore = {
     posts: [],
   },
   user: {
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    createdAt: '',
+    created_at: '',
   },
   error: null,
   hasSavedSuccess: false,
@@ -81,8 +85,15 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         draft.gotBlog = true
         break
       case BLOG_ACTION_TYPES.GET_BLOG_SUCCESS:
+        const { posts, ...blog } = payload
+
         draft.working = false
-        draft.blog = payload
+        draft.blog = blog
+        draft.blog.posts = posts.map((p: BlogPost) =>
+          ({
+            ...p,
+            text: typeof p.text === 'string' ? JSON.parse(p.text) : p.text,
+          }))
         draft.gotBlog = true
         break
       case BLOG_ACTION_TYPES.GET_BLOG_ERROR:
@@ -100,12 +111,17 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       case BLOG_ACTION_TYPES.GET_POST_BY_ID_SUCCESS:
         draft.working = false
         const idx = draft.blog.posts.findIndex(p => p.id === payload.id)
-      
+
         if (idx < 0) {
           throw new Error(`found no post with ID of ${payload.id} to update.`)
         }
 
-        draft.blog.posts[idx] = payload
+        const updatedPost = {
+          ...payload,
+          text: typeof payload.text === 'string' ? JSON.parse(payload.text) : payload.text,
+        }
+
+        draft.blog.posts[idx] = updatedPost
         break
 
       case BLOG_ACTION_TYPES.CREATE_POST:
@@ -118,8 +134,12 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       case BLOG_ACTION_TYPES.CREATE_POST_SUCCESS:
       case BLOG_ACTION_TYPES.SAVE_POST_SUCCESS: {
         const changedPostIndex = draft.blog.posts.findIndex((p) => p.id === payload.id)
+        const updatedPost = {
+          ...payload,
+          text: typeof payload.text === 'string' ? JSON.parse(payload.text) : payload.text,
+        }
 
-        draft.blog.posts[changedPostIndex] = payload
+        draft.blog.posts[changedPostIndex] = updatedPost
         draft.hasSavedSuccess = true
         break
       }
@@ -162,6 +182,26 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         break
       }
 
+      case BLOG_ACTION_TYPES.GET_POSTS_LIST:
+        draft.working = true
+        draft.error = null
+        break
+
+      case BLOG_ACTION_TYPES.GET_POSTS_LIST_SUCCESS:
+        draft.working = false
+        draft.blog.posts = payload.map((p: BlogPost) =>
+          ({
+            ...p,
+            text: typeof p.text === 'string' ? JSON.parse(p.text) : p.text,
+          }))
+        draft.error = null
+        break
+
+      case BLOG_ACTION_TYPES.GET_POSTS_LIST_ERROR:
+        draft.working = false
+        draft.error = payload.message
+        break
+
       default: return state
     }
   })
@@ -179,6 +219,23 @@ export const getUserDataSuccess = (payload: GetUserDataSuccess) => ({
 })
 export const getUserDataError = (error: Error) => ({
   type: BLOG_ACTION_TYPES.GET_USER_DATA_ERROR,
+  error,
+})
+
+
+/**
+ * Get posts list
+ */
+export const getPostsList = (consumerKey: string) => ({
+  type: BLOG_ACTION_TYPES.GET_POSTS_LIST,
+  consumerKey,
+})
+export const getPostsListSuccess = (payload: BlogPost[]) => ({
+  type: BLOG_ACTION_TYPES.GET_POSTS_LIST_SUCCESS,
+  payload,
+})
+export const getPostsListError = (error: Error) => ({
+  type: BLOG_ACTION_TYPES.GET_POSTS_LIST_ERROR,
   error,
 })
 

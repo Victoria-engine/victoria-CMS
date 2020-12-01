@@ -30,18 +30,16 @@ const Account: React.FC = () => {
       <div className={classes.accountSettings}>
 
         <div className={classes.labelsCol}>
-          <span>First name</span>
-          <span>Last name</span>
+          <span>Name</span>
           <span>Email address</span>
         </div>
         <div className={classes.fieldsCols}>
-          <TextInput value={userData.firstName} />
-          <TextInput value={userData.lastName} />
+          <TextInput value={userData.name} />
           <TextInput value={userData.email} />
         </div>
       </div>
 
-      <p className={classes.created}>Account created at {transformToLocalDate(userData.createdAt)}</p>
+      <p className={classes.created}>Account created at {transformToLocalDate(userData.created_at)}</p>
 
 
       <div className={classes.actions}>

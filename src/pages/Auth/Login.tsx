@@ -22,12 +22,7 @@ const Login: React.FC = () => {
       isValid: true,
       error: null,
     },
-    firstName: {
-      value: '',
-      isValid: true,
-      error: null,
-    },
-    lastName: {
+    name: {
       value: '',
       isValid: true,
       error: null,
@@ -46,7 +41,7 @@ const Login: React.FC = () => {
     if (!auth.success || !gotBlog) return
 
     const isLoggedUserWithBlog = blog.id
-    const isLoggedUserFirstTime =  !blog.id
+    const isLoggedUserFirstTime = !blog.id
 
     if (isLoggedUserFirstTime) {
       return history.push('/welcome')
@@ -60,7 +55,7 @@ const Login: React.FC = () => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    const _name = name as 'email' | 'password' | 'firstName' | 'lastName'
+    const _name = name as 'email' | 'password' | 'name'
 
     let isValid = true
     let errorMsg: string | null = null
@@ -80,17 +75,10 @@ const Login: React.FC = () => {
         }
         break
       }
-      case 'lastName': {
+      case 'name': {
         if (!value) {
           isValid = false
-          errorMsg = 'Last name is required!'
-        }
-        break
-      }
-      case 'firstName': {
-        if (!value) {
-          isValid = false
-          errorMsg = 'First name is required!'
+          errorMsg = 'Name is required!'
         }
         break
       }
@@ -111,12 +99,12 @@ const Login: React.FC = () => {
   }
 
   const onRegisterClick = () => {
-    dispatch(registerUser({
-      email: formData.email.value,
-      password: formData.password.value,
-      firstName: formData.firstName.value,
-      lastName: formData.lastName.value,
-    }))
+    dispatch(
+      registerUser({
+        email: formData.email.value,
+        password: formData.password.value,
+        name: formData.name.value,
+      }))
   }
 
   const renderLoginForm = () => (
@@ -153,22 +141,12 @@ const Login: React.FC = () => {
       <div>
         <TextInputField
           type='text'
-          name='firstName'
-          value={formData.firstName.value}
-          isInvalid={!formData.firstName.isValid}
+          name='name'
+          value={formData.name.value}
+          isInvalid={!formData.name.isValid}
           required
-          label="First Name"
-          validationMessage={formData.firstName.error}
-          onChange={onChange}
-        />
-        <TextInputField
-          type='text'
-          name='lastName'
-          value={formData.lastName.value}
-          isInvalid={!formData.lastName.isValid}
-          required
-          label="Last Name"
-          validationMessage={formData.lastName.error}
+          label="Name"
+          validationMessage={formData.name.error}
           onChange={onChange}
         />
         <TextInputField

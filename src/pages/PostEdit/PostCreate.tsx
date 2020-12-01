@@ -21,7 +21,7 @@ const PostEdit: React.FC<Props> = () => {
   const [hasChangesToSave, setHasChangesToSave] = useState(false)
   const [hasFieldChanged, setHasFieldChanged] = useState({
     title: false,
-    excerpt: false,
+    description: false,
     editor: false,
   })
 
@@ -31,13 +31,14 @@ const PostEdit: React.FC<Props> = () => {
   const hasSavedSuccess = useSelector(({ blog }: Store) => blog.hasSavedSuccess)
 
   const onCreatePost = () => {
-    const { visibility, title, description: excerpt } = postData
+    const { visibility, title, description } = postData
+
     dispatch(
       createPost({
-        text: editorData,
+        text: JSON.stringify(editorData),
         visibility,
         title,
-        description: excerpt,
+        description,
       }))
 
     window.setTimeout(() => { history.push('/drafts') }, 700)
@@ -52,6 +53,7 @@ const PostEdit: React.FC<Props> = () => {
     })
 
     if (!isNameValidField(name)) return
+
     if (!hasFieldChanged[name]) setHasFieldChanged({ ...hasFieldChanged, [name]: true })
     if (!hasChangesToSave) setHasChangesToSave(true)
   }
@@ -87,11 +89,11 @@ const PostEdit: React.FC<Props> = () => {
         />
 
         <TextInputField
-          name='excerpt'
+          name='description'
           onChange={onPostDataChange}
           value={postData.description}
           className={classes.borderlessInput}
-          isInvalid={postData.description.length <= 0 && hasFieldChanged['excerpt']}
+          isInvalid={postData.description.length <= 0 && hasFieldChanged['description']}
           placeholder='Description'
         />
 

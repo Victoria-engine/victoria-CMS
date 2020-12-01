@@ -86,19 +86,18 @@ export type BlogPost = {
   updated_at: string,
 }
 
-export type BlogData = {
-  _id: string,
+export interface BlogData {
+  id: string,
   description: string,
   name: string,
   key: string,
   posts: BlogPost[],
 }
 
-export type UserData = {
-  firstName: string,
-  lastName: string,
+export interface UserData {
+  name: string,
   email: string,
-  createdAt: string,
+  created_at: string,
 }
 
 export interface BlogStore {
@@ -120,8 +119,7 @@ export interface BlogStore {
 export interface RegisterUserPayload {
   email: string,
   password: string,
-  firstName: string,
-  lastName: string,
+  name: string,
 }
 export interface RegisterUserSuccessPayload {
   access_token: string,

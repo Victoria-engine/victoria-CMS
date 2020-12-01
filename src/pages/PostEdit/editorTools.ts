@@ -82,6 +82,6 @@ export const EMPTY_POST: BlogPost = {
   }
 }
 
-export function isNameValidField (name: string): name is 'title' | 'excerpt' | 'editor' {
-  return ['title', 'excerpt', 'editor'].includes(name)
+export function isNameValidField(name: string): name is 'title' | 'description' | 'editor' {
+  return ['title', 'description', 'editor'].includes(name)
 }
