@@ -23,6 +23,10 @@ export const BLOG_ACTION_TYPES = {
   SAVE_POST_SUCCESS: 'Blog/SAVE_POST_SUCCESS',
   SAVE_POST_ERROR: 'Blog/SAVE_POST_ERROR',
 
+  DELETE_POST: 'Blog/DELETE_POST',
+  DELETE_POST_SUCCESS: 'Blog/DELETE_POST_SUCCESS',
+  DELETE_POST_ERROR: 'Blog/DELETE_POST_ERROR',
+
   TOGGLE_PUBLISH_POST: 'Blog/TOGGLE_PUBLISH_POST',
   TOGGLE_PUBLISH_POST_SUCCESS: 'Blog/TOGGLE_PUBLISH_POST_SUCCESS',
   TOGGLE_PUBLISH_POST_ERROR: 'Blog/TOGGLE_PUBLISH_POST_ERROR',
@@ -62,6 +66,7 @@ const initialState: BlogStore = {
   blogCreated: false,
   working: false,
   gotBlog: false,
+  postDeletedID: '',
 }
 
 const blogReducer = (state = initialState, { payload, type, error }: ReduxAction) => {
@@ -202,6 +207,20 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         draft.error = payload.message
         break
 
+      case BLOG_ACTION_TYPES.DELETE_POST:
+        draft.postDeletedID = ''
+        break
+
+      case BLOG_ACTION_TYPES.DELETE_POST_SUCCESS:
+        draft.error = null
+        draft.postDeletedID = payload.postID
+        break
+
+      case BLOG_ACTION_TYPES.DELETE_POST_ERROR:
+        draft.error = payload.message
+        draft.postDeletedID = ''
+        break
+
       default: return state
     }
   })
@@ -270,6 +289,28 @@ export const getPostByIDError = (error: Error) => ({
   type: BLOG_ACTION_TYPES.GET_POST_BY_ID_ERROR,
   error,
 })
+
+/**
+ * 
+ * Delete post
+ */
+export const deletePost = (postID: string) => ({
+  type: BLOG_ACTION_TYPES.DELETE_POST,
+  postID,
+})
+export const deletePostSuccess = (payload: { postID: string }) => {
+  toaster.success('Post deleted successfully!')
+
+  return {
+    type: BLOG_ACTION_TYPES.DELETE_POST_SUCCESS,
+    payload,
+  }
+}
+export const deletePostError = (error: Error) => ({
+  type: BLOG_ACTION_TYPES.DELETE_POST_ERROR,
+  error,
+})
+
 
 /**
  * Save post

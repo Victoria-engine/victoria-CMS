@@ -114,6 +114,7 @@ export interface BlogStore {
   hasSavedSuccess: boolean,
   blogCreated: boolean,
   gotBlog: boolean,
+  postDeletedID: string,
 }
 
 export interface RegisterUserPayload {

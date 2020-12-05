@@ -4,7 +4,7 @@ import { API_URL } from '../constants'
 import {
   BLOG_ACTION_TYPES, getUserDataSuccess, getUserDataError, getPostByIDSuccess, getPostByIDError, savePostError, savePostSuccess,
   createPostError, createPostSuccess, createBlogError, createBlogSuccess, togglePublishPostError, togglePublishPostSuccess,
-  getConsumerKeyError, getConsumerKeySuccess, getBlog, getBlogSuccess, getBlogError, getConsumerKey, getPostsList, getPostsListSuccess, getPostsListError
+  getConsumerKeyError, getConsumerKeySuccess, getBlog, getBlogSuccess, getBlogError, getConsumerKey, getPostsList, getPostsListSuccess, getPostsListError, deletePostSuccess
 } from '../reducers/blog'
 import setAuthHeaders from '../utils/setAuthHeaders'
 import { logoutUser } from '../reducers/auth'
@@ -173,6 +173,23 @@ function* getPostsListWorker({ consumerKey }: AnyAction) {
   }
 }
 
+function* deletePostWorker({ postID }: AnyAction) {
+  const requestUrl = `${API_URL}/post/${postID}`
+  const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
+
+  const { data, error } = yield call(request, requestUrl, {
+    headers,
+    method: 'DELETE',
+  })
+
+  if (error) {
+    yield put(createPostError(error))
+  }
+  if (data && !error) {
+    yield put(deletePostSuccess({ postID }))
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(BLOG_ACTION_TYPES.GET_USER_DATA, getUserDataWorker)
   yield takeLatest(BLOG_ACTION_TYPES.GET_BLOG, getBlogWorker)
@@ -183,5 +200,6 @@ export default function* rootSaga() {
   yield takeLatest(BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST, togglePublishPostWorker)
   yield takeLatest(BLOG_ACTION_TYPES.GET_CONSUMER_KEY, getConsumerKeyWorker)
   yield takeLatest(BLOG_ACTION_TYPES.GET_POSTS_LIST, getPostsListWorker)
+  yield takeLatest(BLOG_ACTION_TYPES.DELETE_POST, deletePostWorker)
 }
 
