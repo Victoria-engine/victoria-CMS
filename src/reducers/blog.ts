@@ -5,6 +5,7 @@ import {
   BlogPost
 } from '../types'
 import { toaster } from 'evergreen-ui'
+import safeJsonParse from '../utils/safeJsonParse'
 
 export const BLOG_ACTION_TYPES = {
   GET_USER_DATA: 'Blog/GET_USER_DATA',
@@ -97,7 +98,7 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         draft.blog.posts = posts.map((p: BlogPost) =>
           ({
             ...p,
-            text: typeof p.text === 'string' ? JSON.parse(p.text) : p.text,
+            text: typeof p.text === 'string' ? safeJsonParse(p.text) : p.text,
           }))
         draft.gotBlog = true
         break
@@ -123,7 +124,7 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 
         const updatedPost = {
           ...payload,
-          text: typeof payload.text === 'string' ? JSON.parse(payload.text) : payload.text,
+          text: typeof payload.text === 'string' ? safeJsonParse(payload.text) : payload.text,
         }
 
         draft.blog.posts[idx] = updatedPost
@@ -141,7 +142,7 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         const changedPostIndex = draft.blog.posts.findIndex((p) => p.id === payload.id)
         const updatedPost = {
           ...payload,
-          text: typeof payload.text === 'string' ? JSON.parse(payload.text) : payload.text,
+          text: typeof payload.text === 'string' ? safeJsonParse(payload.text) : payload.text,
         }
 
         draft.blog.posts[changedPostIndex] = updatedPost
@@ -197,7 +198,7 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         draft.blog.posts = payload.map((p: BlogPost) =>
           ({
             ...p,
-            text: typeof p.text === 'string' ? JSON.parse(p.text) : p.text,
+            text: typeof p.text === 'string' ? safeJsonParse(p.text) : p.text,
           }))
         draft.error = null
         break

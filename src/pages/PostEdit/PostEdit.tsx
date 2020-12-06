@@ -17,12 +17,32 @@ export const getPostIDFromPathname = (pathname: string) => {
   return arr[arr.length - 1]
 }
 
+/**
+ * Posts text string is converted safely to a OutputData block
+ */
+const safeRenderEditorText = (data: BlogPost['text']): OutputData => {
+  if (typeof data === 'string') {
+    return {
+      blocks: [
+        {
+          type: 'paragraph',
+          data: {
+            text: data,
+          },
+        }
+      ]
+    } as OutputData
+  }
+
+  return data
+}
+
 
 /**
  * Post manipulation screen
  */
 const PostEdit: React.FC<Props> = () => {
-  const { blog, hasSavedSuccess, postDeletedID, working } = useSelector(({ blog }: Store) => blog)
+  const { blog, hasSavedSuccess, postDeletedID } = useSelector(({ blog }: Store) => blog)
 
   const { pathname } = useLocation()
   const postID = getPostIDFromPathname(pathname)
@@ -165,7 +185,7 @@ const PostEdit: React.FC<Props> = () => {
           onChange={onPostDataChange}
           value={postData.title}
           className={cx(classes.borderlessInput, classes.title)}
-          isInvalid={postData.title.length <= 0}
+          isInvalid={postData.title?.length <= 0}
           placeholder='Title'
           disabled={isDisabled}
         />
@@ -175,7 +195,7 @@ const PostEdit: React.FC<Props> = () => {
           onChange={onPostDataChange}
           value={postData.description}
           className={classes.borderlessInput}
-          isInvalid={postData.description.length <= 0}
+          isInvalid={postData.description?.length <= 0}
           placeholder='Description'
           disabled={isDisabled}
         />
@@ -183,7 +203,7 @@ const PostEdit: React.FC<Props> = () => {
         {fetchSuccess &&
           <Editor
             tools={EDITOR_JS_TOOLS as any}
-            data={postData.text as OutputData}
+            data={safeRenderEditorText(postData.text)}
             onData={onEditorDataChange}
             autofocus
           />}

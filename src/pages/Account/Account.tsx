@@ -1,22 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Topbar from '../../components/Layout/Topbar'
 import classes from './styles.module.scss'
-import { Button, TextInput } from 'evergreen-ui'
+import { Button, Icon, TextInput } from 'evergreen-ui'
 import { useSelector, useDispatch } from 'react-redux'
 import { Store } from '../../types'
 import { transformToLocalDate } from '../../utils/dateUtils'
 import { logoutUser } from '../../reducers/auth'
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal'
 
 const Account: React.FC = () => {
-
   const dispatch = useDispatch()
 
-  // Selectors
   const userData = useSelector(({ blog }: Store) => blog.user)
+
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [confirmedUserName, setConfirmUserName] = useState('')
 
   const onLogout = () => {
     dispatch(logoutUser())
   }
+
+  const handleDeleteAccount = () => {
+    setDeleteConfirmOpen(true)
+  }
+
+  const onUserNameConfirm = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = target
+    setConfirmUserName(value)
+  }
+
+  const handleConfirmDeleteAccount = () => {
+    // TODO: Delete account
+  }
+
+  const isUserNameConfirmValid = userData.name === confirmedUserName
 
   return (
     <div className={classes.accountContainer}>
@@ -44,6 +61,43 @@ const Account: React.FC = () => {
 
       <div className={classes.actions}>
         <Button onClick={onLogout} appearance='minimal' iconAfter='log-out'>Logout</Button>
+      </div>
+
+      <div className={classes.actions}>
+        <Button
+          intent='danger'
+          onClick={handleDeleteAccount}
+          appearance='primary'
+          iconAfter='delete'
+        >
+          Delete account
+        </Button>
+
+        <ConfirmDeleteModal
+          open={deleteConfirmOpen}
+          confirmText='Delete'
+          title={'Are you sure you want to delete your account ?'}
+          onClose={() => setDeleteConfirmOpen(false)}
+          onConfirm={handleConfirmDeleteAccount}
+          confirmDisabled={!isUserNameConfirmValid}
+        >
+          <div>
+            <p>This action is irreversible, are you sure you want to delete your account ?</p>
+            <b>
+              <Icon icon="delete" color="red" marginRight={5} paddingTop={3} />
+              Deleting your account will delete all your content and make any other blog posts consuming your content
+              not valid.
+            </b>
+
+            <p>In order to delete your account, please type bellow your user name:</p>
+            <TextInput
+              isInvalid={!isUserNameConfirmValid}
+              label='User name'
+              value={confirmedUserName}
+              onChange={onUserNameConfirm}
+            />
+          </div>
+        </ConfirmDeleteModal>
       </div>
     </div>
   )

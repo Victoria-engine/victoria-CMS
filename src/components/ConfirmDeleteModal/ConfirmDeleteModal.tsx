@@ -7,6 +7,7 @@ export interface ConfirmDeleteModalProps {
   title: string | ReactElement,
   confirmText: string,
   loading?: boolean,
+  confirmDisabled?: boolean,
   onClose: () => void,
   onConfirm: () => void,
 }
@@ -19,6 +20,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   onClose,
   children,
   loading,
+  confirmDisabled,
 }) => {
 
   return (
@@ -29,6 +31,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       confirmLabel={confirmText}
       onConfirm={onConfirm}
       isConfirmLoading={loading}
+      isConfirmDisabled={confirmDisabled}
     >
       {children}
     </Dialog>
