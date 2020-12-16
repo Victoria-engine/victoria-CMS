@@ -163,18 +163,22 @@
 }
 
 .continueButton {
-  width: 100%;
-  color: #fff;
-  background: $primary-color;
-  border: none;
-  font-size: 15px;
-  font-weight: 800;
-  height: 44px;
-  min-width: 96px;
-  padding: 0 16px 3px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
+  //
+  // FIXME:  During build process evergreen-ui package, creates multiple sub packages that will
+  // make impossible for custom styles, so this is a temporary alternative
+  //
+  width: 100% !important;
+  color: #fff  !important;
+  background: $primary-color  !important;
+  border: none  !important;
+  font-size: 15px  !important;
+  font-weight: 800  !important;
+  height: 44px  !important;
+  min-width: 96px  !important;
+  padding: 0 16px 3px  !important;
+  margin-bottom: 20px !important;
+  display: flex  !important;
+  justify-content: center  !important;
 
   &:hover,
   &:focus {
