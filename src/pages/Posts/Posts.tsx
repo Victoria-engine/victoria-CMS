@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PostsProps as Props, Store, BlogPost } from '../../types'
+import { PostsProps as Props, Store, BlogPost, RemoteDataStatus } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { Spinner } from 'evergreen-ui'
@@ -15,20 +15,20 @@ const Posts: React.FC<Props> = () => {
   const [posts, setPosts] = useState<BlogPost[]>([])
 
   const blogReducer = useSelector(({ blog }: Store) => blog)
-  const blogData = blogReducer.blog
+  const { key, posts: blogPosts } = blogReducer.blog
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const consumerKey = blogData.key
-    if (!consumerKey) return
+    const validConsumerKey = key.value && key.status === RemoteDataStatus.Success
+    if (!validConsumerKey) return
 
-    dispatch(getPostsList(consumerKey))
-  }, [blogData.key, dispatch, getPostsList])
+    dispatch(getPostsList(key.value))
+  }, [key, dispatch, getPostsList])
 
 
   useEffect(() => {
-    setPosts(blogData.posts.filter(p => ['public'].includes(p.visibility)))
-  }, [blogData.posts])
+    setPosts(blogPosts.filter(p => ['public'].includes(p.visibility)))
+  }, [blogPosts, setPosts])
 
   const history = useHistory()
 
@@ -37,7 +37,7 @@ const Posts: React.FC<Props> = () => {
   }
 
   const onSearchChange = (value: string) => {
-    if (!value) return setPosts(blogData.posts.filter(p => ['public'].includes(p.visibility)))
+    if (!value) return setPosts(blogPosts.filter(p => ['public'].includes(p.visibility)))
 
     const searchValue = value.toLocaleLowerCase()
 
@@ -45,7 +45,7 @@ const Posts: React.FC<Props> = () => {
       post.title.toLocaleLowerCase().includes(searchValue) && ['public'].includes(post.visibility)))
   }
 
-  if (!blogData || blogReducer.working || !posts) return <Spinner />
+  if (blogReducer.working || !posts) return <Spinner />
 
   return (
     <div className={classes.postsContainer}>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { GatekeeperProps } from '../../../types'
+import { GatekeeperProps } from '../../types'
 import { Redirect } from 'react-router-dom'
 import { Spinner } from 'evergreen-ui'
 

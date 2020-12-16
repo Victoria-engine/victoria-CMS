@@ -4,7 +4,7 @@ import routes from '../../routes/routes'
 import Layout from '../../components/Layout'
 import { useHistory, useLocation, matchPath } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { Store } from '../../types'
+import { RemoteDataStatus, Store } from '../../types'
 import { getBlog, getConsumerKey, getUserData } from '../../reducers/blog'
 
 const shouldPathHaveSidebar = (path: string) => {
@@ -14,7 +14,6 @@ const shouldPathHaveSidebar = (path: string) => {
 const App: React.FC = () => {
   const history = useHistory()
   const dispatch = useDispatch()
-
   const { pathname } = useLocation()
 
   const auth = useSelector(({ auth }: Store) => auth)
@@ -31,11 +30,26 @@ const App: React.FC = () => {
       return
     }
 
-    if (!auth.authToken) return
+    if (!auth.authToken || blog.key.status === RemoteDataStatus.Fetching) return
 
-    dispatch(getUserData())
+    const invalidConsumerKey = blog.key.status === RemoteDataStatus.Failed && !blog.key.value
+    if (invalidConsumerKey) {
+      history.push('/welcome/1')
+      return
+    }
+
+    const isTutorialOnGoing = history.location.pathname.includes('/welcome')
+    if (isTutorialOnGoing) return
+
+    const validConsumerKey = blog.key.status === RemoteDataStatus.Success
+    if (validConsumerKey) {
+      dispatch(getUserData())
+      history.push('/')
+      return
+    }
+
     dispatch(getConsumerKey())
-  }, [dispatch, auth.authToken, error, history, getUserData, getBlog])
+  }, [dispatch, auth.authToken, error, history, getUserData, getBlog, blog.key])
 
   return (
     <div className='App'>

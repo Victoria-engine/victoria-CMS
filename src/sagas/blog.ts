@@ -4,7 +4,7 @@ import { API_URL } from '../constants'
 import {
   BLOG_ACTION_TYPES, getUserDataSuccess, getUserDataError, getPostByIDSuccess, getPostByIDError, savePostError, savePostSuccess,
   createPostError, createPostSuccess, createBlogError, createBlogSuccess, togglePublishPostError, togglePublishPostSuccess,
-  getConsumerKeyError, getConsumerKeySuccess, getBlog, getBlogSuccess, getBlogError, getConsumerKey, getPostsList, getPostsListSuccess, getPostsListError, deletePostSuccess
+  getConsumerKeyError, getConsumerKeySuccess, getBlog, getBlogSuccess, getBlogError, getPostsListSuccess, getPostsListError, deletePostSuccess
 } from '../reducers/blog'
 import setAuthHeaders from '../utils/setAuthHeaders'
 import { logoutUser } from '../reducers/auth'
@@ -49,7 +49,7 @@ function* getBlogWorker({ key }: AnyAction) {
 function* getPostByIDWorker({ postID }: GetPostByIDPayload & AnyAction) {
   const { blog }: Store = yield select()
 
-  const consumerKey = blog.blog.key
+  const consumerKey = blog.blog.key.value
   if (!consumerKey) {
     console.warn('No consumer key found when trying to fetch post')
     return

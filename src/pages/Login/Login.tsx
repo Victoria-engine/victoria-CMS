@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { TextInputField, Button } from 'evergreen-ui'
+import { TextInputField, Button, Icon } from 'evergreen-ui'
 import produce from 'immer'
-import { loginUser, registerUser } from '../../reducers/auth'
+import { loginUser, loginUserWithGoogle, registerUser } from '../../reducers/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import { Store, LoginSignInSwitcherProps } from '../../types'
 import { useHistory } from 'react-router-dom'
 import classes from './styles.module.scss'
 import LogoTextSvg from '../../assets/victoria-text.svg'
 import LogoWhite from '../../assets/logo-white.svg'
+import { stringifiedParams } from '../../utils/google'
+import * as queryString from 'query-string'
+import request from '../../utils/request'
+import googleIconSvg from '../../assets/google-icon.svg'
 
 
 const Login: React.FC = () => {
@@ -36,6 +40,22 @@ const Login: React.FC = () => {
   const auth = useSelector(({ auth }: Store) => auth)
   const { blog, gotBlog } = useSelector(({ blog }: Store) => blog)
 
+  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`
+
+
+  React.useEffect(() => {
+    const urlParams = queryString.parse(window.location.search)
+    if (urlParams.error) {
+      console.error(`An error occurred: ${urlParams.error}`)
+      return
+    }
+
+    const singleUserExchangeCode = urlParams.code?.toString()
+    if (!singleUserExchangeCode) return
+
+    dispatch(loginUserWithGoogle(singleUserExchangeCode))
+  }, [queryString.parse, loginUserWithGoogle, request, dispatch])
+
 
   useEffect(() => {
     if (!auth.success || !gotBlog) return
@@ -44,7 +64,7 @@ const Login: React.FC = () => {
     const isLoggedUserFirstTime = !blog.id
 
     if (isLoggedUserFirstTime) {
-      return history.push('/welcome')
+      return history.push('/welcome/1')
     }
     if (isLoggedUserWithBlog) {
       return history.push('/')
@@ -55,12 +75,12 @@ const Login: React.FC = () => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    const _name = name as 'email' | 'password' | 'name'
+    const fieldName = name as 'email' | 'password' | 'name'
 
     let isValid = true
     let errorMsg: string | null = null
 
-    switch (_name) {
+    switch (fieldName) {
       case 'email': {
         if (!value) {
           isValid = false
@@ -85,9 +105,9 @@ const Login: React.FC = () => {
     }
 
     setFormData(produce(formData, (draft) => {
-      draft[_name].value = value
-      draft[_name].error = errorMsg as any
-      draft[_name].isValid = isValid
+      draft[fieldName].value = value
+      draft[fieldName].error = errorMsg as any
+      draft[fieldName].isValid = isValid
     }))
   }
 
@@ -108,37 +128,70 @@ const Login: React.FC = () => {
   }
 
   const renderLoginForm = () => (
-    <div>
-      <TextInputField
-        type='email'
-        name='email'
-        value={formData.email.value}
-        isInvalid={!formData.email.isValid}
-        required
-        label="Email address"
-        validationMessage={formData.email.error}
-        onChange={onChange}
-      />
-      <TextInputField
-        type='password'
-        name='password'
-        value={formData.password.value}
-        isInvalid={!formData.password.isValid}
-        required
-        label="Password"
-        validationMessage={formData.password.error}
-        onChange={onChange}
-      />
-      <div className={classes.bottomActions}>
-        <span className={classes.forgotPwText}>Don't remember your password ?</span>
-        <Button onClick={onLoginClick} intent='success' appearance='primary'>Login</Button>
+    <>
+      <div>
+        <TextInputField
+          type='email'
+          name='email'
+          value={formData.email.value}
+          isInvalid={!formData.email.isValid}
+          required
+          label="Email address"
+          validationMessage={formData.email.error}
+          onChange={onChange}
+        />
+        <TextInputField
+          type='password'
+          name='password'
+          value={formData.password.value}
+          isInvalid={!formData.password.isValid}
+          required
+          label="Password"
+          validationMessage={formData.password.error}
+          onChange={onChange}
+        />
+        <div className={classes.bottomActions}>
+          <Button
+            className={classes.continueButton}
+            intent='success'
+            appearance='primary'
+            onClick={onLoginClick}
+          >
+            <span>Continue</span>
+          </Button>
+        </div>
       </div>
-    </div>
+
+      <div className={classes.horizontalDivider}>
+        <hr />
+        <span>OR</span>
+        <hr />
+      </div>
+
+      <div>
+        <a
+          className={classes.googleLoginButton}
+          href={googleLoginUrl}
+        >
+          <img src={googleIconSvg} />
+          <span>Continue with Google</span>
+        </a>
+      </div>
+
+      <div>
+        <span className={classes.forgotPwText}>Don't remember your password ?</span>
+      </div>
+    </>
   )
 
   const renderRegisterForm = () => (
     <div>
       <div>
+        <div style={{ marginBottom: '40px' }}>
+          <Icon icon='warning-sign' color='red' marginRight={10} />
+          <span>Currently internal sign-in is not supported, please continue with a <b>google account</b>.</span>
+        </div>
+
         <TextInputField
           type='text'
           name='name'
@@ -171,7 +224,15 @@ const Login: React.FC = () => {
         />
       </div>
 
-      <Button onClick={onRegisterClick} intent='success' appearance='primary'>Register</Button>
+      <Button
+        className={classes.continueButton}
+        intent='success'
+        appearance='primary'
+        onClick={onRegisterClick}
+        disabled={true}
+      >
+        Register
+        </Button>
     </div>
   )
 
@@ -186,7 +247,6 @@ const Login: React.FC = () => {
           <LoginSignInSwitcher isLoginActive={isLoginActive} onChange={() => setLoginActive(!isLoginActive)} />
 
           {isLoginActive ? renderLoginForm() : renderRegisterForm()}
-
         </div>
       </div>
 
@@ -209,7 +269,7 @@ const LoginSignInSwitcher: React.FC<LoginSignInSwitcherProps> = ({ isLoginActive
   return (
     <span className={classes.loginSignInSwitcher}>
       <h2 className={isLoginActive ? classes.activeElem : classes.noneActive} onClick={onChange}>Log In</h2>
-      /
+      <span>/</span>
       <h2 className={!isLoginActive ? classes.activeElem : classes.noneActive} onClick={onChange}>Sign In</h2>
     </span>
   )

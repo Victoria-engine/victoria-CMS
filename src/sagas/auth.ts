@@ -2,15 +2,17 @@ import { takeLatest, put, call } from 'redux-saga/effects'
 import { AnyAction } from 'redux'
 import request from '../utils/request'
 import { API_URL } from '../constants'
-import { loginUserError, loginUserSuccess, AUTH_ACTION_TYPES, registerUserSuccess, registerUserError } from '../reducers/auth'
+import {
+  loginUserError, loginUserSuccess, AUTH_ACTION_TYPES, registerUserSuccess, registerUserError, loginUserWithGoogleError,
+  deleteAccountError, deleteAccountSuccess
+} from '../reducers/auth'
 import { LoginserPayload, RegisterUserPayload } from '../types'
+import setAuthHeaders from '../utils/setAuthHeaders'
 
 
 /** Worker to login a user with the API */
 function* loginUserWorker({ payload }: AnyAction & LoginserPayload) {
   const { email, password } = payload
-
-
   try {
     const requestUrl = `${API_URL}/auth/session`
     const headers = { 'Content-Type': 'application/json' }
@@ -24,6 +26,27 @@ function* loginUserWorker({ payload }: AnyAction & LoginserPayload) {
 
     if (error) {
       yield put(loginUserError(error))
+      return
+    }
+
+    yield put(loginUserSuccess(data))
+  } catch (error) {
+    yield put(loginUserError(error))
+  }
+}
+
+function* loginUserGoogleWorker({ code }: AnyAction & LoginserPayload) {
+  try {
+    const requestUrl = `${API_URL}/auth/google?code=${code}`
+    const headers = { 'Content-Type': 'application/json' }
+
+    const { data, error } = yield call(request, requestUrl, {
+      headers,
+      method: 'POST',
+    })
+
+    if (error) {
+      yield put(loginUserWithGoogleError(error))
       return
     }
 
@@ -54,8 +77,26 @@ function* registerUserWorker({ payload }: AnyAction & RegisterUserPayload) {
   if (data && !error) yield put(registerUserSuccess(data))
 }
 
+function* deleteAccountWorker() {
+  const requestUrl = `${API_URL}/user`
+  const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
+
+  const { data, error } = yield call(request, requestUrl, {
+    headers,
+    method: 'DELETE',
+  })
+
+  if (error) {
+    yield put(deleteAccountError(error))
+  }
+
+  if (data && !error) yield put(deleteAccountSuccess())
+}
+
 export default function* rootSaga() {
   yield takeLatest(AUTH_ACTION_TYPES.LOGIN_USER, loginUserWorker)
+  yield takeLatest(AUTH_ACTION_TYPES.LOGIN_USER_GOOGLE, loginUserGoogleWorker)
   yield takeLatest(AUTH_ACTION_TYPES.REGISTER_USER, registerUserWorker)
+  yield takeLatest(AUTH_ACTION_TYPES.DELETE_ACCOUNT, deleteAccountWorker)
 }
 

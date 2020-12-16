@@ -18,7 +18,7 @@ const Drafts: React.FC = () => {
 
 
   useEffect(() => {
-    const consumerKey = blogData.key
+    const consumerKey = blogData.key.value
     if (!consumerKey) return
 
     dispatch(getPostsList(consumerKey))

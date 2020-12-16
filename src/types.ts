@@ -64,10 +64,10 @@ export interface AppStore {
 
 export interface AuthStore {
   authToken?: string,
-  blogKey: string | null,
   working: boolean,
   error: string | null,
   success: boolean,
+  accountDeleted: boolean,
 }
 
 export type BlogPost = {
@@ -100,13 +100,25 @@ export interface UserData {
   created_at: string,
 }
 
+export enum RemoteDataStatus {
+  Idle = 'idle',
+  Fetching = 'fetching',
+  Success = 'success',
+  Failed = 'failed',
+}
+
+export interface RemoteData<T> {
+  value: T,
+  status: RemoteDataStatus,
+}
+
 export interface BlogStore {
   working: boolean,
   blog: {
     id: string,
     title: string,
     description: string,
-    key: string,
+    key: RemoteData<string>,
     posts: BlogPost[],
   },
   user: UserData,

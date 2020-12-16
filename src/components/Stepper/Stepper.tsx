@@ -1,8 +1,15 @@
 import React from 'react'
-import { StepperProps } from '../../types'
+import { StepperProps as Props } from '../../types'
 import './stepperStyles.scss'
 
-const Stepper: React.FC<StepperProps> = ({ steps, showNumber, onSelect, activeStep, isNextBlocked }) => {
+
+const Stepper: React.FC<Props> = ({
+  steps,
+  showNumber,
+  onSelect,
+  activeStep,
+  isNextBlocked
+}) => {
   const lastIndexOfSteps = steps.length - 1
 
   return (

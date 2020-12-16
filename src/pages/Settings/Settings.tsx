@@ -2,16 +2,12 @@ import React from 'react'
 import { PostEditProps as Props, Store } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
 import { Code, Icon } from 'evergreen-ui'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import classes from '../Account/styles.module.scss'
 
 const Settings: React.FC<Props> = () => {
-
-  const dispatch = useDispatch()
-
-  // Selectors
-  const blogReducer = useSelector(({ blog }: Store) => blog)
-  const apiKey = blogReducer.blog.key
+  const { blog } = useSelector(({ blog }: Store) => blog)
+  const consumerKey = blog.key.value
 
 
   return (
@@ -24,7 +20,7 @@ const Settings: React.FC<Props> = () => {
           <span>Blog public consumer key:</span>
         </div>
         <div className={classes.fieldsCols}>
-          <Code style={{ color: '#e9404c' }}>{apiKey}</Code>
+          <Code style={{ color: '#e9404c' }}>{consumerKey}</Code>
         </div>
       </div>
       <p className={classes.warning}>

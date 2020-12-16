@@ -16,7 +16,7 @@
       margin: auto;
       text-align: left;
 
-      img {
+      & > img {
         width: 50%;
         margin-bottom: 50px;
       }
@@ -40,7 +40,7 @@
       flex-flow: row;
       align-items: center;
       justify-content: space-between;
-      width: 60%;      
+      width: 60%;
 
       img {
         width: 100%;
@@ -69,10 +69,7 @@
   .bottomActions {
     display: flex;
     flex-flow: column;
-
-    button {
-      width: 70px;
-    }
+    width: 100%;
   }
 }
 
@@ -104,4 +101,83 @@
   text-decoration: underline;
   cursor: pointer;
   padding-bottom: 30px;
+}
+
+.horizontalDivider {
+  align-items: center;
+  display: flex;
+  margin-bottom: 24px;
+
+  hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    clear: both;
+    margin-bottom: 16px;
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  span {
+    padding: 0 20px;
+    color: #868686;
+    font-weight: 700;
+  }
+}
+
+.googleLoginButton {
+  display: flex;
+  text-decoration: none;
+  background-color: #fff;
+  border: 2px solid #4285f4;
+  color: #4285f4;
+  display: flex;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  font-size: 16px;
+  font-weight: 800;
+  height: 44px;
+  min-width: 96px;
+  transition: all 80ms linear;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+
+  & > img {
+    height: 20px;
+    margin: 0;
+    margin-right: 10px;
+    padding: 0;
+  }
+
+  & > span {
+    color: #4285f4;
+  }
+
+  &:hover {
+    background-color: #fff;
+    color: #4285f4;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.continueButton {
+  width: 100%;
+  color: #fff;
+  background: $primary-color;
+  border: none;
+  font-size: 15px;
+  font-weight: 800;
+  height: 44px;
+  min-width: 96px;
+  padding: 0 16px 3px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+
+  &:hover,
+  &:focus {
+    background: $primary-dark !important;
+  }
 }

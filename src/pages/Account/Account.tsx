@@ -1,20 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Topbar from '../../components/Layout/Topbar'
 import classes from './styles.module.scss'
 import { Button, Icon, TextInput } from 'evergreen-ui'
 import { useSelector, useDispatch } from 'react-redux'
 import { Store } from '../../types'
 import { transformToLocalDate } from '../../utils/dateUtils'
-import { logoutUser } from '../../reducers/auth'
+import { deleteAccount, logoutUser } from '../../reducers/auth'
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal'
+import { getUserData } from '../../reducers/blog'
 
 const Account: React.FC = () => {
   const dispatch = useDispatch()
 
   const userData = useSelector(({ blog }: Store) => blog.user)
+  const { accountDeleted } = useSelector(({ auth }: Store) => auth)
 
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [confirmedUserName, setConfirmUserName] = useState('')
+
+
+  useEffect(() => {
+    if (!userData.email || !userData.name) {
+      dispatch(getUserData())
+    }
+  }, [dispatch, getUserData, userData])
+
+  useEffect(() => {
+    if (accountDeleted) {
+      dispatch(logoutUser())
+    }
+  }, [accountDeleted, dispatch, logoutUser])
+
 
   const onLogout = () => {
     dispatch(logoutUser())
@@ -30,7 +46,7 @@ const Account: React.FC = () => {
   }
 
   const handleConfirmDeleteAccount = () => {
-    // TODO: Delete account
+    dispatch(deleteAccount())
   }
 
   const isUserNameConfirmValid = userData.name === confirmedUserName

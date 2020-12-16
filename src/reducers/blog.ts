@@ -2,10 +2,12 @@ import produce from 'immer'
 import {
   ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME,
   CreateBlogPayload,
-  BlogPost
+  BlogPost,
+  RemoteDataStatus
 } from '../types'
 import { toaster } from 'evergreen-ui'
 import safeJsonParse from '../utils/safeJsonParse'
+import { AUTH_ACTION_TYPES } from './auth'
 
 export const BLOG_ACTION_TYPES = {
   GET_USER_DATA: 'Blog/GET_USER_DATA',
@@ -54,7 +56,10 @@ const initialState: BlogStore = {
     id: '',
     title: '',
     description: '',
-    key: '',
+    key: {
+      value: '',
+      status: RemoteDataStatus.Idle,
+    },
     posts: [],
   },
   user: {
@@ -94,12 +99,18 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         const { posts, ...blog } = payload
 
         draft.working = false
-        draft.blog = blog
+        draft.blog = {
+          ...blog,
+          key: {
+            value: blog.key,
+            status: RemoteDataStatus.Success,
+          }
+        }
         draft.blog.posts = posts.map((p: BlogPost) =>
-          ({
-            ...p,
-            text: typeof p.text === 'string' ? safeJsonParse(p.text) : p.text,
-          }))
+        ({
+          ...p,
+          text: typeof p.text === 'string' ? safeJsonParse(p.text) : p.text,
+        }))
         draft.gotBlog = true
         break
       case BLOG_ACTION_TYPES.GET_BLOG_ERROR:
@@ -164,7 +175,9 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       }
       case BLOG_ACTION_TYPES.CREATE_BLOG_SUCCESS: {
         draft.blogCreated = true
-        draft.blog = payload
+        draft.blog.id = payload.id
+        draft.blog.title = payload.title
+        draft.blog.description = payload.description
         break
       }
       case BLOG_ACTION_TYPES.CREATE_BLOG_ERROR: {
@@ -175,16 +188,18 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 
       case BLOG_ACTION_TYPES.GET_CONSUMER_KEY: {
         draft.working = false
+        draft.blog.key.status = RemoteDataStatus.Fetching
         break
       }
       case BLOG_ACTION_TYPES.GET_CONSUMER_KEY_SUCCESS: {
         draft.working = false
-        draft.blog.key = payload
+        draft.blog.key.value = payload
+        draft.blog.key.status = RemoteDataStatus.Success
         break
       }
       case BLOG_ACTION_TYPES.GET_CONSUMER_KEY_ERROR: {
         draft.working = false
-        draft.error = error.message
+        draft.blog.key.status = RemoteDataStatus.Failed
         break
       }
 
@@ -196,10 +211,10 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       case BLOG_ACTION_TYPES.GET_POSTS_LIST_SUCCESS:
         draft.working = false
         draft.blog.posts = payload.map((p: BlogPost) =>
-          ({
-            ...p,
-            text: typeof p.text === 'string' ? safeJsonParse(p.text) : p.text,
-          }))
+        ({
+          ...p,
+          text: typeof p.text === 'string' ? safeJsonParse(p.text) : p.text,
+        }))
         draft.error = null
         break
 
@@ -220,6 +235,12 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       case BLOG_ACTION_TYPES.DELETE_POST_ERROR:
         draft.error = payload.message
         draft.postDeletedID = ''
+        break
+
+      case AUTH_ACTION_TYPES.LOGOUT_USER:
+        draft.blog = initialState.blog
+        draft.user = initialState.user
+        draft.gotBlog = initialState.gotBlog
         break
 
       default: return state
