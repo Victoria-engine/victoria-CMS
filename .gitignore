@@ -24,3 +24,7 @@ yarn-error.log*
 
 # env file
 .env
+
+# Google stuff
+app.yaml
+.gcloudignore
