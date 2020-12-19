@@ -1,5 +1,3 @@
-[![Dev server status](https://api.netlify.com/api/v1/badges/ac48970f-b4f5-434d-98c5-612e9b4889bd/deploy-status)](https://app.netlify.com/sites/dev-victoria-cms/deploys)
-
 <div align="center">
     <img alt="styled-components" src="./public/logo.png" height="150px" />
 </div>

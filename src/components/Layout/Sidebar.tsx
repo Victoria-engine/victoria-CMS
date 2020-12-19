@@ -6,11 +6,11 @@ import { Icon } from 'evergreen-ui'
 import { NavLink, Link } from 'react-router-dom'
 import logoImage from '../../assets/logo.png'
 
-const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem , title }) => {
+
+const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem, title }) => {
   return (
     <div className={classes.sidebar}>
       <ul>
-        
         <Link to='/'>
           <img src={logoImage} alt='victoria logo' className={classes.logo}>
           </img>
@@ -27,19 +27,20 @@ const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem , title }) => {
               activeClassName={classes.activeSidebarItem}
               exact
             >
-            <li>
-              <Icon icon={tab.iconName} color='muted' marginRight={16} />
-              <p>{tab.label}</p>
-          </li>
-          </NavLink>
-        )})}
+              <li>
+                <Icon icon={tab.iconName} color='muted' marginRight={16} />
+                <p>{tab.label}</p>
+              </li>
+            </NavLink>
+          )
+        })}
 
-          <NavLink to='/account' activeClassName={classes.activeSidebarItem}>
-            <li>
-              <Icon icon='user' color='muted' marginRight={16} />
-              <p>Account</p>
+        <NavLink to='/account' activeClassName={classes.activeSidebarItem}>
+          <li>
+            <Icon icon='user' color='muted' marginRight={16} />
+            <p>Account</p>
           </li>
-          </NavLink>
+        </NavLink>
       </ul>
     </div>
   )
