@@ -1,12 +1,22 @@
 import produce from 'immer'
-import { ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME,
-  CreateBlogPayload } from '../types'
+import {
+  ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME,
+  CreateBlogPayload,
+  BlogPost,
+  RemoteDataStatus
+} from '../types'
 import { toaster } from 'evergreen-ui'
+import safeJsonParse from '../utils/safeJsonParse'
+import { AUTH_ACTION_TYPES } from './auth'
 
 export const BLOG_ACTION_TYPES = {
   GET_USER_DATA: 'Blog/GET_USER_DATA',
   GET_USER_DATA_SUCCESS: 'Blog/GET_USER_DATA_SUCCESS',
   GET_USER_DATA_ERROR: 'Blog/GET_USER_DATA_ERROR',
+
+  GET_BLOG: 'Blog/GET_BLOG',
+  GET_BLOG_SUCCESS: 'Blog/GET_BLOG_SUCCESS',
+  GET_BLOG_ERROR: 'Blog/GET_BLOG_ERROR',
 
   GET_POST_BY_ID: 'Blog/GET_POST_BY_ID',
   GET_POST_BY_ID_SUCCESS: 'Blog/GET_POST_BY_ID_SUCCESS',
@@ -15,6 +25,10 @@ export const BLOG_ACTION_TYPES = {
   SAVE_POST: 'Blog/SAVE_POST',
   SAVE_POST_SUCCESS: 'Blog/SAVE_POST_SUCCESS',
   SAVE_POST_ERROR: 'Blog/SAVE_POST_ERROR',
+
+  DELETE_POST: 'Blog/DELETE_POST',
+  DELETE_POST_SUCCESS: 'Blog/DELETE_POST_SUCCESS',
+  DELETE_POST_ERROR: 'Blog/DELETE_POST_ERROR',
 
   TOGGLE_PUBLISH_POST: 'Blog/TOGGLE_PUBLISH_POST',
   TOGGLE_PUBLISH_POST_SUCCESS: 'Blog/TOGGLE_PUBLISH_POST_SUCCESS',
@@ -27,26 +41,38 @@ export const BLOG_ACTION_TYPES = {
   CREATE_BLOG: 'Blog/CREATE_BLOG',
   CREATE_BLOG_SUCCESS: 'Blog/CREATE_BLOG_SUCCESS',
   CREATE_BLOG_ERROR: 'Blog/CREATE_BLOG_ERROR',
+
+  GET_CONSUMER_KEY: 'Blog/GET_CONSUMER_KEY',
+  GET_CONSUMER_KEY_SUCCESS: 'Blog/GET_CONSUMER_KEY_SUCCESS',
+  GET_CONSUMER_KEY_ERROR: 'Blog/GET_CONSUMER_KEY_ERROR',
+
+  GET_POSTS_LIST: 'Blog/GET_POSTS_LIST',
+  GET_POSTS_LIST_SUCCESS: 'Blog/GET_POSTS_LIST_SUCCESS',
+  GET_POSTS_LIST_ERROR: 'Blog/GET_POSTS_LIST_ERROR',
 }
 
 const initialState: BlogStore = {
-  working: false,
   blog: {
-    name: '',
+    id: '',
+    title: '',
     description: '',
-    author: '',
-    key: '',
+    key: {
+      value: '',
+      status: RemoteDataStatus.Idle,
+    },
     posts: [],
   },
   user: {
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    createdAt: '',
+    created_at: '',
   },
   error: null,
   hasSavedSuccess: false,
-  wasBlogCreated: false,
+  blogCreated: false,
+  working: false,
+  gotBlog: false,
+  postDeletedID: '',
 }
 
 const blogReducer = (state = initialState, { payload, type, error }: ReduxAction) => {
@@ -59,10 +85,38 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
         draft.working = true
         break
       case BLOG_ACTION_TYPES.GET_USER_DATA_SUCCESS:
+        const { blogID, ...userData } = payload
         draft.working = false
-        draft.blog = payload.blog
-        draft.user = payload.user
-        draft.blog.posts = payload.posts
+        draft.blog.id = blogID
+        draft.user = userData
+        break
+
+      case BLOG_ACTION_TYPES.GET_BLOG:
+        draft.working = true
+        draft.gotBlog = true
+        break
+      case BLOG_ACTION_TYPES.GET_BLOG_SUCCESS:
+        const { posts, ...blog } = payload
+
+        draft.working = false
+        draft.blog = {
+          ...blog,
+          key: {
+            value: blog.key,
+            status: RemoteDataStatus.Success,
+          }
+        }
+        draft.blog.posts = posts.map((p: BlogPost) =>
+        ({
+          ...p,
+          text: typeof p.text === 'string' ? safeJsonParse(p.text) : p.text,
+        }))
+        draft.gotBlog = true
+        break
+      case BLOG_ACTION_TYPES.GET_BLOG_ERROR:
+        draft.working = false
+        draft.gotBlog = true
+        draft.error = error.message
         break
 
       case BLOG_ACTION_TYPES.GET_POST_BY_ID_ERROR:
@@ -73,15 +127,18 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 
       case BLOG_ACTION_TYPES.GET_POST_BY_ID_SUCCESS:
         draft.working = false
-        const postToUpdate = draft.blog.posts.find(post => post._id === payload._id)
+        const idx = draft.blog.posts.findIndex(p => p.id === payload.id)
 
-        if (postToUpdate) {
-          const idx = draft.blog.posts.findIndex(post => post._id === payload._id)
-          draft.blog.posts[idx] = payload
-        } else {
-          draft.blog.posts.unshift(payload)
+        if (idx < 0) {
+          throw new Error(`found no post with ID of ${payload.id} to update.`)
         }
 
+        const updatedPost = {
+          ...payload,
+          text: typeof payload.text === 'string' ? safeJsonParse(payload.text) : payload.text,
+        }
+
+        draft.blog.posts[idx] = updatedPost
         break
 
       case BLOG_ACTION_TYPES.CREATE_POST:
@@ -93,9 +150,13 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
       case BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST_SUCCESS:
       case BLOG_ACTION_TYPES.CREATE_POST_SUCCESS:
       case BLOG_ACTION_TYPES.SAVE_POST_SUCCESS: {
-        const changedPostIndex = draft.blog.posts.findIndex((p) => p._id === payload.post._id)
+        const changedPostIndex = draft.blog.posts.findIndex((p) => p.id === payload.id)
+        const updatedPost = {
+          ...payload,
+          text: typeof payload.text === 'string' ? safeJsonParse(payload.text) : payload.text,
+        }
 
-        draft.blog.posts[changedPostIndex] = payload.post
+        draft.blog.posts[changedPostIndex] = updatedPost
         draft.hasSavedSuccess = true
         break
       }
@@ -109,19 +170,78 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 
       case BLOG_ACTION_TYPES.CREATE_BLOG: {
         draft.working = false
-        draft.wasBlogCreated = false
+        draft.blogCreated = false
         break
       }
       case BLOG_ACTION_TYPES.CREATE_BLOG_SUCCESS: {
-        draft.wasBlogCreated = true
-        draft.blog = payload.blog
+        draft.blogCreated = true
+        draft.blog.id = payload.id
+        draft.blog.title = payload.title
+        draft.blog.description = payload.description
         break
       }
       case BLOG_ACTION_TYPES.CREATE_BLOG_ERROR: {
-        draft.wasBlogCreated = false
+        draft.blogCreated = false
         draft.error = error.message
         break
       }
+
+      case BLOG_ACTION_TYPES.GET_CONSUMER_KEY: {
+        draft.working = false
+        draft.blog.key.status = RemoteDataStatus.Fetching
+        break
+      }
+      case BLOG_ACTION_TYPES.GET_CONSUMER_KEY_SUCCESS: {
+        draft.working = false
+        draft.blog.key.value = payload
+        draft.blog.key.status = RemoteDataStatus.Success
+        break
+      }
+      case BLOG_ACTION_TYPES.GET_CONSUMER_KEY_ERROR: {
+        draft.working = false
+        draft.blog.key.status = RemoteDataStatus.Failed
+        break
+      }
+
+      case BLOG_ACTION_TYPES.GET_POSTS_LIST:
+        draft.working = true
+        draft.error = null
+        break
+
+      case BLOG_ACTION_TYPES.GET_POSTS_LIST_SUCCESS:
+        draft.working = false
+        draft.blog.posts = payload.map((p: BlogPost) =>
+        ({
+          ...p,
+          text: typeof p.text === 'string' ? safeJsonParse(p.text) : p.text,
+        }))
+        draft.error = null
+        break
+
+      case BLOG_ACTION_TYPES.GET_POSTS_LIST_ERROR:
+        draft.working = false
+        draft.error = payload.message
+        break
+
+      case BLOG_ACTION_TYPES.DELETE_POST:
+        draft.postDeletedID = ''
+        break
+
+      case BLOG_ACTION_TYPES.DELETE_POST_SUCCESS:
+        draft.error = null
+        draft.postDeletedID = payload.postID
+        break
+
+      case BLOG_ACTION_TYPES.DELETE_POST_ERROR:
+        draft.error = payload.message
+        draft.postDeletedID = ''
+        break
+
+      case AUTH_ACTION_TYPES.LOGOUT_USER:
+        draft.blog = initialState.blog
+        draft.user = initialState.user
+        draft.gotBlog = initialState.gotBlog
+        break
 
       default: return state
     }
@@ -143,6 +263,39 @@ export const getUserDataError = (error: Error) => ({
   error,
 })
 
+
+/**
+ * Get posts list
+ */
+export const getPostsList = (consumerKey: string) => ({
+  type: BLOG_ACTION_TYPES.GET_POSTS_LIST,
+  consumerKey,
+})
+export const getPostsListSuccess = (payload: BlogPost[]) => ({
+  type: BLOG_ACTION_TYPES.GET_POSTS_LIST_SUCCESS,
+  payload,
+})
+export const getPostsListError = (error: Error) => ({
+  type: BLOG_ACTION_TYPES.GET_POSTS_LIST_ERROR,
+  error,
+})
+
+/**
+ * Get blog action
+ */
+export const getBlog = (payload: { key: string }) => ({
+  type: BLOG_ACTION_TYPES.GET_BLOG,
+  ...payload,
+})
+export const getBlogSuccess = (payload: GetUserDataSuccess['blog']) => ({
+  type: BLOG_ACTION_TYPES.GET_BLOG_SUCCESS,
+  payload,
+})
+export const getBlogError = (error: Error) => ({
+  type: BLOG_ACTION_TYPES.GET_BLOG_ERROR,
+  error,
+})
+
 /**
  * Get single post by ID
  */
@@ -158,6 +311,28 @@ export const getPostByIDError = (error: Error) => ({
   type: BLOG_ACTION_TYPES.GET_POST_BY_ID_ERROR,
   error,
 })
+
+/**
+ * 
+ * Delete post
+ */
+export const deletePost = (postID: string) => ({
+  type: BLOG_ACTION_TYPES.DELETE_POST,
+  postID,
+})
+export const deletePostSuccess = (payload: { postID: string }) => {
+  toaster.success('Post deleted successfully!')
+
+  return {
+    type: BLOG_ACTION_TYPES.DELETE_POST_SUCCESS,
+    payload,
+  }
+}
+export const deletePostError = (error: Error) => ({
+  type: BLOG_ACTION_TYPES.DELETE_POST_ERROR,
+  error,
+})
+
 
 /**
  * Save post
@@ -191,7 +366,7 @@ export const togglePublishPost = (payload: SavePostPayload) => ({
   ...payload,
 })
 export const togglePublishPostSuccess = (payload: $TS_FIXME) => {
-  const newStateNotification = ['private', 'not-listed'].includes(payload.post.visibility) ? 'Unpublished' : 'Published'
+  const newStateNotification = ['private', 'not-listed'].includes(payload.visibility) ? 'Unpublished' : 'Published'
   toaster.success(`Post has been ${newStateNotification} !`)
 
   return {
@@ -245,11 +420,30 @@ export const createBlogSuccess = (payload: $TS_FIXME) => {
     payload,
   }
 }
-export const ccreateBlogError = (error: Error) => {
+export const createBlogError = (error: Error) => {
   toaster.danger(error.message || 'Couldn\'t create the blog, please check if eveything is filled correctly.')
 
   return {
     type: BLOG_ACTION_TYPES.CREATE_BLOG_ERROR,
+    error,
+  }
+}
+
+/**
+ * Get consumer key
+ */
+export const getConsumerKey = () => ({
+  type: BLOG_ACTION_TYPES.GET_CONSUMER_KEY,
+})
+export const getConsumerKeySuccess = (payload: string) => {
+  return {
+    type: BLOG_ACTION_TYPES.GET_CONSUMER_KEY_SUCCESS,
+    payload,
+  }
+}
+export const getConsumerKeyError = (error: Error) => {
+  return {
+    type: BLOG_ACTION_TYPES.GET_CONSUMER_KEY_ERROR,
     error,
   }
 }

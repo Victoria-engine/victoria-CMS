@@ -1,19 +1,17 @@
 import React from 'react'
 import { RouteProps, Route, Switch } from 'react-router'
+import GateKeeper from '../components/GateKeeper'
 
 // Pages
 import Posts from '../pages/Posts'
 import PostEdit, { PostCreate } from '../pages/PostEdit'
 import Drafts from '../pages/Drafts'
 import Settings from '../pages/Settings'
-import Login from '../pages/Auth'
+import Login from '../pages/Login'
 import Tutorial from '../pages/Tutorial'
 import Account from '../pages/Account'
-import GateKeeper from '../pages/Auth/GateKeeper'
 
-/**
- * Add routes to your web app here
- */
+
 const routes: RouteProps[] = [
   { path: '/', component: GateKeeper(Posts), exact: true },
   { path: '/post/new', component: GateKeeper(PostCreate), exact: true },
@@ -22,7 +20,7 @@ const routes: RouteProps[] = [
   { path: '/settings', component: GateKeeper(Settings), exact: true },
   { path: '/account', component: GateKeeper(Account), exact: true },
   { path: '/login', component: Login, exact: true },
-  { path: '/welcome', component: GateKeeper(Tutorial), exact: true },
+  { path: '/welcome/:step', component: GateKeeper(Tutorial), exact: true },
 ]
 
 export default () => (

@@ -5,22 +5,24 @@ import PostsTable from '../../components/PostsTable'
 import classes from '../Posts/styles.module.scss'
 import { Spinner } from 'evergreen-ui'
 import { BlogPost, Store } from '../../types'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPostsList } from '../../reducers/blog'
 
 const Drafts: React.FC = () => {
-
-  // Local State
   const [posts, setPosts] = useState<BlogPost[]>([])
 
-
-  // Selectors
   const blogReducer = useSelector(({ blog }: Store) => blog)
   const blogData = blogReducer.blog
 
+  const dispatch = useDispatch()
+
 
   useEffect(() => {
-    // getPosts...
-  })
+    const consumerKey = blogData.key.value
+    if (!consumerKey) return
+
+    dispatch(getPostsList(consumerKey))
+  }, [blogData.key, dispatch, getPostsList])
 
   const history = useHistory()
 
@@ -28,15 +30,14 @@ const Drafts: React.FC = () => {
     setPosts(blogData.posts.filter(p => ['not-listed', 'private'].includes(p.visibility)))
   }, [blogData.posts])
 
-  const nagivateToPostHandler = (postID: string) => () => {
+  const handlePostClick = (postID: string) => () => {
     history.push(`/post/${postID}`)
   }
 
-  const onSearchChange = (value: string) => {
+  const handleOnSearchChange = (value: string) => {
     if (!value) return setPosts(blogData.posts)
 
     const searchValue = value.toLocaleLowerCase()
-
     setPosts(posts.filter(post => post.title.toLocaleLowerCase().includes(searchValue)))
   }
 
@@ -54,8 +55,8 @@ const Drafts: React.FC = () => {
 
       <PostsTable
         posts={posts}
-        onSelect={nagivateToPostHandler}
-        onSearchChange={onSearchChange}
+        onSelect={handlePostClick}
+        onSearchChange={handleOnSearchChange}
       />
     </div>
   )

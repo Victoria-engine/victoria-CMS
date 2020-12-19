@@ -34,12 +34,12 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, onSelect, onSearchChange
 
       <Table.Body>
         {posts.map(p => (
-          <Table.Row key={`${p._id}post`} isSelectable onSelect={onSelect(p._id)}>
+          <Table.Row key={`${p.id}post`} isSelectable onSelect={onSelect(p.id)}>
             <Table.TextCell>{p.title}</Table.TextCell>
             <Table.TextCell>{getStatusWording(p.visibility)}</Table.TextCell>
-            <Table.TextCell>{getRelativeDate(p.updatedAt)}</Table.TextCell>
-            <Table.TextCell>{transformToLocalDate(p.createdAt)}</Table.TextCell>
-            <Table.TextCell>{p.author}</Table.TextCell>
+            <Table.TextCell>{getRelativeDate(p.updated_at)}</Table.TextCell>
+            <Table.TextCell>{transformToLocalDate(p.created_at)}</Table.TextCell>
+            <Table.TextCell>{p.user.name}</Table.TextCell>
           </Table.Row>
         ))}
       </Table.Body>

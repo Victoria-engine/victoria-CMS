@@ -14,14 +14,22 @@ export const AUTH_ACTION_TYPES = {
   REGISTER_USER_ERROR: 'Auth/REGISTER_USER_ERROR',
 
   LOGOUT_USER: 'Auth/LOGOUT_USER',
+
+  LOGIN_USER_GOOGLE: 'Auth/LOGIN_USER_GOOGLE',
+  LOGIN_USER_GOOGLE_SUCCESS: 'Auth/LOGIN_USER_GOOGLE_SUCCESS',
+  LOGIN_USER_GOOGLE_ERROR: 'Auth/LOGIN_USER_GOOGLE_ERROR',
+
+  DELETE_ACCOUNT: 'Auth/DELETE_ACCOUNT',
+  DELETE_ACCOUNT_SUCCESS: 'Auth/DELETE_ACCOUNT_SUCCESS',
+  DELETE_ACCOUNT_ERROR: 'Auth/DELETE_ACCOUNT_ERROR',
 }
 
 const initialState: AuthStore = {
-  authToken: getCookie('key'),
-  blogKey: null,
+  authToken: getCookie(ACCESS_TOKEN),
   working: false,
   error: null,
   success: false,
+  accountDeleted: false,
 }
 
 const authReducer = (state = initialState, { payload, type, error }: ReduxAction) => {
@@ -34,7 +42,6 @@ const authReducer = (state = initialState, { payload, type, error }: ReduxAction
         break
       case AUTH_ACTION_TYPES.LOGIN_USER_SUCCESS:
         draft.working = false
-        draft.blogKey = payload.blogID
         draft.authToken = payload['access_token']
         draft.success = true
         break
@@ -46,8 +53,23 @@ const authReducer = (state = initialState, { payload, type, error }: ReduxAction
         break
 
       case AUTH_ACTION_TYPES.LOGOUT_USER:
-        draft.blogKey = null
         draft.authToken = ''
+        draft.success = initialState.success
+        break
+
+      case AUTH_ACTION_TYPES.DELETE_ACCOUNT:
+        draft.working = true
+        draft.accountDeleted = false
+        break
+      case AUTH_ACTION_TYPES.DELETE_ACCOUNT_SUCCESS:
+        draft.working = false
+        draft.error = null
+        draft.accountDeleted = true
+        break
+      case AUTH_ACTION_TYPES.DELETE_ACCOUNT_ERROR:
+        draft.working = false
+        draft.error = error.message
+        draft.accountDeleted = false
         break
 
       default: return state
@@ -71,8 +93,9 @@ export const loginUserSuccess = (payload: LoginUserSuccessPayload) => {
   }
 }
 export const loginUserError = (error: Error) => {
+  const errorMessage = error.message ?? 'Please check if all the credentials are correctly typed'
 
-  toaster.danger(error.message, { description: 'Please check if all the credentials are correctly typed' })
+  toaster.danger(errorMessage)
 
   return {
     type: AUTH_ACTION_TYPES.LOGIN_USER_ERROR,
@@ -117,5 +140,37 @@ export const logoutUser = () => {
     token,
   }
 }
+
+export const loginUserWithGoogle = (code: string) => ({
+  type: AUTH_ACTION_TYPES.LOGIN_USER_GOOGLE,
+  code,
+})
+export const loginUserWithGoogleSuccess = (data: any) => ({
+  type: AUTH_ACTION_TYPES.LOGIN_USER_GOOGLE_SUCCESS,
+  data,
+})
+export const loginUserWithGoogleError = (error: Error) => ({
+  type: AUTH_ACTION_TYPES.LOGIN_USER_GOOGLE_ERROR,
+  error,
+})
+
+export const deleteAccount = () => ({
+  type: AUTH_ACTION_TYPES.DELETE_ACCOUNT,
+})
+export const deleteAccountSuccess = () => {
+  toaster.success('Account', {
+    description: 'Your account has been deleted!',
+    hasCloseButton: true,
+    duration: 5,
+  })
+
+  return {
+    type: AUTH_ACTION_TYPES.DELETE_ACCOUNT_SUCCESS,
+  }
+}
+export const deleteAccountError = (error: Error) => ({
+  type: AUTH_ACTION_TYPES.DELETE_ACCOUNT_ERROR,
+  error,
+})
 
 export default authReducer

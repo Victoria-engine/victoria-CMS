@@ -1,4 +1,4 @@
-export default (url: string, options: object) => {
+export default (url: string, options: object)=> {
   return fetch(url, options)
     .then(response => {
       if (response.ok) {

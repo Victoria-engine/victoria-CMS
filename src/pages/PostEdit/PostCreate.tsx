@@ -16,28 +16,32 @@ import cx from 'classnames'
  * Post manipulation screen
  */
 const PostEdit: React.FC<Props> = () => {
-  // Local state
   const [editorData, setEditorData] = useState<OutputData>(INITIAL_EDITOR_DATA)
   const [postData, setPostData] = useState({ ...EMPTY_POST })
   const [hasChangesToSave, setHasChangesToSave] = useState(false)
   const [hasFieldChanged, setHasFieldChanged] = useState({
     title: false,
-    excerpt: false,
+    description: false,
     editor: false,
   })
 
   const dispatch = useDispatch()
   const history = useHistory()
 
-  // Selectors
   const hasSavedSuccess = useSelector(({ blog }: Store) => blog.hasSavedSuccess)
 
   const onCreatePost = () => {
-    const { visibility, title, excerpt } = postData
-    dispatch(createPost({ html: editorData as any, visibility, title, description: excerpt }))
-    window.setTimeout(() => {
-      history.push('/drafts')
-    }, 700)
+    const { visibility, title, description } = postData
+
+    dispatch(
+      createPost({
+        text: JSON.stringify(editorData),
+        visibility,
+        title,
+        description,
+      }))
+
+    window.setTimeout(() => { history.push('/drafts') }, 700)
   }
 
   const onPostDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,13 +53,14 @@ const PostEdit: React.FC<Props> = () => {
     })
 
     if (!isNameValidField(name)) return
-    if (!hasFieldChanged[name]) setHasFieldChanged({...hasFieldChanged, [name]: true})
+
+    if (!hasFieldChanged[name]) setHasFieldChanged({ ...hasFieldChanged, [name]: true })
     if (!hasChangesToSave) setHasChangesToSave(true)
   }
 
   const onEditorDataChange = (value: OutputData) => {
     setEditorData(value)
-    
+
     if (!hasChangesToSave) setHasChangesToSave(true)
   }
 
@@ -84,11 +89,11 @@ const PostEdit: React.FC<Props> = () => {
         />
 
         <TextInputField
-          name='excerpt'
+          name='description'
           onChange={onPostDataChange}
-          value={postData.excerpt}
+          value={postData.description}
           className={classes.borderlessInput}
-          isInvalid={postData.excerpt.length <= 0 && hasFieldChanged['excerpt']}
+          isInvalid={postData.description.length <= 0 && hasFieldChanged['description']}
           placeholder='Description'
         />
 

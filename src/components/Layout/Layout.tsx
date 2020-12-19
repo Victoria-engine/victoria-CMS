@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children, history, hasSidebar, blog }) 
           { iconName: 'settings', label: 'Settings', to: '/settings' },
         ]}
         activeItem={history.location.pathname}
-        title={blog.name}
+        title={blog.title}
       />}
 
       <div className={classes.content}>

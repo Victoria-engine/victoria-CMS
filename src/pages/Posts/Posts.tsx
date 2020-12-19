@@ -1,33 +1,34 @@
 import React, { useEffect, useState } from 'react'
-import { PostsProps as Props, Store, BlogPost } from '../../types'
+import { PostsProps as Props, Store, BlogPost, RemoteDataStatus } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Spinner } from 'evergreen-ui'
 import classes from './styles.module.scss'
 import { useHistory } from 'react-router-dom'
 import PostsTable from '../../components/PostsTable/PostsTable'
+import { getPostsList } from '../../reducers/blog'
 
 /**
  * Posts list screen
  */
 const Posts: React.FC<Props> = () => {
-
-  // Local State
   const [posts, setPosts] = useState<BlogPost[]>([])
 
-
-  // Selectors
   const blogReducer = useSelector(({ blog }: Store) => blog)
-  const blogData = blogReducer.blog
+  const { key, posts: blogPosts } = blogReducer.blog
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const validConsumerKey = key.value && key.status === RemoteDataStatus.Success
+    if (!validConsumerKey) return
+
+    dispatch(getPostsList(key.value))
+  }, [key, dispatch, getPostsList])
 
 
   useEffect(() => {
-    // getPosts...
-  })
-
-  useEffect(() => {
-    setPosts(blogData.posts.filter(p => ['public'].includes(p.visibility)))
-  }, [blogData.posts])
+    setPosts(blogPosts.filter(p => ['public'].includes(p.visibility)))
+  }, [blogPosts, setPosts])
 
   const history = useHistory()
 
@@ -36,7 +37,7 @@ const Posts: React.FC<Props> = () => {
   }
 
   const onSearchChange = (value: string) => {
-    if (!value) return setPosts(blogData.posts.filter(p => ['public'].includes(p.visibility)))
+    if (!value) return setPosts(blogPosts.filter(p => ['public'].includes(p.visibility)))
 
     const searchValue = value.toLocaleLowerCase()
 
@@ -44,7 +45,7 @@ const Posts: React.FC<Props> = () => {
       post.title.toLocaleLowerCase().includes(searchValue) && ['public'].includes(post.visibility)))
   }
 
-  if (!blogData || blogReducer.working || !posts) return <Spinner />
+  if (blogReducer.working || !posts) return <Spinner />
 
   return (
     <div className={classes.postsContainer}>
@@ -52,10 +53,10 @@ const Posts: React.FC<Props> = () => {
         title='Posts list'
         actions={[
           { iconName: 'add', label: 'New post', appearance: 'primary', onClick: () => history.push('/post/new') },
-         ]}
-         description='The list with all of the public posts, the posts the users will see on your blog.'
+        ]}
+        description='The list with all of the public posts, the posts the users will see on your blog.'
       />
-      
+
       <PostsTable
         posts={posts}
         onSelect={nagivateToPostHandler}

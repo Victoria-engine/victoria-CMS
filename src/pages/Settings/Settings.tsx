@@ -2,16 +2,12 @@ import React from 'react'
 import { PostEditProps as Props, Store } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
 import { Code, Icon } from 'evergreen-ui'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import classes from '../Account/styles.module.scss'
 
 const Settings: React.FC<Props> = () => {
-
-  const dispatch = useDispatch()
-
-  // Selectors
-  const blogReducer = useSelector(({ blog }: Store) => blog)
-  const apiKey = blogReducer.blog.key
+  const { blog } = useSelector(({ blog }: Store) => blog)
+  const consumerKey = blog.key.value
 
 
   return (
@@ -21,16 +17,16 @@ const Settings: React.FC<Props> = () => {
       <div className={classes.accountSettings}>
 
         <div className={classes.labelsCol}>
-          <span>Blog private API KEY: </span>
+          <span>Blog public consumer key:</span>
         </div>
         <div className={classes.fieldsCols}>
-          <Code style={{ color: '#e9404c' }}>{apiKey}</Code>
+          <Code style={{ color: '#e9404c' }}>{consumerKey}</Code>
         </div>
       </div>
       <p className={classes.warning}>
         <Icon icon="info-sign" color="warning" marginRight={5} paddingTop={3} />
-          This key <b>should not be public to anyone</b> but you or your development team !
-          Sharing to others might harm you blog!
+          This key is used to identify your blog content when consuming public endpoints,
+          please refer to the documentation for more information.
         </p>
     </div>
   )

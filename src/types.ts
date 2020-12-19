@@ -15,11 +15,11 @@ export type Store = {
 }
 
 export interface PostEditProps {
-  
+
 }
 
 export interface PostsProps {
-  
+
 }
 
 export type ReduxAction = {
@@ -64,75 +64,84 @@ export interface AppStore {
 
 export interface AuthStore {
   authToken?: string,
-  blogKey: string | null,
   working: boolean,
   error: string | null,
   success: boolean,
+  accountDeleted: boolean,
 }
 
 export type BlogPost = {
   tags: string[],
-  _id: string,
-  html: OutputData,
+  id: string,
+  text: OutputData | string,
   title: string,
-  excerpt: string,
+  description: string,
   visibility: 'public' | 'private' | 'not-listed',
   reading_time: number,
-  author: string,
-  createdAt: string,
-  updatedAt: string,
-  description?: string,
+  user: {
+    id: string,
+    name: string,
+  },
+  created_at: string,
+  updated_at: string,
 }
 
-export type BlogData = {
-  _id: string,
+export interface BlogData {
+  id: string,
   description: string,
   name: string,
-  author: string,
   key: string,
   posts: BlogPost[],
 }
 
-export type UserData = {
-  firstName: string,
-  lastName: string,
+export interface UserData {
+  name: string,
   email: string,
-  createdAt: string,
+  created_at: string,
+}
+
+export enum RemoteDataStatus {
+  Idle = 'idle',
+  Fetching = 'fetching',
+  Success = 'success',
+  Failed = 'failed',
+}
+
+export interface RemoteData<T> {
+  value: T,
+  status: RemoteDataStatus,
 }
 
 export interface BlogStore {
   working: boolean,
   blog: {
-    name: string,
+    id: string,
+    title: string,
     description: string,
-    author: string,
-    key: string,
+    key: RemoteData<string>,
     posts: BlogPost[],
   },
   user: UserData,
   error: string | null,
   hasSavedSuccess: boolean,
-  wasBlogCreated: boolean,
+  blogCreated: boolean,
+  gotBlog: boolean,
+  postDeletedID: string,
 }
 
-export interface RegisterUserPayload{
-  credentials: {
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-  }
+export interface RegisterUserPayload {
+  email: string,
+  password: string,
+  name: string,
 }
 export interface RegisterUserSuccessPayload {
   access_token: string,
   blogID: string,
 }
 
-export interface LoginserPayload{
-  credentials: {
-    email: string,
-    password: string,
-  }
+export interface LoginserPayload {
+  email: string,
+  password: string,
 }
 export interface LoginUserSuccessPayload {
   access_token: string,
@@ -163,11 +172,11 @@ export interface GetPostByIDPayload {
 export type GetPostByIDSuccessPayload = BlogPost
 
 export interface SavePostPayload {
-  title: string,
-  html: OutputData,
-  description?: string,
-  visibility: BlogPost['visibility'],
   id?: string,
+  title?: string,
+  text?: OutputData | string,
+  description?: string,
+  visibility?: BlogPost['visibility'],
 }
 
 export interface LoginSignInSwitcherProps {
@@ -190,13 +199,13 @@ export interface StepperProps {
   activeStep: number,
   showNumber?: boolean,
   isNextBlocked: boolean,
-  
+
   onSelect: (step: any) => void,
 }
 
 export type CreateBlogPayload = {
-  name: string,
-	description: string,
+  title: string,
+  description: string,
 }
 
 export interface BlogCreationSectionProps {

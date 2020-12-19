@@ -28,7 +28,7 @@ Built from `cra (create-react-app)`
 4. `.env structure:`
 
 ```bash
-REACT_APP_API_URL='http://127.0.0.1:3001'
+REACT_APP_API_URL='http://127.0.0.1:3000'
 ```
 
 5. `yarn start` to run the server

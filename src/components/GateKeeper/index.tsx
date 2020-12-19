@@ -1,4 +1,4 @@
-import { Store } from "../../../types"
+import { Store } from "../../types"
 import { connect } from "react-redux"
 import GateKeeper from "./Gatekeeper"
 import { RouteProps } from "react-router-dom"

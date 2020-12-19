@@ -5,4 +5,13 @@ export const USER_ROLES = Object.freeze({
   ADMIN: 1,
 })
 
-export const ACCESS_TOKEN = 'key'
+export const ACCESS_TOKEN = 'victoria_a_t'
+
+export const GoogleOAuth2ClientCredentials = {
+  id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+  redirect_uri: process.env.REACT_APP_GOOGLE_REDIRECT_URI,
+  scopes: [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+  ],
+}
