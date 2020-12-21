@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PostEditProps as Props, Store, BlogPost } from '../../types'
+import { PostEditProps as Props, Store, BlogPost, PostVisibility } from '../../types'
 import { useLocation, useHistory, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Topbar from '../../components/Layout/Topbar'
@@ -118,7 +118,8 @@ const PostEdit: React.FC<Props> = () => {
 
     const { title, description, visibility } = postData
 
-    const newVisibility: BlogPost['visibility'] = ['not-listed', 'private'].includes(visibility) ? 'public' : 'not-listed'
+    const newVisibility: BlogPost['visibility'] = [PostVisibility.NotListed]
+      .includes(visibility) ? PostVisibility.Public : PostVisibility.NotListed
     const postText = editorData || selectedPost?.text
 
     dispatch(

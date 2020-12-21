@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PostsProps as Props, Store, BlogPost, RemoteDataStatus } from '../../types'
+import { PostsProps as Props, Store, BlogPost, RemoteDataStatus, PostVisibility } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { Spinner } from 'evergreen-ui'
@@ -15,15 +15,12 @@ const Posts: React.FC<Props> = () => {
   const [posts, setPosts] = useState<BlogPost[]>([])
 
   const blogReducer = useSelector(({ blog }: Store) => blog)
-  const { key, posts: blogPosts } = blogReducer.blog
+  const { posts: blogPosts } = blogReducer.blog
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const validConsumerKey = key.value && key.status === RemoteDataStatus.Success
-    if (!validConsumerKey) return
-
-    dispatch(getPostsList(key.value))
-  }, [key, dispatch, getPostsList])
+    dispatch(getPostsList(PostVisibility.Public))
+  }, [dispatch, getPostsList])
 
 
   useEffect(() => {

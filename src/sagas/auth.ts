@@ -78,7 +78,7 @@ function* registerUserWorker({ payload }: AnyAction & RegisterUserPayload) {
 }
 
 function* deleteAccountWorker() {
-  const requestUrl = `${API_URL}/user`
+  const requestUrl = `${API_URL}/admin/user`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {

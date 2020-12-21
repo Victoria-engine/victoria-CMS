@@ -70,13 +70,19 @@ export interface AuthStore {
   accountDeleted: boolean,
 }
 
+export enum PostVisibility {
+  All = 'all',
+  Public = 'public',
+  NotListed = 'not-listed'
+}
+
 export type BlogPost = {
   tags: string[],
   id: string,
   text: OutputData | string,
   title: string,
   description: string,
-  visibility: 'public' | 'private' | 'not-listed',
+  visibility: PostVisibility,
   reading_time: number,
   user: {
     id: string,

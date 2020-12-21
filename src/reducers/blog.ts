@@ -3,7 +3,8 @@ import {
   ReduxAction, BlogStore, GetUserDataSuccess, GetPostByIDPayload, GetPostByIDSuccessPayload, SavePostPayload, $TS_FIXME,
   CreateBlogPayload,
   BlogPost,
-  RemoteDataStatus
+  RemoteDataStatus,
+  PostVisibility
 } from '../types'
 import { toaster } from 'evergreen-ui'
 import safeJsonParse from '../utils/safeJsonParse'
@@ -267,9 +268,9 @@ export const getUserDataError = (error: Error) => ({
 /**
  * Get posts list
  */
-export const getPostsList = (consumerKey: string) => ({
+export const getPostsList = (visibility?: PostVisibility) => ({
   type: BLOG_ACTION_TYPES.GET_POSTS_LIST,
-  consumerKey,
+  visibility,
 })
 export const getPostsListSuccess = (payload: BlogPost[]) => ({
   type: BLOG_ACTION_TYPES.GET_POSTS_LIST_SUCCESS,

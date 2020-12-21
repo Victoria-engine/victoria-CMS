@@ -7,7 +7,6 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, onSelect, onSearchChange
 
   const getStatusWording = (status: BlogPost['visibility']) => {
     switch (status) {
-      case 'private': return 'PRIVATE'
       case 'public': return 'PUBLISHED'
       case 'not-listed': return 'DRAFT'
       default: return status

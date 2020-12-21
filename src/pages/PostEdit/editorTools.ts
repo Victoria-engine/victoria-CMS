@@ -13,7 +13,7 @@ import CheckList from '@editorjs/checklist'
 import Delimiter from '@editorjs/delimiter'
 import InlineCode from '@editorjs/inline-code'
 import SimpleImage from '@editorjs/editorjs'
-import { BlogPost } from '../../types'
+import { BlogPost, PostVisibility } from '../../types'
 
 export const EDITOR_JS_TOOLS = {
   embed: Embed,
@@ -69,7 +69,7 @@ export const INITIAL_EDITOR_DATA = {
 export const EMPTY_POST: BlogPost = {
   id: '',
   text: INITIAL_EDITOR_DATA,
-  visibility: 'not-listed',
+  visibility: PostVisibility.NotListed,
   title: '',
   tags: [],
   created_at: '',

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import PostsTable from '../../components/PostsTable'
 import classes from '../Posts/styles.module.scss'
 import { Spinner } from 'evergreen-ui'
-import { BlogPost, Store } from '../../types'
+import { BlogPost, PostVisibility, Store } from '../../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPostsList } from '../../reducers/blog'
 
@@ -18,16 +18,13 @@ const Drafts: React.FC = () => {
 
 
   useEffect(() => {
-    const consumerKey = blogData.key.value
-    if (!consumerKey) return
-
-    dispatch(getPostsList(consumerKey))
-  }, [blogData.key, dispatch, getPostsList])
+    dispatch(getPostsList(PostVisibility.NotListed))
+  }, [dispatch, getPostsList])
 
   const history = useHistory()
 
   useEffect(() => {
-    setPosts(blogData.posts.filter(p => ['not-listed', 'private'].includes(p.visibility)))
+    setPosts(blogData.posts)
   }, [blogData.posts])
 
   const handlePostClick = (postID: string) => () => {

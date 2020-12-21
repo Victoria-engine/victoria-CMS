@@ -13,7 +13,7 @@ import { AnyAction } from 'redux'
 
 
 function* getUserDataWorker() {
-  const requestUrl = `${API_URL}/user`
+  const requestUrl = `${API_URL}/admin/user`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
@@ -70,7 +70,7 @@ function* getPostByIDWorker({ postID }: GetPostByIDPayload & AnyAction) {
 }
 
 function* createPostWorker({ visibility, title, text, description }: SavePostPayload & AnyAction) {
-  const requestUrl = `${API_URL}/post`
+  const requestUrl = `${API_URL}/admin/post`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
@@ -91,7 +91,7 @@ function* createPostWorker({ visibility, title, text, description }: SavePostPay
 }
 
 function* savePostWorker({ visibility, title, text, description, id }: SavePostPayload & AnyAction) {
-  const requestUrl = `${API_URL}/post/${id}`
+  const requestUrl = `${API_URL}/admin/post/${id}`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
@@ -107,7 +107,7 @@ function* savePostWorker({ visibility, title, text, description, id }: SavePostP
 }
 
 function* togglePublishPostWorker({ visibility, id }: SavePostPayload & AnyAction) {
-  const requestUrl = `${API_URL}/post/${id}`
+  const requestUrl = `${API_URL}/admin/post/${id}`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
@@ -123,7 +123,7 @@ function* togglePublishPostWorker({ visibility, id }: SavePostPayload & AnyActio
 }
 
 function* createBlogWorker({ title, description }: CreateBlogPayload & AnyAction) {
-  const requestUrl = `${API_URL}/blog`
+  const requestUrl = `${API_URL}/admin/blog`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
@@ -139,7 +139,7 @@ function* createBlogWorker({ title, description }: CreateBlogPayload & AnyAction
 }
 
 function* getConsumerKeyWorker() {
-  const requestUrl = `${API_URL}/blog/key`
+  const requestUrl = `${API_URL}/admin/blog/key`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
@@ -156,8 +156,8 @@ function* getConsumerKeyWorker() {
   }
 }
 
-function* getPostsListWorker({ consumerKey }: AnyAction) {
-  const requestUrl = `${API_URL}/posts?key=${consumerKey}`
+function* getPostsListWorker({ visibility = 'public' }: AnyAction) {
+  const requestUrl = `${API_URL}/admin/posts?visibility=${visibility}`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
@@ -174,7 +174,7 @@ function* getPostsListWorker({ consumerKey }: AnyAction) {
 }
 
 function* deletePostWorker({ postID }: AnyAction) {
-  const requestUrl = `${API_URL}/post/${postID}`
+  const requestUrl = `${API_URL}/admin/post/${postID}`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
