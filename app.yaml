@@ -13,7 +13,6 @@ handlers:
   - url: /(.*\.(json|ico|js))$
     static_files: build/\1
     upload: build/.*\.(json|ico|js)$
-    secure: always
 
   - url: .*
     static_files: build/index.html
