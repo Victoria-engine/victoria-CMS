@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { PostsProps as Props, Store, BlogPost, RemoteDataStatus, PostVisibility } from '../../types'
 import Topbar from '../../components/Layout/Topbar'
 import { useDispatch, useSelector } from 'react-redux'
-import { Spinner } from 'evergreen-ui'
+import { AddIcon, Spinner } from 'evergreen-ui'
 import classes from './styles.module.scss'
 import { useHistory } from 'react-router-dom'
 import PostsTable from '../../components/PostsTable/PostsTable'
@@ -49,7 +49,7 @@ const Posts: React.FC<Props> = () => {
       <Topbar
         title='Posts list'
         actions={[
-          { iconName: 'add', label: 'New post', appearance: 'primary', onClick: () => history.push('/post/new') },
+          { icon: AddIcon, label: 'New post', appearance: 'primary', onClick: () => history.push('/post/new') },
         ]}
         description='The list with all of the public posts, the posts the users will see on your blog.'
       />

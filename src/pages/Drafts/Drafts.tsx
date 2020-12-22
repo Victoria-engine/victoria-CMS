@@ -3,7 +3,7 @@ import Topbar from '../../components/Layout/Topbar'
 import { useHistory } from 'react-router-dom'
 import PostsTable from '../../components/PostsTable'
 import classes from '../Posts/styles.module.scss'
-import { Spinner } from 'evergreen-ui'
+import { AddIcon, Spinner } from 'evergreen-ui'
 import { BlogPost, PostVisibility, Store } from '../../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPostsList } from '../../reducers/blog'
@@ -45,7 +45,7 @@ const Drafts: React.FC = () => {
       <Topbar
         title='Drafts'
         actions={[
-          { iconName: 'add', label: 'New post', appearance: 'primary', onClick: () => history.push('/post/new') },
+          { icon: AddIcon, label: 'New post', appearance: 'primary', onClick: () => history.push('/post/new') },
         ]}
         description='The list of posts that are not published or are work in progress.'
       />

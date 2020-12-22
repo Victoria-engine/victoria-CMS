@@ -3,7 +3,7 @@ import { PostEditProps as Props, Store, BlogPost, PostVisibility } from '../../t
 import { useLocation, useHistory, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Topbar from '../../components/Layout/Topbar'
-import { Spinner, TextInput } from 'evergreen-ui'
+import { DeleteIcon, PublishFunctionIcon, SavedIcon, Spinner, StepBackwardIcon, TextInput } from 'evergreen-ui'
 import { deletePost, getPostByID, savePost, togglePublishPost } from '../../reducers/blog'
 import Editor from './Editor'
 import { EDITOR_JS_TOOLS, isNameValidField } from './editorTools'
@@ -173,10 +173,10 @@ const PostEdit: React.FC<Props> = () => {
   return (
     <article>
       <Topbar title={postData.title} actions={[
-        { label: 'Exit', onClick: () => history.goBack(), appearance: 'primary', iconName: 'step-backward', intent: 'none' },
-        { label: 'Save', onClick: onSaveClick, appearance: 'primary', iconName: 'saved', intent: 'success', isDisabled: !hasChangesToSave || isDisabled },
-        { label: publishButtonText, onClick: onPublishClick, appearance: 'primary', iconName: 'publish-function', intent: 'warning' },
-        { label: 'Delete', onClick: onDeleteClick, appearance: 'minimal', iconName: 'delete', intent: 'danger', isDisabled: isDisabled },
+        { label: 'Exit', onClick: () => history.goBack(), appearance: 'primary', icon: StepBackwardIcon, intent: 'none' },
+        { label: 'Save', onClick: onSaveClick, appearance: 'primary', icon: SavedIcon, intent: 'success', isDisabled: !hasChangesToSave || isDisabled },
+        { label: publishButtonText, onClick: onPublishClick, appearance: 'primary', icon: PublishFunctionIcon, intent: 'warning' },
+        { label: 'Delete', onClick: onDeleteClick, appearance: 'minimal', icon: DeleteIcon, intent: 'danger', isDisabled: isDisabled },
       ]} />
 
       <div className={classes.mainWrapper}>

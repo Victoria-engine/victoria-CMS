@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Topbar from '../../components/Layout/Topbar'
 import classes from './styles.module.scss'
-import { Button, Icon, TextInput } from 'evergreen-ui'
+import { Button, DeleteIcon, Icon, LogOutIcon, SavedIcon, TextInput } from 'evergreen-ui'
 import { useSelector, useDispatch } from 'react-redux'
 import { Store } from '../../types'
 import { transformToLocalDate } from '../../utils/dateUtils'
 import { deleteAccount, logoutUser } from '../../reducers/auth'
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal'
 import { getUserData } from '../../reducers/blog'
+
 
 const Account: React.FC = () => {
   const dispatch = useDispatch()
@@ -56,7 +57,7 @@ const Account: React.FC = () => {
       <Topbar
         title='Account'
         actions={[
-          { onClick: undefined, appearance: 'primary', label: 'Save', iconName: 'saved', isDisabled: true }
+          { onClick: undefined, appearance: 'primary', label: 'Save', icon: SavedIcon, isDisabled: true }
         ]}
       />
 
@@ -76,7 +77,7 @@ const Account: React.FC = () => {
 
 
       <div className={classes.actions}>
-        <Button onClick={onLogout} appearance='minimal' iconAfter='log-out'>Logout</Button>
+        <Button onClick={onLogout} appearance='minimal' iconAfter={LogOutIcon}>Logout</Button>
       </div>
 
       <div className={classes.actions}>
@@ -84,7 +85,7 @@ const Account: React.FC = () => {
           intent='danger'
           onClick={handleDeleteAccount}
           appearance='primary'
-          iconAfter='delete'
+          iconAfter={DeleteIcon}
         >
           Delete account
         </Button>
@@ -100,7 +101,7 @@ const Account: React.FC = () => {
           <div>
             <p>This action is irreversible, are you sure you want to delete your account ?</p>
             <b>
-              <Icon icon="delete" color="red" marginRight={5} paddingTop={3} />
+              <Icon icon={DeleteIcon} color="red" marginRight={5} paddingTop={3} />
               Deleting your account will delete all your content and make any other blog posts consuming your content
               not valid.
             </b>
@@ -108,7 +109,7 @@ const Account: React.FC = () => {
             <p>In order to delete your account, please type bellow your user name:</p>
             <TextInput
               isInvalid={!isUserNameConfirmValid}
-              label='User name'
+              title='User name'
               value={confirmedUserName}
               onChange={onUserNameConfirm}
             />

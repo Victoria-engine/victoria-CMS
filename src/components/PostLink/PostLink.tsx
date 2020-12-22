@@ -1,9 +1,8 @@
 import React from 'react'
-import { Link } from 'evergreen-ui'
 import { PostLinkProps } from '../../types'
 import classes from './styles.module.scss'
 import { getRelativeDate } from '../../utils/dateUtils'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 const PostLink: React.FC<PostLinkProps> = ({ postData, ...rest }) => {
   const history = useHistory()

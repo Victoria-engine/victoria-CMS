@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Stepper from '../../components/Stepper'
 import classes from './styles.module.scss'
-import { TextInputField, Button, Code, Icon, Link } from 'evergreen-ui'
+import { TextInputField, Button, Code, Icon, Link, InfoSignIcon, ButtonProps } from 'evergreen-ui'
 import randomNameGen from '../../utils/randomNameGenerator'
 import { BlogCreationSectionProps, Store } from '../../types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -143,7 +143,7 @@ export const BlogCreationSection: React.FC<BlogCreationSectionProps> = ({
 
 export const SetupSection: React.FC<{
   consumerKey: string,
-  onEnd: Function,
+  onEnd: ButtonProps['onClick'],
 }> =
   ({
     consumerKey,
@@ -163,7 +163,7 @@ export const SetupSection: React.FC<{
         <div className={classes.textWrapper}>
           <p className={classes.bolder}>In order for you to customize and setup your blog we need to run it locally.</p>
           <p className={classes.bolder}>
-            <Icon icon="info-sign" color="info" marginRight={5} paddingTop={3} />
+            <Icon icon={InfoSignIcon} color="info" marginRight={5} paddingTop={3} />
         You can easily install and mantain your blog with the <b>Victoria CLI</b> (recommend way):
         </p>
 
@@ -183,7 +183,7 @@ export const SetupSection: React.FC<{
           <Code style={{ color: '#e9404c' }}>{consumerKey}</Code>
 
           <p className={classes.bolder}>
-            <Icon icon="info-sign" color="warning" marginRight={5} paddingTop={3} />
+            <Icon icon={InfoSignIcon} color="warning" marginRight={5} paddingTop={3} />
           This key <b>should not be public to anyone</b> but you or your development team !
           Sharing to others might harm you blog!
         </p>
@@ -232,7 +232,7 @@ export const SetupSection: React.FC<{
     )
   }
 
-export const DeploySection: React.FC<{ onEnd: Function }> = ({ onEnd }) => {
+export const DeploySection: React.FC<{ onEnd: ButtonProps['onClick'] }> = ({ onEnd }) => {
   return (
     <>
       <h1>Let's deploy your first blog</h1>
@@ -241,7 +241,7 @@ export const DeploySection: React.FC<{ onEnd: Function }> = ({ onEnd }) => {
       <div className={classes.textWrapper}>
         <p className={classes.border}>For other people to see your blog one must deploy it to the web.</p>
         <p className={classes.border}>
-          <Icon icon="info-sign" color="info" marginRight={5} paddingTop={3} />
+          <Icon icon={InfoSignIcon} color="info" marginRight={5} paddingTop={3} />
           If you don't want to do this now and just want to experience Victoria, you can always skip this section and
           read it later.
         </p>

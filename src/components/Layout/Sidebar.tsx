@@ -2,7 +2,7 @@ import React from 'react'
 
 import classes from './styles.module.scss'
 import { SidebarProps } from '../../types'
-import { Icon } from 'evergreen-ui'
+import { Icon, UserIcon } from 'evergreen-ui'
 import { NavLink, Link } from 'react-router-dom'
 import logoImage from '../../assets/logo.png'
 
@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem, title }) => {
               exact
             >
               <li>
-                <Icon icon={tab.iconName} color='muted' marginRight={16} />
+                <Icon icon={tab.icon} color='muted' marginRight={16} />
                 <p>{tab.label}</p>
               </li>
             </NavLink>
@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem, title }) => {
 
         <NavLink to='/account' activeClassName={classes.activeSidebarItem}>
           <li>
-            <Icon icon='user' color='muted' marginRight={16} />
+            <Icon icon={UserIcon} color='muted' marginRight={16} />
             <p>Account</p>
           </li>
         </NavLink>

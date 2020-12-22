@@ -15,7 +15,7 @@ const Topbar: React.FC<Props> = ({ actions, title, description }) => (
       {Array.isArray(actions) && actions.map((tab, index) => (
         <li key={`${index}-topbarItem`}>
           <Button
-            iconAfter={tab.iconName}
+            iconAfter={tab.icon}
             disabled={tab.isDisabled}
             isLoading={tab.isLoading}
             appearance={tab.appearance}

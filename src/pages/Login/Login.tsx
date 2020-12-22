@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TextInputField, Button, Icon } from 'evergreen-ui'
+import { TextInputField, Button, Icon, WarningSignIcon } from 'evergreen-ui'
 import produce from 'immer'
 import { loginUser, loginUserWithGoogle, registerUser } from '../../reducers/auth'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +10,6 @@ import LogoTextSvg from '../../assets/victoria-text.svg'
 import LogoWhite from '../../assets/logo-white.svg'
 import { stringifiedParams } from '../../utils/google'
 import * as queryString from 'query-string'
-import request from '../../utils/request'
 import googleIconSvg from '../../assets/google-icon.svg'
 
 
@@ -54,7 +53,7 @@ const Login: React.FC = () => {
     if (!singleUserExchangeCode) return
 
     dispatch(loginUserWithGoogle(singleUserExchangeCode))
-  }, [queryString.parse, loginUserWithGoogle, request, dispatch])
+  }, [dispatch])
 
 
   useEffect(() => {
@@ -188,7 +187,7 @@ const Login: React.FC = () => {
     <div>
       <div>
         <div style={{ marginBottom: '40px' }}>
-          <Icon icon='warning-sign' color='red' marginRight={10} />
+          <Icon icon={WarningSignIcon} color='red' marginRight={10} />
           <span>Currently internal sign-in is not supported, please continue with a <b>google account</b>.</span>
         </div>
 

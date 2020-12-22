@@ -1,4 +1,4 @@
-import { IconName, ButtonAppearance, IntentTypes } from 'evergreen-ui'
+import { ButtonAppearance, IntentTypes } from 'evergreen-ui'
 import { History } from 'history'
 import { RouteComponentProps } from 'react-router-dom'
 import { OutputData } from '@editorjs/editorjs'
@@ -28,8 +28,8 @@ export type ReduxAction = {
   error: Error,
 }
 
-export type TabbarActionItem = {
-  iconName: IconName,
+export interface TabbarActionItem {
+  icon: React.ElementType | JSX.Element,
   label: string,
   to?: string,
   isDisabled?: boolean,

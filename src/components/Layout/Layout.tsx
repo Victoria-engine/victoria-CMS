@@ -2,6 +2,7 @@ import React from 'react'
 import classes from './styles.module.scss'
 import Sidebar from './Sidebar'
 import { LayoutProps } from '../../types'
+import { ApplicationIcon, SettingsIcon, EditIcon } from 'evergreen-ui'
 
 /**
  * Layout component
@@ -11,9 +12,9 @@ const Layout: React.FC<LayoutProps> = ({ children, history, hasSidebar, blog }) 
     <div className={classes.layoutContainer}>
       {hasSidebar && <Sidebar
         tabs={[
-          { iconName: 'edit', label: 'Drafts', to: '/drafts' },
-          { iconName: 'applications', label: 'Posts', to: '/' },
-          { iconName: 'settings', label: 'Settings', to: '/settings' },
+          { icon: EditIcon, label: 'Drafts', to: '/drafts' },
+          { icon: ApplicationIcon, label: 'Posts', to: '/' },
+          { icon: SettingsIcon, label: 'Settings', to: '/settings' },
         ]}
         activeItem={history.location.pathname}
         title={blog.title}

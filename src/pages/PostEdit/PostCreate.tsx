@@ -3,7 +3,7 @@ import { PostEditProps as Props, Store } from '../../types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Topbar from '../../components/Layout/Topbar'
-import { TextInputField } from 'evergreen-ui'
+import { DeleteIcon, PlusIcon, PublishFunctionIcon, StepBackwardIcon, TextInputField } from 'evergreen-ui'
 import { createPost } from '../../reducers/blog'
 import Editor from './Editor'
 import { EDITOR_JS_TOOLS, EMPTY_POST, INITIAL_EDITOR_DATA, isNameValidField } from './editorTools'
@@ -71,10 +71,10 @@ const PostEdit: React.FC<Props> = () => {
   return (
     <article>
       <Topbar title={postData.title} actions={[
-        { label: 'Exit', onClick: () => history.push('/'), appearance: 'primary', iconName: 'step-backward', intent: 'none' },
-        { label: 'Create', onClick: onCreatePost, appearance: 'primary', iconName: 'plus', intent: 'success', isDisabled: !hasChangesToSave },
-        { label: 'Publish', onClick: () => { }, appearance: 'primary', iconName: 'publish-function', intent: 'warning', isDisabled: true },
-        { label: 'Delete', onClick: () => { }, appearance: 'minimal', iconName: 'delete', intent: 'danger', isDisabled: true },
+        { label: 'Exit', onClick: () => history.push('/'), appearance: 'primary', icon: StepBackwardIcon, intent: 'none' },
+        { label: 'Create', onClick: onCreatePost, appearance: 'primary', icon: PlusIcon, intent: 'success', isDisabled: !hasChangesToSave },
+        { label: 'Publish', onClick: () => { }, appearance: 'primary', icon: PublishFunctionIcon, intent: 'warning', isDisabled: true },
+        { label: 'Delete', onClick: () => { }, appearance: 'minimal', icon: DeleteIcon, intent: 'danger', isDisabled: true },
       ]} />
 
       <div className={classes.mainWrapper}>
