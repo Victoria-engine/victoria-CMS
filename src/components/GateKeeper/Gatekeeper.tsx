@@ -5,7 +5,7 @@ import { Spinner } from 'evergreen-ui'
 
 const GateKeeper: React.FC<GatekeeperProps> = ({ Component, isAutorizing, authToken, ...props }) => {
   if (isAutorizing) {
-    return <Spinner />
+    return <Spinner marginX="auto" marginY={120} />
   }
   
   if (authToken) return <Component {...props} />

@@ -1,14 +1,18 @@
-.accountContainer {
+@import "../../styles/base.scss";
+
+.root {
+  @include sidebarLessView;
+
   display: flex;
   flex-flow: column;
   text-align: left;
+  padding: 0 40px;
 }
 
 .accountSettings {
   display: flex;
   flex-flow: row;
 }
-
 
 .labelsCol {
   span {
@@ -34,10 +38,13 @@
   }
 }
 
- 
 .created {
   color: #666666;
   font-size: 12px;
+}
+
+.actionsContainer {
+  display: flex;
 }
 
 .actions {

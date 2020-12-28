@@ -5,14 +5,14 @@ import { Code, Icon, InfoSignIcon } from 'evergreen-ui'
 import { useSelector } from 'react-redux'
 import classes from '../Account/styles.module.scss'
 
+
 const Settings: React.FC<Props> = () => {
   const { blog } = useSelector(({ blog }: Store) => blog)
   const consumerKey = blog.key.value
 
-
   return (
-    <div>
-      <Topbar title='Settings' actions={[]} />
+    <div className={classes.root}>
+      <Topbar title='API Settings' actions={[]} />
 
       <div className={classes.accountSettings}>
 

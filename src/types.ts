@@ -1,4 +1,4 @@
-import { ButtonAppearance, IntentTypes } from 'evergreen-ui'
+import { ButtonAppearance, IntentTypes, Theme } from 'evergreen-ui'
 import { History } from 'history'
 import { RouteComponentProps } from 'react-router-dom'
 import { OutputData } from '@editorjs/editorjs'
@@ -32,6 +32,7 @@ export interface TabbarActionItem {
   icon: React.ElementType | JSX.Element,
   label: string,
   to?: string,
+  style?: React.CSSProperties,
   isDisabled?: boolean,
   isLoading?: boolean,
   appearance?: ButtonAppearance,
@@ -42,8 +43,6 @@ export interface TabbarActionItem {
 
 export interface SidebarProps {
   tabs: TabbarActionItem[],
-  activeItem: History['location']['pathname'],
-  title: string,
 }
 
 export interface TopbarProps {
@@ -52,10 +51,17 @@ export interface TopbarProps {
   actions?: TabbarActionItem[],
 }
 
+export interface AccountBarProps {
+  user: UserInformation,
+  blog: UserBlog,
+}
+
+
 export interface LayoutProps {
-  history: History,
-  hasSidebar: boolean,
+  showSidebar: boolean,
+  showTopBar: boolean,
   blog: BlogStore['blog'],
+  user: BlogStore['user'],
 }
 
 export interface AppStore {
@@ -76,7 +82,7 @@ export enum PostVisibility {
   NotListed = 'not-listed'
 }
 
-export type BlogPost = {
+export interface BlogPost {
   tags: string[],
   id: string,
   text: OutputData | string,
@@ -92,15 +98,15 @@ export type BlogPost = {
   updated_at: string,
 }
 
-export interface BlogData {
+export interface UserBlog {
   id: string,
   description: string,
-  name: string,
-  key: string,
+  title: string,
+  key: RemoteData<string>,
   posts: BlogPost[],
 }
 
-export interface UserData {
+export interface UserInformation {
   name: string,
   email: string,
   created_at: string,
@@ -120,14 +126,8 @@ export interface RemoteData<T> {
 
 export interface BlogStore {
   working: boolean,
-  blog: {
-    id: string,
-    title: string,
-    description: string,
-    key: RemoteData<string>,
-    posts: BlogPost[],
-  },
-  user: UserData,
+  blog: UserBlog,
+  user: UserInformation,
   error: string | null,
   hasSavedSuccess: boolean,
   blogCreated: boolean,
@@ -156,8 +156,8 @@ export interface LoginUserSuccessPayload {
 
 
 export interface GetUserDataSuccess {
-  blog: BlogData,
-  user: UserData,
+  blog: UserBlog,
+  user: UserInformation,
   posts: BlogPost[],
 }
 
@@ -216,8 +216,12 @@ export type CreateBlogPayload = {
 
 export interface BlogCreationSectionProps {
   blogData: CreateBlogPayload,
-  userData: UserData,
+  userData: UserInformation,
 
   onBlogDataChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   onEnd: () => void,
+}
+
+export interface VictoriaTheme extends Theme {
+  primary: React.CSSProperties,
 }

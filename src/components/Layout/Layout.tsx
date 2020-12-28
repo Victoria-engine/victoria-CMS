@@ -1,27 +1,35 @@
 import React from 'react'
 import classes from './styles.module.scss'
 import Sidebar from './Sidebar'
-import { LayoutProps } from '../../types'
-import { ApplicationIcon, SettingsIcon, EditIcon } from 'evergreen-ui'
+import { LayoutProps as Props } from '../../types'
+import { ApplicationIcon, EditIcon } from 'evergreen-ui'
+import AccountBar from './AccountBar'
 
-/**
- * Layout component
- */
-const Layout: React.FC<LayoutProps> = ({ children, history, hasSidebar, blog }) => {
+
+const Layout: React.FC<Props> = ({
+  children,
+  showSidebar,
+  blog,
+  user,
+  showTopBar
+}) => {
+
   return (
     <div className={classes.layoutContainer}>
-      {hasSidebar && <Sidebar
-        tabs={[
-          { icon: EditIcon, label: 'Drafts', to: '/drafts' },
-          { icon: ApplicationIcon, label: 'Posts', to: '/' },
-          { icon: SettingsIcon, label: 'Settings', to: '/settings' },
-        ]}
-        activeItem={history.location.pathname}
-        title={blog.title}
-      />}
+      {showTopBar && <AccountBar user={user} blog={blog} />}
 
-      <div className={classes.content}>
-        {children}
+      <div className={classes.contentWrapper}>
+        {showSidebar &&
+          <Sidebar
+            tabs={[
+              { icon: ApplicationIcon, label: 'Posts', to: '/' },
+              { icon: EditIcon, label: 'Drafts', to: '/drafts' },
+            ]}
+          />}
+
+        <div className={classes.content}>
+          {children}
+        </div>
       </div>
     </div>
   )

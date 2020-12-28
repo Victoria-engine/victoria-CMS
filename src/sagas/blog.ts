@@ -42,7 +42,7 @@ function* getBlogWorker({ key }: AnyAction) {
     yield put(logoutUser())
   }
   if (data && !error) {
-    yield put(getBlogSuccess({ ...data, key }))
+    yield put(getBlogSuccess({ ...data, key: key }))
   }
 }
 
@@ -142,7 +142,7 @@ function* getConsumerKeyWorker() {
   const requestUrl = `${API_URL}/admin/blog/key`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
-  const { data, error } = yield call(request, requestUrl, {
+  const { data, error, ...rest } = yield call(request, requestUrl, {
     headers,
     method: 'GET',
   })

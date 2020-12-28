@@ -1,23 +1,14 @@
 import React from 'react'
-
 import classes from './styles.module.scss'
-import { SidebarProps } from '../../types'
-import { Icon, UserIcon } from 'evergreen-ui'
-import { NavLink, Link } from 'react-router-dom'
-import logoImage from '../../assets/logo.png'
+import { SidebarProps as Props } from '../../types'
+import { Icon } from 'evergreen-ui'
+import { NavLink } from 'react-router-dom'
 
 
-const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem, title }) => {
+const Sidebar: React.FC<Props> = ({ tabs }) => {
   return (
     <div className={classes.sidebar}>
       <ul>
-        <Link to='/'>
-          <img src={logoImage} alt='victoria logo' className={classes.logo}>
-          </img>
-        </Link>
-
-        <p>{title}</p>
-
         {tabs.map(tab => {
           return (
             <NavLink
@@ -34,13 +25,6 @@ const Sidebar: React.FC<SidebarProps> = ({ tabs, activeItem, title }) => {
             </NavLink>
           )
         })}
-
-        <NavLink to='/account' activeClassName={classes.activeSidebarItem}>
-          <li>
-            <Icon icon={UserIcon} color='muted' marginRight={16} />
-            <p>Account</p>
-          </li>
-        </NavLink>
       </ul>
     </div>
   )

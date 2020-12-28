@@ -6,12 +6,24 @@ import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store'
+import { ThemeProvider, defaultTheme } from 'evergreen-ui'
+import { VictoriaTheme } from './types'
+
 
 const ApplicationWrapper = (
   <>
     <Provider store={store}>
       <Router>
-        <App />
+        <ThemeProvider value={{
+          ...defaultTheme,
+          spinnerColor: '#e9404c',
+          primary: {
+            color: 'white',
+            background: '#e9404c',
+          }
+        } as VictoriaTheme}>
+          <App />
+        </ThemeProvider>
       </Router>
     </Provider>
   </>

@@ -7,9 +7,15 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RemoteDataStatus, Store } from '../../types'
 import { getBlog, getConsumerKey, getUserData } from '../../reducers/blog'
 
+
 const shouldPathHaveSidebar = (path: string) => {
+  return matchPath(path, ['/welcome', '/post', '/login', '/settings', '/account'])
+}
+
+const shouldPathHaveTopbar = (path: string) => {
   return matchPath(path, ['/welcome', '/post', '/login'])
 }
+
 
 const App: React.FC = () => {
   const history = useHistory()
@@ -17,12 +23,14 @@ const App: React.FC = () => {
   const { pathname } = useLocation()
 
   const auth = useSelector(({ auth }: Store) => auth)
-  const blog = useSelector(({ blog }: Store) => blog.blog)
+  const { blog, user } = useSelector(({ blog }: Store) => blog)
   const error = useSelector(({ blog }: Store) => blog.error)
 
   const pathsWithoutSidebar = shouldPathHaveSidebar(pathname)
+  const pathsWithoutTopbar = shouldPathHaveTopbar(pathname)
   const loggedInUser = auth.authToken
   const showSideBar = !!loggedInUser && !pathsWithoutSidebar
+  const showTopBar = !!loggedInUser && !pathsWithoutTopbar
 
   useEffect(() => {
     if (error) {
@@ -51,9 +59,15 @@ const App: React.FC = () => {
     dispatch(getConsumerKey())
   }, [dispatch, auth.authToken, error, history, getUserData, getBlog, blog.key])
 
+
   return (
     <div className='App'>
-      <Layout history={history} hasSidebar={showSideBar} blog={blog}>
+      <Layout
+        showSidebar={showSideBar}
+        showTopBar={showTopBar}
+        blog={blog}
+        user={user}
+      >
         {routes()}
       </Layout>
     </div>

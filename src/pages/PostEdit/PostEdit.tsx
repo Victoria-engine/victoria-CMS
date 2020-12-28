@@ -164,7 +164,7 @@ const PostEdit: React.FC<Props> = () => {
     setDeleteConfirmOpen(true)
   }
 
-  if (!selectedPost || !postData) return <Spinner />
+  if (!selectedPost || !postData) return <Spinner marginX="auto" marginY={120} />
 
   const publishButtonText = postData.visibility === 'public' ? 'Unpublish' : 'Publish'
   const isDisabled = postData.visibility !== 'not-listed'

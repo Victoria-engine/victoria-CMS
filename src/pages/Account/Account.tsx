@@ -53,7 +53,7 @@ const Account: React.FC = () => {
   const isUserNameConfirmValid = userData.name === confirmedUserName
 
   return (
-    <div className={classes.accountContainer}>
+    <div className={classes.root}>
       <Topbar
         title='Account'
         actions={[
@@ -76,19 +76,22 @@ const Account: React.FC = () => {
       <p className={classes.created}>Account created at {transformToLocalDate(userData.created_at)}</p>
 
 
-      <div className={classes.actions}>
-        <Button onClick={onLogout} appearance='minimal' iconAfter={LogOutIcon}>Logout</Button>
-      </div>
+      <div className={classes.actionsContainer}>
 
-      <div className={classes.actions}>
-        <Button
-          intent='danger'
-          onClick={handleDeleteAccount}
-          appearance='primary'
-          iconAfter={DeleteIcon}
-        >
-          Delete account
+        <div className={classes.actions}>
+          <Button onClick={onLogout} appearance='minimal' iconAfter={LogOutIcon}>Logout</Button>
+        </div>
+
+        <div className={classes.actions}>
+          <Button
+            intent='danger'
+            onClick={handleDeleteAccount}
+            appearance='primary'
+            iconAfter={DeleteIcon}
+          >
+            Delete account
         </Button>
+        </div>
 
         <ConfirmDeleteModal
           open={deleteConfirmOpen}

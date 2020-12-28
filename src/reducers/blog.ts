@@ -221,7 +221,7 @@ const blogReducer = (state = initialState, { payload, type, error }: ReduxAction
 
       case BLOG_ACTION_TYPES.GET_POSTS_LIST_ERROR:
         draft.working = false
-        draft.error = payload.message
+        draft.error = payload?.message
         break
 
       case BLOG_ACTION_TYPES.DELETE_POST:
