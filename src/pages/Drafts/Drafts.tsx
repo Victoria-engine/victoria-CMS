@@ -8,6 +8,7 @@ import { BlogPost, PostVisibility, Store, VictoriaTheme } from '../../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPostsList } from '../../reducers/blog'
 
+
 const Drafts: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const theme = useTheme() as VictoriaTheme
@@ -20,7 +21,7 @@ const Drafts: React.FC = () => {
 
   useEffect(() => {
     dispatch(getPostsList(PostVisibility.NotListed))
-  }, [dispatch, getPostsList])
+  }, [dispatch])
 
   const history = useHistory()
 

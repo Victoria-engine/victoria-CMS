@@ -94,7 +94,7 @@ const PostEdit: React.FC<Props> = () => {
       history.push('/drafts')
       return
     }
-  }, [postDeletedID])
+  }, [history, postDeletedID, selectedPost])
 
 
   const onSaveClick = () => {

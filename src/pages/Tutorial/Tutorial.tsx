@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Stepper from '../../components/Stepper'
 import classes from './styles.module.scss'
 import { TextInputField, Button, Code, Icon, Link, InfoSignIcon, ButtonProps } from 'evergreen-ui'
@@ -27,9 +27,9 @@ const Tutorial: React.FC = () => {
   const consumerKey = blog.key.value
 
 
-  const onChangeStep = (nextStep: number) => {
+  const onChangeStep = useCallback((nextStep: number) => {
     history.push(`/welcome/${nextStep}`)
-  }
+  }, [history])
 
   const onBlogDataChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = target
@@ -52,7 +52,7 @@ const Tutorial: React.FC = () => {
     if (wasBlogCreated) {
       onChangeStep(2)
     }
-  }, [wasBlogCreated])
+  }, [onChangeStep, wasBlogCreated])
 
 
   if (!step) {
@@ -153,7 +153,7 @@ export const SetupSection: React.FC<{
 
     useEffect(() => {
       dispatch(getConsumerKey())
-    }, [dispatch, getConsumerKey])
+    }, [dispatch])
 
     return (
       <>

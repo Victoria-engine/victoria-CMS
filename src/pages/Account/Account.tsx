@@ -24,13 +24,13 @@ const Account: React.FC = () => {
     if (!userData.email || !userData.name) {
       dispatch(getUserData())
     }
-  }, [dispatch, getUserData, userData])
+  }, [dispatch, userData])
 
   useEffect(() => {
     if (accountDeleted) {
       dispatch(logoutUser())
     }
-  }, [accountDeleted, dispatch, logoutUser])
+  }, [accountDeleted, dispatch])
 
 
   const onLogout = () => {

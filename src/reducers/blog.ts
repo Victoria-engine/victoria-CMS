@@ -368,7 +368,9 @@ export const togglePublishPost = (payload: SavePostPayload) => ({
 })
 export const togglePublishPostSuccess = (payload: $TS_FIXME) => {
   const newStateNotification = ['private', 'not-listed'].includes(payload.visibility) ? 'Unpublished' : 'Published'
-  toaster.success(`Post has been ${newStateNotification} !`)
+  toaster.success(`Post has been ${newStateNotification} !`, {
+    duration: 2,
+  })
 
   return {
     type: BLOG_ACTION_TYPES.TOGGLE_PUBLISH_POST_SUCCESS,

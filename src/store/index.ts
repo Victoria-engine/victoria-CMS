@@ -4,13 +4,14 @@ import { createLogger } from 'redux-logger'
 
 import combinedReducers from './combinedReducers'
 import combinedSagas from './combinedSagas'
+import tokenVerificationMiddleware from '../middleware/tokenVerification'
 
 const __PROD__ = process.env.NODE_ENV === 'production'
 
 const sagaMiddleware = createSagaMiddleware()
 
 /** Middlewares */
-const middlewares = [sagaMiddleware]
+const middlewares = [sagaMiddleware, tokenVerificationMiddleware]
 
 /** Add a logger if it's not in production */
 if (!__PROD__) {

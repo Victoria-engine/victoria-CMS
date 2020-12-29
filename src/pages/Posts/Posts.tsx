@@ -21,7 +21,7 @@ const Posts: React.FC<Props> = () => {
 
   useEffect(() => {
     dispatch(getPostsList(PostVisibility.Public))
-  }, [dispatch, getPostsList])
+  }, [dispatch])
 
 
   useEffect(() => {

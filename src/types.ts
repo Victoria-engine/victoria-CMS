@@ -1,5 +1,4 @@
 import { ButtonAppearance, IntentTypes, Theme } from 'evergreen-ui'
-import { History } from 'history'
 import { RouteComponentProps } from 'react-router-dom'
 import { OutputData } from '@editorjs/editorjs'
 
@@ -8,7 +7,7 @@ export type ValueOf<T> = T[keyof T]
 export type $TS_FIXME = any
 export type ComponentType = React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>
 
-export type Store = {
+export interface Store {
   auth: AuthStore,
   app: AppStore,
   blog: BlogStore,

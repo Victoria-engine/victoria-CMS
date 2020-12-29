@@ -57,7 +57,7 @@ const App: React.FC = () => {
     }
 
     dispatch(getConsumerKey())
-  }, [dispatch, auth.authToken, error, history, getUserData, getBlog, blog.key])
+  }, [dispatch, auth.authToken, error, history, blog.key])
 
 
   return (
