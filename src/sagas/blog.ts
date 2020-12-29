@@ -49,13 +49,7 @@ function* getBlogWorker({ key }: AnyAction) {
 function* getPostByIDWorker({ postID }: GetPostByIDPayload & AnyAction) {
   const { blog }: Store = yield select()
 
-  const consumerKey = blog.blog.key.value
-  if (!consumerKey) {
-    console.warn('No consumer key found when trying to fetch post')
-    return
-  }
-
-  const requestUrl = `${API_URL}/post/${postID}?key=${consumerKey}`
+  const requestUrl = `${API_URL}/admin/post/${postID}`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
