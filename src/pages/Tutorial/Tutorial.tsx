@@ -5,7 +5,7 @@ import { TextInputField, Button, Code, Icon, Link, InfoSignIcon, ButtonProps } f
 import randomNameGen from '../../utils/randomNameGenerator'
 import { BlogCreationSectionProps, Store } from '../../types'
 import { useDispatch, useSelector } from 'react-redux'
-import { createBlog, getConsumerKey } from '../../reducers/blog'
+import { createBlog, getConsumerKey, getUserData } from '../../reducers/blog'
 import LogoTextSvg from '../../assets/victoria-text.svg'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 
@@ -23,9 +23,7 @@ const Tutorial: React.FC = () => {
 
   const { blogCreated, user, blog } = useSelector(({ blog }: Store) => blog)
   const wasBlogCreated = blogCreated
-  const userData = user
   const consumerKey = blog.key.value
-
 
   const onChangeStep = useCallback((nextStep: number) => {
     history.push(`/welcome/${nextStep}`)
@@ -47,6 +45,17 @@ const Tutorial: React.FC = () => {
 
     dispatch(createBlog({ description, title }))
   }
+
+  const handleGetUserData = () => {
+    dispatch(getUserData())
+  }
+
+  useEffect(() => {
+    if (!user.email) {
+      handleGetUserData()
+    }
+  }, [handleGetUserData])
+
 
   useEffect(() => {
     if (wasBlogCreated) {
@@ -76,7 +85,7 @@ const Tutorial: React.FC = () => {
             onBlogDataChange={onBlogDataChange}
             blogData={blogData}
             onEnd={createBlogAndGoNext}
-            userData={userData}
+            user={user}
           />)}
         {step === "2" && (
           <SetupSection consumerKey={consumerKey} onEnd={() => onChangeStep(3)} />
@@ -90,10 +99,10 @@ const Tutorial: React.FC = () => {
 }
 
 export const BlogCreationSection: React.FC<BlogCreationSectionProps> = ({
-  onBlogDataChange,
   blogData,
+  onBlogDataChange,
   onEnd,
-  userData,
+  user,
 }) => {
   const isValidSubmit = blogData.description && blogData.title
 
@@ -103,7 +112,7 @@ export const BlogCreationSection: React.FC<BlogCreationSectionProps> = ({
       <hr />
 
       <div className={classes.textWrapper}>
-        <p className={classes.bolder}>Welcome <b>{userData.name}</b>, your account has been successfully created, now we need to create and link a blog to your account !</p>
+        <p className={classes.bolder}>Welcome <b>{user.name}</b>, your account has been successfully created, now we need to create and link a blog to your account !</p>
 
         <p>How would like to name your blog ?</p>
 
@@ -162,71 +171,18 @@ export const SetupSection: React.FC<{
 
         <div className={classes.textWrapper}>
           <p className={classes.bolder}>In order for you to customize and setup your blog we need to run it locally.</p>
-          <p className={classes.bolder}>
-            <Icon icon={InfoSignIcon} color="info" marginRight={5} paddingTop={3} />
-        You can easily install and mantain your blog with the <b>Victoria CLI</b> (recommend way):
-        </p>
-
-          <p>Open up your terminal and follow the following commands:</p>
-          <br />
-
-          <p>To install the CLI, run:</p>
-        1.<Code>homebrew victoria-cli</Code>
-          <br />
-          <p>Go to your prefered folder to store your blog code and run:</p>
-        2.<Code>victoria-cli new 'Meditation about code'</Code>
-
-          <p>If everything went smothly you should have eveything setup. Now follow the last steps printed in the console in order to run and devolop the project locally.</p>
-          <br />
-
-          <p>Here's the <b>api key</b> you need to connect your blog to our API.</p>
-          <Code style={{ color: '#e9404c' }}>{consumerKey}</Code>
-
-          <p className={classes.bolder}>
-            <Icon icon={InfoSignIcon} color="warning" marginRight={5} paddingTop={3} />
-          This key <b>should not be public to anyone</b> but you or your development team !
-          Sharing to others might harm you blog!
-        </p>
-
-          <p className={classes.bolder}>If you have the blog running locally without errors you should be done by now, let's get writting !</p>
-
-
-          <Button
-            className={classes.nextButton}
-            onClick={onEnd}
-          >
-            Next step
-        </Button>
-
-
-          <hr style={{ marginTop: '40px' }} />
-
-          <p className={classes.bolder}>If you don't want to install the CLI, here's the steps in order to install it.</p>
 
           <p>Get the repository with the starter template code.</p>
-        1.<Code>git clone https://github.com/Victoria-engine/blog-template.git</Code>
+          <p>1. <a href='https://github.com/Victoria-engine/blog-template' target='_blank' rel="noopener noreferrer">Use the template</a></p>
+          <p>2. Clone the repository locally and move inside the directory.</p>
+          <p>3.<Code>npm install</Code> to install the dependencies while inside the cloned directory.</p>
+          <p>4. Create a file called <Code>.env</Code> inside the root of directory</p>
+          <p>And store you consumer API key there, such as:</p>
+          <p><Code>REACT_APP_VICTORIA_CONSUMER_KEY={consumerKey}</Code></p>
+          <p>5.Finally run <Code>npm run local</Code> to run your project locally.</p>
 
-          <p>Move inside the cloned directory and install the dependencies</p>
-        2.<Code>cd blog-template</Code>
-          <br />
-          <br />
-        3.<Code>yarn</Code> or <Code>npm install</Code> to install the dependencies
-
-        <p>Create a file called <Code>.env</Code> inside the root of directory</p>
-          <p>And store you api key there like this:</p>
-        4.<Code>REACT_APP_VICTORIA_KEY={consumerKey}</Code>
-          <p>Finally run</p>
-        5.<Code>yarn start</Code> or <Code>npm run start</Code> to run your project locally.
-
-        <p><b>Happy blogging, you can move on!</b></p>
-
-
-          <Button
-            className={classes.nextButton}
-            onClick={onEnd}
-          >
-            Next step
-        </Button>
+          <p><b>Happy blogging, you can move on!</b></p>
+          <Button className={classes.nextButton} onClick={onEnd}> Next step</Button>
         </div>
       </>
     )

@@ -215,8 +215,8 @@ export type CreateBlogPayload = {
 
 export interface BlogCreationSectionProps {
   blogData: CreateBlogPayload,
-  userData: UserInformation,
-
+  user: BlogStore['user'],
+  
   onBlogDataChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   onEnd: () => void,
 }
