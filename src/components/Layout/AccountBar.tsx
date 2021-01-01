@@ -37,11 +37,13 @@ const Topbar: React.FC<Props> = ({ user, blog }) => {
 
   return (
     <div className={classes.accountTopBar}>
-      <div>
+      <div className={classes.blogInfoContainer}>
         <Link to='/' className={classes.logoHeader}>
           <img src={logoImage} alt='victoria logo' className={classes.logo}></img>
           <h3 className={classes.blogTitle}>{blog.title}</h3>
         </Link>
+
+        <p className={classes.description}><span style={{ marginRight: 5 }}>|</span> {blog.description}</p>
       </div>
 
       <div>
