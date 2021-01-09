@@ -11,6 +11,7 @@ import { OutputData } from '@editorjs/editorjs'
 import classes from './styles.module.scss'
 import cx from 'classnames'
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal'
+import DatePicker from './DatePicker'
 
 export const getPostIDFromPathname = (pathname: string) => {
   const arr = pathname.split('/')
@@ -100,7 +101,7 @@ const PostEdit: React.FC<Props> = () => {
   const onSaveClick = () => {
     if (!postData) return
 
-    const { title, description, visibility } = postData
+    const { title, description, visibility, created_at } = postData
     const postText = editorData || selectedPost?.text
 
     dispatch(
@@ -110,6 +111,7 @@ const PostEdit: React.FC<Props> = () => {
         title,
         visibility,
         description,
+        created_at,
       }))
   }
 
@@ -164,6 +166,16 @@ const PostEdit: React.FC<Props> = () => {
     setDeleteConfirmOpen(true)
   }
 
+  const handlePostDateChange = (date: Date) => {
+    if (!postData) return
+    setHasChangesToSave(true)
+
+    setPostData({
+      ...postData,
+      created_at: date as any,
+    })
+  }
+
   if (!selectedPost || !postData) return <Spinner marginX="auto" marginY={120} />
 
   const publishButtonText = postData.visibility === 'public' ? 'Unpublish' : 'Publish'
@@ -198,6 +210,12 @@ const PostEdit: React.FC<Props> = () => {
           className={classes.borderlessInput}
           isInvalid={postData.description?.length <= 0}
           placeholder='Description'
+          disabled={isDisabled}
+        />
+
+        <DatePicker
+          date={new Date(postData.created_at)}
+          onDateChange={handlePostDateChange}
           disabled={isDisabled}
         />
 

@@ -63,7 +63,7 @@ function* getPostByIDWorker({ postID }: GetPostByIDPayload & AnyAction) {
   if (data && !error) yield put(getPostByIDSuccess(data))
 }
 
-function* createPostWorker({ visibility, title, text, description }: SavePostPayload & AnyAction) {
+function* createPostWorker({ visibility, title, text, description, created_at }: SavePostPayload & AnyAction) {
   const requestUrl = `${API_URL}/admin/post`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
@@ -74,7 +74,8 @@ function* createPostWorker({ visibility, title, text, description }: SavePostPay
       visibility,
       title,
       text: text,
-      description
+      description,
+      created_at,
     }),
   })
 
@@ -84,14 +85,21 @@ function* createPostWorker({ visibility, title, text, description }: SavePostPay
   if (data && !error) yield put(createPostSuccess(data))
 }
 
-function* savePostWorker({ visibility, title, text, description, id }: SavePostPayload & AnyAction) {
+function* savePostWorker({ visibility, title, text, description, id, created_at }: SavePostPayload & AnyAction) {
   const requestUrl = `${API_URL}/admin/post/${id}`
   const headers = { 'Content-Type': 'application/json', ...setAuthHeaders() }
 
   const { data, error } = yield call(request, requestUrl, {
     headers,
     method: 'PATCH',
-    body: JSON.stringify({ id, visibility, title, text, description }),
+    body: JSON.stringify({
+      id,
+      visibility,
+      title,
+      text,
+      description,
+      created_at: created_at ? new Date(created_at) : null,
+    }),
   })
 
   if (error) {

@@ -10,7 +10,7 @@ import { EDITOR_JS_TOOLS, EMPTY_POST, INITIAL_EDITOR_DATA, isNameValidField } fr
 import { OutputData } from '@editorjs/editorjs'
 import classes from './styles.module.scss'
 import cx from 'classnames'
-
+import DatePicker from './DatePicker'
 
 /**
  * Post manipulation screen
@@ -31,7 +31,7 @@ const PostEdit: React.FC<Props> = () => {
   const hasSavedSuccess = useSelector(({ blog }: Store) => blog.hasSavedSuccess)
 
   const onCreatePost = () => {
-    const { visibility, title, description } = postData
+    const { visibility, title, description, created_at } = postData
 
     dispatch(
       createPost({
@@ -39,6 +39,7 @@ const PostEdit: React.FC<Props> = () => {
         visibility,
         title,
         description,
+        created_at,
       }))
 
     window.setTimeout(() => { history.push('/drafts') }, 700)
@@ -62,6 +63,13 @@ const PostEdit: React.FC<Props> = () => {
     setEditorData(value)
 
     if (!hasChangesToSave) setHasChangesToSave(true)
+  }
+
+  const handlePostDateChange = (date: Date) => {
+    setPostData({
+      ...postData,
+      created_at: date as any,
+    })
   }
 
   useEffect(() => {
@@ -95,6 +103,11 @@ const PostEdit: React.FC<Props> = () => {
           className={classes.borderlessInput}
           isInvalid={postData.description.length <= 0 && hasFieldChanged['description']}
           placeholder='Description'
+        />
+
+        <DatePicker
+          date={new Date(postData.created_at)}
+          onDateChange={handlePostDateChange}
         />
 
         <Editor

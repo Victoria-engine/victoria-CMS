@@ -72,7 +72,7 @@ export const EMPTY_POST: BlogPost = {
   visibility: PostVisibility.NotListed,
   title: '',
   tags: [],
-  created_at: '',
+  created_at: new Date(Date.now()).toString(),
   description: '',
   reading_time: 0,
   updated_at: '',

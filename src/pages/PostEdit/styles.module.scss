@@ -1,3 +1,5 @@
+@import "../../styles/base.scss";
+
 #editorjs {
   text-align: start;
 }
@@ -5,6 +7,36 @@
 .mainWrapper {
   width: 70%;
   margin: auto;
+
+  .datePickerPopper {
+    z-index: z("high");
+  }
+
+  .dateWrapper {
+    display: flex;
+
+    * > * {
+      display: flex;
+    }
+  }
+
+  .datePicker {
+    border: none;
+    box-shadow: none;
+    text-align: left;
+    width: 500px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    height: 30px;
+
+    &:focus,
+    &:active {
+      box-shadow: none;
+    }
+    &:hover {
+      background-color: #f8f8f8;
+    }
+  }
 }
 
 .borderlessInput {

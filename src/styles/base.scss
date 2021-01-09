@@ -1,3 +1,19 @@
 @mixin sidebarLessView {
   padding: 0 40px;
 }
+
+/// Z-indexes map, gathering all Z layers of the application
+$z-layers: (
+  'low': 2,
+  'medium': 99,
+  'high': 999,
+  'highest': 9999,
+);
+
+/// Get a z-index value from a layer name
+@function z($layer) {
+  @if not map-has-key($z-layers, $layer) {
+    @error "No layer found for `#{$layer}` in $z-layers map";
+  }
+  @return map-get($z-layers, $layer);
+}

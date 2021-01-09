@@ -1,6 +1,7 @@
 import { ButtonAppearance, IntentTypes, Theme } from 'evergreen-ui'
 import { RouteComponentProps } from 'react-router-dom'
 import { OutputData } from '@editorjs/editorjs'
+import { ReactDatePickerProps } from 'react-datepicker'
 
 export type ValueOf<T> = T[keyof T]
 
@@ -178,10 +179,11 @@ export type GetPostByIDSuccessPayload = BlogPost
 
 export interface SavePostPayload {
   id?: string,
-  title?: string,
-  text?: OutputData | string,
-  description?: string,
+  title?: BlogPost['title'],
+  text?: BlogPost['text'],
+  description?: BlogPost['description'],
   visibility?: BlogPost['visibility'],
+  created_at?: BlogPost['created_at'],
 }
 
 export interface LoginSignInSwitcherProps {
@@ -216,11 +218,17 @@ export type CreateBlogPayload = {
 export interface BlogCreationSectionProps {
   blogData: CreateBlogPayload,
   user: BlogStore['user'],
-  
+
   onBlogDataChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   onEnd: () => void,
 }
 
 export interface VictoriaTheme extends Theme {
   primary: React.CSSProperties,
+}
+
+export interface DatePickerWrappertProps {
+  date: ReactDatePickerProps['selected'],
+  disabled?: boolean,
+  onDateChange: ReactDatePickerProps['onChange'],
 }

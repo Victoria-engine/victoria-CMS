@@ -21,7 +21,7 @@ const PostLink: React.FC<PostLinkProps> = ({ postData, ...rest }) => {
         </div>
 
         <div className={classes.section}>
-          <p>Published  by <b>{postData.user.name}</b> -- {getRelativeDate(postData.created_at)}</p>
+          <p>Published  by <b>{postData.user.name}</b> -- {getRelativeDate(postData?.created_at.toString())}</p>
         </div>
       </Link>
     </li>
